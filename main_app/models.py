@@ -14,11 +14,12 @@ class Project(models.Model):
 class Location(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     what3words = models.CharField
-    #! Setting as JSONFields for now as that seems like a decent way to potentially store complex info in one field
+    #! Setting as JSONFields here and lower for now as that seems like a decent way to potentially store complex info in one field
     location = models.JSONField
     stats = models.JSONField
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -27,8 +28,9 @@ class Location(models.Model):
 class Deck(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400)
-    items = models.JSONField
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    items = models.JSONField
     def __str__(self):
         return self.name
     def get_absolute_url(self):
