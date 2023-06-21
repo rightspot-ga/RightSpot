@@ -43,13 +43,13 @@ with open(csv_file_path, 'r') as csv_file:
     reader = csv.reader(csv_file)
     headers = next(reader) 
 
-model_fields = {
-    'district': models.CharField,
-    'date': models.IntegerField
-}
+model_fields = {}
 
 for column_name in headers[2:]:
     model_fields[column_name] = models.DecimalField(max_digits=10, decimal_places=2) 
+
+model_fields['district'] = models.CharField(max_length=300)
+model_fields['date'] = models.IntegerField()
 
 class Meta:
     app_label = 'main_app'
@@ -57,7 +57,7 @@ class Meta:
 model_attrs = {
     '__module__': __name__,
     'Meta': Meta,
-    **model_fields
+    **model_fields,
 }
 
-Static_ONS_Data = type('Static_ONS_Data', (models.Model,), model_attrs)
+StaticOnsData = type('StaticOnsData', (models.Model,), model_attrs)
