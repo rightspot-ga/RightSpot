@@ -52,7 +52,7 @@ for column_name in headers[2:]:
     model_fields[column_name] = models.DecimalField(max_digits=10, decimal_places=2) 
 
 class Meta:
-    app_label = 'your_app_label'
+    app_label = 'main_app'
 
 model_attrs = {
     '__module__': __name__,
