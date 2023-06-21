@@ -1,3 +1,7 @@
+# HTTP Request: GET {{baseURL}}/api/location_services/geocode
+# Query Parameters: query (string)
+# where query is a 3 word address (format:"<string>.<string>.<string>") or any address (format: "<string> <string> ...")
+
 import environ, os
 import requests
 
