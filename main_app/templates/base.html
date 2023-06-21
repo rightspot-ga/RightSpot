@@ -18,7 +18,7 @@
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-secondary">
-        <button id="sidebarToggle" class="btn btn-secondary fs-2">
+        <button id="sidebarToggle" class="btn btn-secondary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
             <i class="bi bi-list"></i>
         </button>
         <div class="py-4 py-3 mb-4">
@@ -50,19 +50,19 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
+                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
                     <i class="nav-icon bi bi-gear-fill px-1"></i>
                     <span class="nav-text">Settings</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="/accounts/login?next=/" class="nav-link font-italic {% if request.path == '/login' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
+                <a href="/accounts/login?next=/" class="nav-link font-italic {% if '/accounts/login' in request.path %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
                     <i class="nav-icon bi bi-person-fill px-1"></i>
                     <span class="nav-text">Login</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/register' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
+                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/accounts/signup/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
                     <i class="nav-icon bi bi-person-plus-fill px-1"></i>
                     <span class="nav-text">Sign Up</span>
                 </a>
@@ -134,6 +134,8 @@
         const navLinks = document.querySelectorAll('.nav-link');
         const logoTitle = document.getElementById('logo-title');
 
+        $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
+
         // Destroy the default tooltip when first loading the page, as menu is expanded by default
         (function(){
             navLinks.forEach((navLink) => {
@@ -148,6 +150,7 @@
             sidebar.style.transition = 'none';
             sidebarToggle.classList.add('active');
             sidebarToggle.style.transition = 'none';
+            sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
             content.classList.add('active');
             content.style.transition = 'none';
             footer.classList.add('active');
@@ -171,9 +174,12 @@
                     navIcon.style.transition = '';
                 });
             }, 250);
+        } else{
+            sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
         }
 
         sidebarToggle.addEventListener('click', () => {
+            $(sidebarToggle).tooltip('hide'); // hide the tooltip when button clicked
             sidebar.classList.toggle('active');
             localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('active')); // save the state in localStorage
             sidebarToggle.classList.toggle('active');
@@ -190,6 +196,9 @@
                     $(navLink).tooltip('dispose'); // destroy the tooltip
                 });
 
+                // Set tooltip for sidebar toggle button
+                sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
+
                 // Delay the transition of the logo title and nav text when expanding the sidebar
                 setTimeout(() => {
                     logoTitle.classList.toggle('active');
@@ -202,6 +211,9 @@
                 navLinks.forEach((navLink) => {
                     $(navLink).tooltip(); // initialize the tooltip
                 });
+
+                // Set tooltip for sidebar toggle button
+                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
 
                 // Remove the logo title and nav text when collapsing the sidebar, without delay
                 logoTitle.classList.toggle('active');
