@@ -38,33 +38,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
+                <a href="{% url 'projects' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
                     <i class="nav-icon bi bi-journals px-1"></i>
                     <span class="nav-text">My Projects</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
+                <a href="{% url 'locations' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
                     <span class="nav-text">Saved Locations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/settings' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
+                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
                     <i class="nav-icon bi bi-gear-fill px-1"></i>
                     <span class="nav-text">Settings</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/login' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
+                <a href="/accounts/login?next=/" class="nav-link font-italic {% if request.path == '/login' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
                     <i class="nav-icon bi bi-person-fill px-1"></i>
                     <span class="nav-text">Login</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/register' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Register">
+                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/register' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
                     <i class="nav-icon bi bi-person-plus-fill px-1"></i>
-                    <span class="nav-text">Register</span>
+                    <span class="nav-text">Sign Up</span>
                 </a>
             </li>
     </div>
@@ -142,8 +142,40 @@
             });
         })();
 
+        // Check if the sidebar is collapsed or not within the same session
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            sidebar.classList.add('active');
+            sidebar.style.transition = 'none';
+            sidebarToggle.classList.add('active');
+            sidebarToggle.style.transition = 'none';
+            content.classList.add('active');
+            content.style.transition = 'none';
+            footer.classList.add('active');
+            footer.style.transition = 'none';
+            navIcons.forEach((navIcon) => {
+                navIcon.classList.add('active');
+                navIcon.style.transition = 'none';
+            });
+            logoTitle.classList.add('active');
+            navTexts.forEach((navText) => {
+                navText.classList.add('active');
+            });
+
+            // Restore transition after the sidebar is collapsed
+            setTimeout(() => {
+                sidebar.style.transition = '';
+                sidebarToggle.style.transition = '';
+                content.style.transition = '';
+                footer.style.transition = '';
+                navIcons.forEach((navIcon) => {
+                    navIcon.style.transition = '';
+                });
+            }, 250);
+        }
+
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('active');
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('active')); // save the state in localStorage
             sidebarToggle.classList.toggle('active');
             content.classList.toggle('active');
             footer.classList.toggle('active');
