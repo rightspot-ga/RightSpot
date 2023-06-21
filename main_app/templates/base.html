@@ -1,0 +1,215 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel='icon' href="{% static 'img/favicon_light.ico' %}" />
+    <!-- External CSS (includes Bootstrap)-->
+    <link rel="stylesheet" href="{% static 'css/external.css' %}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Flag Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css"/>
+
+    <title>RightSpot</title>
+</head>
+<body class="bg-ivory">
+    <div id="sidebar" class="vertical-nav bg-secondary">
+        <button id="sidebarToggle" class="btn btn-secondary fs-2">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="py-4 py-3 mb-4">
+            <div class="d-inline-block" style="max-width: 100px;">
+                <img src="{% static 'img/rightspot_light.png' %}" alt="Logo" id="nav-logo" class="img-fluid px-1 px-sm-1 mt-1 mb-2 d-inline-block">
+            </div>
+            <span id="logo-title" class="fs-4">
+                RightSpot
+            </span>
+        </div>
+
+        <ul class="nav flex-column mb-0 text-right">
+            <li class="nav-item">
+                <a href="{% url 'home' %}" class="nav-link font-italic {% if request.path == '/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Home">
+                    <i class="nav-icon bi bi-house-door-fill px-1"></i>
+                    <span class="nav-text">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'projects' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
+                    <i class="nav-icon bi bi-journals px-1"></i>
+                    <span class="nav-text">My Projects</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'locations' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
+                    <i class="nav-icon bi bi-map-fill px-1"></i>
+                    <span class="nav-text">Saved Locations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
+                    <i class="nav-icon bi bi-gear-fill px-1"></i>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/accounts/login?next=/" class="nav-link font-italic {% if request.path == '/login' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
+                    <i class="nav-icon bi bi-person-fill px-1"></i>
+                    <span class="nav-text">Login</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/register' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
+                    <i class="nav-icon bi bi-person-plus-fill px-1"></i>
+                    <span class="nav-text">Sign Up</span>
+                </a>
+            </li>
+    </div>
+    <main id="content" class="page-content container">
+        {% block content %}
+        {% endblock content %}
+    </main>
+    <footer class="text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col col-4 ">
+                    <p>&copy; RightSpot 2023</p>
+                </div>
+                <div class="col col-2">
+                    <p class="fw-bold mb-1">Quick Links</p>
+                    <ul class="nav flex-column">
+                        <li>
+                            <a href="{% url 'faq' %}" class="footer-link text-decoration-none">FAQs</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer-link text-decoration-none">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col col-3">
+                    <p class="fw-bold mb-1">Legal</p>
+                    <ul class="nav flex-column">
+                        <li>
+                            <a href="#" class="footer-link text-decoration-none">Privacy Policy</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'legal' %}" class="footer-link text-decoration-none">Terms of Service</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col col-3">
+                    <p class="fw-bold mb-2">Region</p>
+                    <div class="input-group">
+                        <label class="input-group-text"><span class="fi fi-gb"></span></label>
+                        <select class="form-select" disabled>
+                            <option value="United Kingdom"> United Kingdom</option>
+                            <option value="United States">United States</option>
+                            <option value="France">France</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const content = document.getElementById('content');
+        const footer = document.querySelector('footer');
+        const navTexts = document.querySelectorAll('.nav-text');
+        const navIcons = document.querySelectorAll('.nav-icon');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const logoTitle = document.getElementById('logo-title');
+
+        // Destroy the default tooltip when first loading the page, as menu is expanded by default
+        (function(){
+            navLinks.forEach((navLink) => {
+                $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
+                $(navLink).tooltip('dispose'); // destroy the tooltip
+            });
+        })();
+
+        // Check if the sidebar is collapsed or not within the same session
+        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+            sidebar.classList.add('active');
+            sidebar.style.transition = 'none';
+            sidebarToggle.classList.add('active');
+            sidebarToggle.style.transition = 'none';
+            content.classList.add('active');
+            content.style.transition = 'none';
+            footer.classList.add('active');
+            footer.style.transition = 'none';
+            navIcons.forEach((navIcon) => {
+                navIcon.classList.add('active');
+                navIcon.style.transition = 'none';
+            });
+            logoTitle.classList.add('active');
+            navTexts.forEach((navText) => {
+                navText.classList.add('active');
+            });
+
+            // Restore transition after the sidebar is collapsed
+            setTimeout(() => {
+                sidebar.style.transition = '';
+                sidebarToggle.style.transition = '';
+                content.style.transition = '';
+                footer.style.transition = '';
+                navIcons.forEach((navIcon) => {
+                    navIcon.style.transition = '';
+                });
+            }, 250);
+        }
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('active')); // save the state in localStorage
+            sidebarToggle.classList.toggle('active');
+            content.classList.toggle('active');
+            footer.classList.toggle('active');
+            navIcons.forEach((navIcon) => {
+                navIcon.classList.toggle('active');
+            });
+
+            if (logoTitle.classList.contains('active')) {
+
+                // Remove the tooltip when expanding the sidebar
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip('dispose'); // destroy the tooltip
+                });
+
+                // Delay the transition of the logo title and nav text when expanding the sidebar
+                setTimeout(() => {
+                    logoTitle.classList.toggle('active');
+                    navTexts.forEach((navText) => {
+                        navText.classList.toggle('active');
+                    });
+                }, 250);
+            } else {
+                // Add the tooltip when collapsing the sidebar
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip(); // initialize the tooltip
+                });
+
+                // Remove the logo title and nav text when collapsing the sidebar, without delay
+                logoTitle.classList.toggle('active');
+                navTexts.forEach((navText) => {
+                    navText.classList.toggle('active');
+                });                
+            }
+        });
+    </script>
+</body>
+</html>
