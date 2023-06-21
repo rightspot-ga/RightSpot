@@ -1,39 +1,24 @@
-# syntax = docker/dockerfile:1
+ARG PYTHON_VERSION=3.11-slim-buster
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.0.0
-FROM node:${NODE_VERSION}-slim as base
+FROM python:${PYTHON_VERSION}
 
-LABEL fly_launch_runtime="NodeJS"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# NodeJS app lives here
-WORKDIR /app
+RUN mkdir -p /code
 
-# Set production environment
-ENV NODE_ENV=production
+WORKDIR /code
 
+COPY requirements.txt /tmp/requirements.txt
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
+COPY . /code
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
+ENV SECRET_KEY "TKEEa44x3bacZFDopg4E8nYc2PVTjW4hCk3st4VHlyEyD6cXg6"
+RUN python manage.py collectstatic --noinput
 
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y python-is-python3 pkg-config build-essential 
+EXPOSE 8000
 
-# Install node modules
-COPY --link package.json package-lock.json .
-RUN npm install
-
-# Copy application code
-COPY --link . .
-
-
-
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
-CMD [ "npm", "run", "start" ]
+CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "RightSpot.wsgi"]
