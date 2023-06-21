@@ -118,6 +118,6 @@ footer{
     color: #fff;
 }
 
-.footer-link:hover{
+.footer-link:hover, #sidebarToggle:hover{
     color: var(--accent-color);
 }
