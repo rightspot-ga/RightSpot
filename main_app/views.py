@@ -6,6 +6,8 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .static_data.lookups import inverse_names
+import requests
 
 #! Static page renders
 def home(request):
@@ -31,10 +33,22 @@ def locations_index(request):
     'locations': locations
   })
 
+def location_detail(request, location_name):
+  url = 'http://localhost:8000/api/data/ons'
+  params = {'query': location_name}
+  response = requests.get(url, params=params)
+  if response.status_code == 200:
+    stats = response.json()
+  else:
+    stats = None
+  return render(request, 'locations/detail.html', {
+    'stats': stats, 'lookup': inverse_names,
+  })
+
 @login_required
-def location_detail(request, location_id):
+def saved_location_detail(request, location_id):
   location = 'Placeholder'
-  return render(request, 'location/detail.html', {
+  return render(request, 'locations/detail.html', {
     'location': location
   })
 

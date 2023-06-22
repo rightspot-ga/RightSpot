@@ -6,6 +6,21 @@
     <div class="row">
         <img src="{% static 'img/rightspot_dark.png' %}" alt="RightSpot logo" class="img-fluid">
     </div>
+    <div>
     <h1>RightSpot</h1>
-</div>
+    <form id="search-form" action="" method="GET" onsubmit="return submitForm();">
+        <div class="form-group d-flex align-items-center gap-1">
+            <input type="text" id="location_name" name="location_name" placeholder="Enter location name">
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Go!</button>
+        </div>
+    </form>
+    <script>
+        function submitForm() {
+            const locationName = document.getElementById("location_name").value;
+            const form = document.getElementById("search-form");
+            form.action = "/locations/" + locationName + "/";
+            return true;
+        }
+    </script>
+</div></div>
 {% endblock %}
