@@ -40,6 +40,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.fly.dev']
 INSTALLED_APPS = [
     'main_app',
     'location_services',
+    'data',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

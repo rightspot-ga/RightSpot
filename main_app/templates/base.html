@@ -21,13 +21,19 @@
         <button id="sidebarToggle" class="btn btn-secondary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
             <i class="bi bi-list"></i>
         </button>
-        <div class="py-4 py-3 mb-4">
+        <div class="py-4 py-3 mb-2">
             <div class="d-inline-block" style="max-width: 100px;">
                 <img src="{% static 'img/rightspot_light.png' %}" alt="Logo" id="nav-logo" class="img-fluid px-1 px-sm-1 mt-1 mb-2 d-inline-block">
             </div>
             <span id="logo-title" class="fs-4">
                 RightSpot
             </span>
+        </div>
+
+        <div id="user-title" class="text-white text-center mb-4">
+            {% if user.is_authenticated %}
+                <p>Welcome, {{ user.username|title }}!</p>
+            {% endif %}
         </div>
 
         <ul class="nav flex-column mb-0 text-right">
@@ -37,6 +43,9 @@
                     <span class="nav-text">Home</span>
                 </a>
             </li>
+
+            {% if user.is_authenticated %}
+
             <li class="nav-item">
                 <a href="{% url 'projects' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
                     <i class="nav-icon bi bi-journals px-1"></i>
@@ -56,19 +65,30 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a href="{% url 'logout' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
+                    <i class="nav-icon bi bi-box-arrow-left px-1"></i>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </li>
+
+            {% else %}
+
+            <li class="nav-item">
                 <a href="/accounts/login?next=/" class="nav-link font-italic {% if '/accounts/login' in request.path %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Login">
                     <i class="nav-icon bi bi-person-fill px-1"></i>
                     <span class="nav-text">Login</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/accounts/signup/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
                     <i class="nav-icon bi bi-person-plus-fill px-1"></i>
                     <span class="nav-text">Sign Up</span>
                 </a>
-            </li>
+            </li> -->
+            {% endif %}
+
     </div>
-    <main id="content" class="page-content container">
+    <main id="content" class="page-content">
         {% block content %}
         {% endblock content %}
     </main>
@@ -133,16 +153,12 @@
         const navIcons = document.querySelectorAll('.nav-icon');
         const navLinks = document.querySelectorAll('.nav-link');
         const logoTitle = document.getElementById('logo-title');
+        const userTitle = document.getElementById('user-title');
 
         $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
-
-        // Destroy the default tooltip when first loading the page, as menu is expanded by default
-        (function(){
-            navLinks.forEach((navLink) => {
-                $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
-                $(navLink).tooltip('dispose'); // destroy the tooltip
-            });
-        })();
+        navLinks.forEach((navLink) => {
+            $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
+        });
 
         // Check if the sidebar is collapsed or not within the same session
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
@@ -160,6 +176,7 @@
                 navIcon.style.transition = 'none';
             });
             logoTitle.classList.add('active');
+            userTitle.classList.add('active');
             navTexts.forEach((navText) => {
                 navText.classList.add('active');
             });
@@ -175,6 +192,12 @@
                 });
             }, 250);
         } else{
+            // Destroy the default tooltip when first loading the page, as menu is expanded by default
+            (function(){
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip('dispose'); // destroy the tooltip
+                });
+            })();
             sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
         }
 
@@ -202,6 +225,7 @@
                 // Delay the transition of the logo title and nav text when expanding the sidebar
                 setTimeout(() => {
                     logoTitle.classList.toggle('active');
+                    userTitle.classList.toggle('active');
                     navTexts.forEach((navText) => {
                         navText.classList.toggle('active');
                     });
@@ -217,6 +241,7 @@
 
                 // Remove the logo title and nav text when collapsing the sidebar, without delay
                 logoTitle.classList.toggle('active');
+                userTitle.classList.toggle('active');
                 navTexts.forEach((navText) => {
                     navText.classList.toggle('active');
                 });                
