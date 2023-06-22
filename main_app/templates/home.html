@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-
-<h1>Home</h1>
-
+<div class="container d-flex flex-column align-items-center">
+    <div class="row">
+        <img src="{% static 'img/rightspot_dark.png' %}" alt="RightSpot logo" class="img-fluid">
+    </div>
+    <h1>RightSpot</h1>
+</div>
 {% endblock %}
