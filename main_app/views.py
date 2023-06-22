@@ -6,6 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .static_data.lookups import inverse_names
 import requests
 
 #! Static page renders
@@ -41,7 +42,7 @@ def location_detail(request, location_name):
   else:
     stats = None
   return render(request, 'locations/detail.html', {
-    'stats': stats
+    'stats': stats, 'lookup': inverse_names,
   })
 
 @login_required

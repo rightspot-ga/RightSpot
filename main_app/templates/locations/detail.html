@@ -1,13 +1,104 @@
 {% extends 'base.html' %}
+{% load index %}
 {% block content %}
 
+<!-- stats is a json object, with stats['data'] holding the data, separated by year -->
+
 <div class="d-flex flex-column">
-    <h1 class="align-self-center">Location detail</h1>
-    <div class="map"></div>
+    <h1>Address</h1>
+    <div class="map mb-3 d-flex justify-content-center align-items-center">MAP</div>
     <div class="d-flex flex-column">
-        {% for year in stats.data %}
-            <h3>{{ year.date }}</h3>
-        {% endfor %}    
+        <div>
+            <h1>District-level statistics - {{ stats.data.0.district }} </h1>
+            <p>Data provided by the Office for National Statistics</p>
+        </div>
+        <h2>Demographics</h2>
+        {% with 292|get_variable_by_index as variable_key %}
+        {% with variable_key|get_inverse_name as display_name %}
+            {% if stats.variable_key %}
+                <p>{{ display_name }} ({{ variable_key }}) for the first year: {{ stats.variable_key|first }}</p>
+            {% else %}
+                <p>{{ display_name }} not found</p>
+            {% endif %}
+        {% endwith %}
+        {% endwith %}   
+        <table class="table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Variable</th>
+                {% for year in stats.data %}
+                <th scope="col">{{ year.date }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody> 
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Socioeconomics</h2>
+        <table class="table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Variable</th>
+                {% for year in stats.data %}
+                <th scope="col">{{ year.date }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody> 
+                <tr>
+                    <td>Variable Y</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Industry</h2>
+        <table class="table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Variable</th>
+                {% for year in stats.data %}
+                <th scope="col">{{ year.date }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody> 
+                <tr>
+                    <td>Variable Y</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                    <td>Value</td>
+                </tr>
+            </tbody>
+        </table>    
     </div>
 </div>
 
