@@ -37,6 +37,7 @@ class Deck(models.Model):
     def get_absolute_url(self):
         return reverse('deck_detail', kwargs={'pk': self.id}) 
 
+# Create Django model using .csv file headers as fields
 csv_file_path = 'main_app/static_data/rightspot_wide.csv'
 
 with open(csv_file_path, 'r') as csv_file:
