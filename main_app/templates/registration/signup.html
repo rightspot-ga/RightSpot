@@ -3,12 +3,11 @@
 
 <h1>Sign-up</h1>
 
-<form method="post">
+<form id="signup" class="pt-2 ps-1" method="post">
     {% csrf_token %}
-    <!-- {{ form.as_p }} -->
     {% for field in form %}
       <p>
-        {{ field.label_tag }}<br>
+        <span class="signup-label">{{ field.label_tag }}</span>
         {{ field }}
         {% if field.help_text %}
           <small class="text-muted d-block">{{ field.help_text }}</small>
@@ -18,7 +17,7 @@
         {% endfor %}
       </p>
     {% endfor %}
-    <button type="submit">Sign up</button>
+    <button type="submit" class="btn btn-primary">Sign up</button>
 </form>
 
 {% endblock %}
