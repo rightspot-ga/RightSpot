@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Location detail</h1>
+<div class="d-flex flex-column">
+    <h1 class="align-self-center">Location detail</h1>
+    <div class="map"></div>
+    <div class="d-flex flex-column">
+        {% for year in stats.data %}
+            <h3>{{ year.date }}</h3>
+        {% endfor %}    
+    </div>
+</div>
 
 {% endblock %}

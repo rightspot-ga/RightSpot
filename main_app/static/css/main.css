@@ -121,3 +121,11 @@ footer{
 .footer-link:hover, #sidebarToggle:hover{
     color: var(--accent-color);
 }
+
+
+/*! Andy's CSS below */
+.map {
+    height: 200px;
+    width: 80vh;
+    border: solid var(--secondary-color) 2px;
+}
