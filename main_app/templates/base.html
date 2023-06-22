@@ -79,13 +79,12 @@
                     <span class="nav-text">Login</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/accounts/signup/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
                     <i class="nav-icon bi bi-person-plus-fill px-1"></i>
                     <span class="nav-text">Sign Up</span>
                 </a>
-            </li>
-
+            </li> -->
             {% endif %}
 
     </div>
@@ -157,14 +156,9 @@
         const userTitle = document.getElementById('user-title');
 
         $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
-
-        // Destroy the default tooltip when first loading the page, as menu is expanded by default
-        (function(){
-            navLinks.forEach((navLink) => {
-                $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
-                $(navLink).tooltip('dispose'); // destroy the tooltip
-            });
-        })();
+        navLinks.forEach((navLink) => {
+            $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
+        });
 
         // Check if the sidebar is collapsed or not within the same session
         if (localStorage.getItem('sidebarCollapsed') === 'true') {
@@ -198,6 +192,12 @@
                 });
             }, 250);
         } else{
+            // Destroy the default tooltip when first loading the page, as menu is expanded by default
+            (function(){
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip('dispose'); // destroy the tooltip
+                });
+            })();
             sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
         }
 
