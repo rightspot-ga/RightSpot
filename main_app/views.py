@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from .models import Project, Location, Deck, Static
+from .models import Project, Location, Deck, StaticOnsData
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -19,6 +19,9 @@ def faq(request):
 
 def legal(request):
   return render(request, 'legal.html')
+
+def settings(request):
+  return render(request, 'settings.html')
 
 #! Locations 
 @login_required
@@ -134,7 +137,3 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
-
-#! Misc
-def settings(request):
-  return render(request, 'settings.html')
