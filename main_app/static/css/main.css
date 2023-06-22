@@ -1,6 +1,6 @@
 :root {
     --primary-color: #36827F;
-    --secondary-color: #14213D;
+    --secondary-color: rgb(20, 33, 61);
     --accent-color: #C89933;
     --ivory-color: #F5F1ED;
     --success-color: #28A745;
@@ -9,6 +9,10 @@
     --danger-color: #d22937;
     --light-color: #e7e7e7;
     --dark-color: #343A40;
+}
+
+html, body{
+    height: 100%;
 }
 
 /* Sidebar */
@@ -77,6 +81,10 @@ footer.active {
     display: none;
 }
 
+#user-title.active{
+    visibility: hidden;
+}
+
 .nav-link.active{
     text-align: center;
 }
@@ -93,10 +101,14 @@ footer.active {
 
 .page-content{
     width: calc(100% - 17rem);
+    height: calc(100% - 9rem);
+    min-height: calc(100vh - 9rem);
     margin-left: 17rem;
     padding: 3rem;
     padding-top: 5rem;
     transition: all 0.4s;
+    overflow: auto;
+    
 }
 
 /* Footer */
@@ -123,7 +135,7 @@ footer{
 }
 
 
-/*! Andy's CSS below */
+/* Location Details */
 .map {
     height: 300px;
     width: 100%;
@@ -133,4 +145,63 @@ footer{
 
 .table {
     width: 100%;
+}
+
+/* Forms */
+
+#login, #signup{
+    /* width: 100%;
+    height: 100%; */
+}
+
+#login > div >  p{
+    text-align: left;
+}
+
+#login > div > p > label{
+    min-width: 7rem;
+}
+
+#login > div > ul{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+    color: var(--danger-color);
+}
+
+#login > div{
+    max-width: 400px;
+    padding: 1rem;
+}
+
+#signup > div{
+    max-width: 500px;
+    padding: 1rem;
+}
+
+.signup-label > label {
+    min-width: 12rem;
+    color: var(--accent-color);
+    font-weight: 650;
+}
+
+.login-label > label {
+    min-width: 6rem;
+    color: var(--accent-color);
+    font-weight: 650;
+}
+
+#signup > div > p > input, #login > div > p > input {
+    height: 40px;
+    font-size: 16px;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+#login-container, #signup-container{
+    height: 100%;
 }
