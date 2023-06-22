@@ -77,6 +77,10 @@ footer.active {
     display: none;
 }
 
+#user-title.active{
+    visibility: hidden;
+}
+
 .nav-link.active{
     text-align: center;
 }
