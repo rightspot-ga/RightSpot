@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load index %}
+{% load getvalue %}
 {% block content %}
 
 <!-- stats is a json object, with stats['data'] holding the data, separated by year -->
@@ -13,15 +13,32 @@
             <p>Data provided by the Office for National Statistics</p>
         </div>
         <h2>Demographics</h2>
-        {% with 292|get_variable_by_index as variable_key %}
-        {% with variable_key|get_inverse_name as display_name %}
-            {% if stats.variable_key %}
-                <p>{{ display_name }} ({{ variable_key }}) for the first year: {{ stats.variable_key|first }}</p>
-            {% else %}
-                <p>{{ display_name }} not found</p>
-            {% endif %}
-        {% endwith %}
-        {% endwith %}   
+        <!-- {% for key in demographics %}
+            <p>{{ key }}</p>
+            {% for year in stats.data %}
+            <p>{{ year.date }} : {{ year|getvalue:key }}</p>
+            {% endfor %}
+        {% endfor %}    -->
+        <table class="table-striped">
+            <thead>
+                <tr>
+                    <th>Indicator</th>
+                    {% for year in stats.data %}
+                        <th>{{ year.date }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for key in demographics %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        {% for year in stats.data %}
+                            <td>{{ year|getvalue:key }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <table class="table-striped">
             <thead>
             <tr>
