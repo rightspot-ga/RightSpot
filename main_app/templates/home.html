@@ -19,13 +19,13 @@
             <p>
                 Search by location your desired spot & view detailed statistics to help you make your decision
             </p>
-            <form id="normal-search" class="" action="" method="GET">
+            <form id="normal-search" class="" action="/locations/" method="GET">
                 <span class="input-group d-flex justify-content-center align-items-center ">
                     <input type="text" id="location_search" name="gQuery" class="" placeholder="Enter a location...">
                     <button type="submit" id="location_search_btn" class="btn btn-accent text-white fw-bold px-3"><span class="pe-3 fw-normal">Search</span><i class="bi bi-search"></i></button>
                 </span>
             </form>
-            <form id="what3-auto" class="my-4" action="" method="GET">
+            <form id="what3-auto" class="my-4" action="/locations/" method="GET">
                 <div class="input-group d-flex flex-row align-items-stretch justify-content-center">
                     <div class="input-group-prepend">
                         <span class="input-group-text h-100 ">or use what3words (optional) </span>
@@ -62,21 +62,5 @@
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
-
-
-    <form id="search-form" action="/location" method="GET" onsubmit="return submitForm();">
-        <div class="form-group d-flex align-items-center gap-1">
-            <input type="text" id="location_name" name="location_name" placeholder="Enter location name">
-            <button type="submit" class="btn btn-outline-secondary btn-sm">Go!</button>
-        </div>
-    </form>
-    <script>
-        function submitForm() {
-            const locationName = document.getElementById("location_name").value;
-            const form = document.getElementById("search-form");
-            form.action = "/locations/" + locationName + "/";
-            return true;
-        }
-    </script>
 </div>
 {% endblock %}

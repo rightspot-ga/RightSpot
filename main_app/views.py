@@ -48,7 +48,7 @@ def locations_index(request):
   })
 
 def location_detail(request):
-  location_name = request.GET.get('location_search') or request.GET.get('what3words_3wa')
+  location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')
   if not location_name:
         return HttpResponseBadRequest("Missing location_search or what3words_3wa parameter")
   w3w_pattern = r'^///\w+\.\w+\.\w+$'
