@@ -231,33 +231,7 @@ footer{
     min-width: 20rem;
 }
 
-
-
-#what3-search > span > div > input {
-    border: var(--accent-color) 2px solid;
-    padding: 5px;
-    max-width: 5rem;
-}
-
-#what3-search > span > div > input:focus {
-    max-width: 7rem;
-}
-
-#what3-search > span > div >  input:first-of-type {
-    border-right: none;    
-}
-
-#what3-search > span > div > input:nth-of-type(2) {
-    border-left: none;
-    border-right: none;  
-}
-
-#what3-search > span > div > input:nth-of-type(3) {
-    border-left: none;
-}
-
-
-#what3-search > span > .input-group-prepend > span, #what3-auto > div > div > span {
+#what3-auto > div > div > span {
     background-color: transparent;
     color: #fff;
     border: none;
@@ -276,3 +250,28 @@ footer{
 .what3words-autosuggest-message{
     color: var(--accent-color) !important;
 }
+
+
+/* .pac-container{
+    background-color: var(--primary-color);
+}
+
+.pac-icon{
+    color: var(--accent-color) !important;
+}
+
+.pac-item{
+    color: #79e82a;
+}
+
+.pac-item:hover{
+    background-color: var(--secondary-color);
+}
+
+.pac-iten-query{
+    color: var(--accent-color) !important;
+}
+
+.pac-matched{
+    color: var(--secondary-color) !important;
+} */

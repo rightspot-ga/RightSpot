@@ -9,9 +9,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .static_data.lookups import inverse_names
 import requests
 
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+
 #! Static page renders
 def home(request):
-  return render(request, 'home.html')
+  return render(request, 'home.html', {
+    'w3w_api_key': env('W3W_API_KEY'),
+    'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+  })
 
 def about(request):
   return render(request, 'about.html')
