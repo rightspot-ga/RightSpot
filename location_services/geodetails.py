@@ -3,6 +3,7 @@
 
 import requests
 import xmltodict
+from main_app.static_data.lookups import districts
 
 def geoDetails(lat, lon):
     # Get details about a location using nominatim.org Reverse API.
@@ -21,3 +22,16 @@ def geoDetails(lat, lon):
     if response.status_code == 200:
         data = xmltodict.parse(response.content)
         return data['reversegeocode']['addressparts']
+
+def check_uk_district(addressparts):
+    if addressparts['country'] != 'United Kingdom':
+        return None
+    for key, value in addressparts.items():
+        if value in districts:
+            return value
+        if key == 'borough' and value.startswith('London Borough of '):
+            borough = value.replace('London Borough of ', '')
+            if borough in districts:
+                return borough
+    return None
+
