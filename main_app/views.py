@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseBadRequest
+from django.views.decorators.http import require_GET
 from .static_data.lookups import inverse_names
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import geoDetails, check_uk_district
@@ -14,9 +15,17 @@ from location_services.geocoding import geocodeGoogle, geocodeWhat3Words
 import requests
 import re
 
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+
 #! Static page renders
 def home(request):
-  return render(request, 'home.html')
+  return render(request, 'home.html', {
+    'w3w_api_key': env('W3W_API_KEY'),
+    'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+  })
 
 def about(request):
   return render(request, 'about.html')
@@ -175,3 +184,13 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
+
+#! API Keys
+@require_GET
+def apikey_w3w(request):
+  return env('W3W_API_KEY')
+
+@require_GET
+def apikey_google(request):
+  return env('GOOGLE_MAPS_API_KEY')

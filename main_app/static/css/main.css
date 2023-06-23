@@ -15,6 +15,11 @@ html, body{
     height: 100%;
 }
 
+/* Misc */
+.nowrap{
+    white-space: nowrap;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -101,8 +106,8 @@ footer.active {
 
 .page-content{
     width: calc(100% - 17rem);
-    height: calc(100% - 9rem);
-    min-height: calc(100vh - 9rem);
+    height: calc(100% - 10rem);
+    min-height: calc(100vh - 10rem);
     margin-left: 17rem;
     padding: 3rem;
     padding-top: 5rem;
@@ -118,12 +123,20 @@ footer{
     bottom: 0;
     right: 0;
     width: calc(100% - 17rem);
-    height: 9rem;
+    height: 10rem;
     background-color: #000000;
     color: #fff;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.4s;
-    padding: 1rem;
+    padding: 1rem 1rem 0 1rem;
+    overflow: auto;
+}
+
+footer > .wrapper{
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 1rem;
 }
 
 .footer-link{
@@ -133,7 +146,6 @@ footer{
 .footer-link:hover, #sidebarToggle:hover{
     color: var(--accent-color);
 }
-
 
 /* Location Details */
 .map {
@@ -245,33 +257,7 @@ footer{
     min-width: 20rem;
 }
 
-
-
-#what3-search > span > div > input {
-    border: var(--accent-color) 2px solid;
-    padding: 5px;
-    max-width: 5rem;
-}
-
-#what3-search > span > div > input:focus {
-    max-width: 7rem;
-}
-
-#what3-search > span > div >  input:first-of-type {
-    border-right: none;    
-}
-
-#what3-search > span > div > input:nth-of-type(2) {
-    border-left: none;
-    border-right: none;  
-}
-
-#what3-search > span > div > input:nth-of-type(3) {
-    border-left: none;
-}
-
-
-#what3-search > span > .input-group-prepend > span, #what3-auto > div > div > span {
+#what3-auto > div > div > span {
     background-color: transparent;
     color: #fff;
     border: none;
@@ -290,3 +276,49 @@ footer{
 .what3words-autosuggest-message{
     color: var(--accent-color) !important;
 }
+
+
+
+/* .pac-container{
+    background-color: var(--primary-color);
+}
+
+.pac-icon{
+    color: var(--accent-color) !important;
+}
+
+.pac-item{
+    color: #79e82a;
+}
+
+.pac-item:hover{
+    background-color: var(--secondary-color);
+}
+
+.pac-iten-query{
+    color: var(--accent-color) !important;
+}
+
+.pac-matched{
+    color: var(--secondary-color) !important;
+} */
+
+
+/* Styles for screens smaller than 768px */
+@media screen and (max-width: 767px) {
+
+    /* Footer */
+    footer > .wrapper{
+        text-align: center;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+    }
+  }
+
+  /* Styles for screens smaller than 690px */
+@media screen and (max-width: 690px) {
+    /* Home */
+    #location_search_btn{
+        margin-top: 10px;
+    }
+  }
