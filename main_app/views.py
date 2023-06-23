@@ -34,7 +34,15 @@ def locations_index(request):
   })
 
 def location_detail(request, location_name):
-  url = 'http://localhost:8000/api/data/ons'
+  #/location?query=location_search
+  #/location?what3words_3wa
+  current_url = request.build_absolute_uri()
+  print(current_url)
+  print(request.scheme)
+  print(request.get_full_path())
+  print(request.get_host())
+
+  url = request.scheme + '://' + request.get_host() + '/api/data/ons'
   params = {'query': location_name}
   response = requests.get(url, params=params)
   if response.status_code == 200:
