@@ -4,12 +4,15 @@
 
 <!-- stats is a json object, with stats['data'] holding the data, separated by year -->
 <div class="d-flex flex-column">
-    <h1>Address</h1>
-    <div class="map mb-3 d-flex justify-content-center align-items-center">MAP</div>
+    <div class="d-flex flex-row justify-content-between">
+    <h2>Address</h2>
+    <button id="save-btn" class="btn btn-sm btn-outline-accent">SAVE</button>
+    </div>
+    <div class="map my-3 d-flex justify-content-center align-items-center">MAP</div>
     <div class="d-flex flex-column">
         {% if stats and stats.data %}
         <div>
-            <h1>District-level statistics - {{ stats.data.0.district }} </h1>
+            <h2>District-level statistics - {{ stats.data.0.district }} </h2>
             <p>Data provided by the Office for National Statistics</p>
         </div>
         <table class="table-striped">
