@@ -1,3 +1,4 @@
+import pprint
 name_reformat = {
     '% aged 16-64 who are employees': 'are_employees_16_64',
     '% aged 16-64 who are self employed': 'self_employed_16_64',
