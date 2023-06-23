@@ -63,7 +63,6 @@ def location_detail(request):
     'address': geoDetails(lat, lon),
     'nearby': nearbyplaces
   }
-  print(location)
   if district:
     url = request.scheme + '://' + request.get_host() + '/api/data/ons'
     params = {'query': district}
