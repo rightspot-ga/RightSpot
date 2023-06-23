@@ -22,22 +22,24 @@
             <form id="normal-search" class="" action="" method="GET">
                 <span class="input-group d-flex justify-content-center align-items-center ">
                     <input type="text" id="location_search" name="gQuery" class="" placeholder="Enter a location...">
-                    <button type="submit" class="btn btn-accent text-white fw-bold px-3"><i class="bi bi-search"></i></button>
+                    <button type="submit" id="location_search_btn" class="btn btn-accent text-white fw-bold px-3"><span class="pe-3 fw-normal">Search</span><i class="bi bi-search"></i></button>
                 </span>
             </form>
-            <form id="what3-auto" class="mt-4" action="" method="GET">
-                <div class="input-group d-flex align-items-stretch justify-content-center">
+            <form id="what3-auto" class="my-4" action="" method="GET">
+                <div class="input-group d-flex flex-row align-items-stretch justify-content-center">
                     <div class="input-group-prepend">
-                        <span class="input-group-text h-100">or use what3words (optional) </span>
+                        <span class="input-group-text h-100 ">or use what3words (optional) </span>
                     </div>
-                    <div>
-                        <what3words-autosuggest api_key="{{ w3w_api_key }}">
-                            <input type="text" />
-                        </what3words-autosuggest>
-                    </div>   
-                    <div>
-                        <button type="submit" class="btn btn-accent text-white fw-bold px-3 h-100"><i class="bi bi-search"></i></button>
-                    </div>                 
+                    <div class="input-group full-width nowrap d-flex justify-content-center">
+                        <div>
+                            <what3words-autosuggest api_key="{{ w3w_api_key }}">
+                                <input type="text" />
+                            </what3words-autosuggest>
+                        </div>   
+                        <div>
+                            <button type="submit" class="btn btn-accent text-white fw-bold px-3 h-100"><i class="bi bi-search"></i></button>
+                        </div>  
+                    </div>         
                 </div>
             </form>
         </div>
