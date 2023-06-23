@@ -4,6 +4,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from main_app.models import StaticOnsData  
 
+# Management command for a one-off transfer of data from a .csv file to the database
+# Run with python manage.py loadcsvdata
 
 class Command(BaseCommand):
     help = 'Load data from CSV into the database'

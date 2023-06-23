@@ -1,3 +1,6 @@
+# HTTP Request: GET {{baseURL}}/api/data/ons
+# Query Parameters: district (string)
+
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from main_app.models import StaticOnsData

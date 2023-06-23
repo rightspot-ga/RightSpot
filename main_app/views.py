@@ -6,9 +6,14 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseBadRequest
 from django.views.decorators.http import require_GET
 from .static_data.lookups import inverse_names
+from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
+from location_services.geodetails import geoDetails, check_uk_district
+from location_services.geocoding import geocodeGoogle, geocodeWhat3Words
 import requests
+import re
 
 import environ
 env = environ.Env()
@@ -42,19 +47,35 @@ def locations_index(request):
     'locations': locations
   })
 
-def location_detail(request, location_name):
-  #/location?query=location_search
-  #/location?what3words_3wa
-
-  url = request.scheme + '://' + request.get_host() + '/api/data/ons'
-  params = {'query': location_name}
-  response = requests.get(url, params=params)
-  if response.status_code == 200:
-    stats = response.json()
+def location_detail(request):
+  location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')
+  if not location_name:
+        return HttpResponseBadRequest("Missing location_search or what3words_3wa parameter")
+  w3w_pattern = r'^///\w+\.\w+\.\w+$'
+  if re.match(w3w_pattern, location_name):
+    lat, lon = geocodeWhat3Words(location_name.replace('///',''))
+  else:
+    lat, lon = geocodeGoogle(location_name)
+  addressparts = geoDetails(lat, lon)
+  print(addressparts)   
+  district = check_uk_district(addressparts)
+  print(district)
+  if district:
+    url = request.scheme + '://' + request.get_host() + '/api/data/ons'
+    params = {'query': district}
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        stats = response.json()
+    else:
+        stats = None
   else:
     stats = None
   return render(request, 'locations/detail.html', {
-    'stats': stats, 'lookup': inverse_names,
+    'stats': stats,
+    'names': inverse_names,
+    'demographics': demographics_final_order_list,
+    'socioeconomics': socioeconomics_final_order_list,
+    'industry': industry_final_order_list,
   })
 
 @login_required
