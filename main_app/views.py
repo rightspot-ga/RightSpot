@@ -6,6 +6,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_GET
 from .static_data.lookups import inverse_names
 import requests
 
@@ -162,3 +163,13 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
+
+#! API Keys
+@require_GET
+def apikey_w3w(request):
+  return env('W3W_API_KEY')
+
+@require_GET
+def apikey_google(request):
+  return env('GOOGLE_MAPS_API_KEY')
