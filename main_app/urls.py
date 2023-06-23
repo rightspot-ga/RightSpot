@@ -8,7 +8,8 @@ urlpatterns = [
   path('decks/', views.decks_index, name='decks'),
   path('projects/', views.projects_index, name='projects'),
   path('compare/', views.compare, name='compare'),
-  path('locations/<int:location_id>/', views.location_detail, name='location_detail'),
+  path('locations/<str:location_name>/', views.location_detail, name='location_detail'),
+  path('locations/<int:location_id>/', views.saved_location_detail, name='saved_location_detail'),
   path('decks/<int:deck_id>/', views.deck_detail, name='deck_detail'),
   path('projects/<int:project_id>/', views.project_detail, name='project_detail'),
   path('location/create/', views.LocationCreate.as_view(), name='location_create'),
@@ -24,4 +25,6 @@ urlpatterns = [
   path('faq/', views.faq, name='faq'),
   path('legal/', views.legal, name='legal'),
   path('settings/', views.settings, name='settings'),
+  path('apikey/w3w/', views.apikey_w3w, name='apikey_w3w'),
+  path('apikey/google/', views.apikey_google, name='apikey_google'),
 ]

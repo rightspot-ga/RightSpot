@@ -6,10 +6,21 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.http import require_GET
+from .static_data.lookups import inverse_names
+import requests
+
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
 
 #! Static page renders
 def home(request):
-  return render(request, 'home.html')
+  return render(request, 'home.html', {
+    'w3w_api_key': env('W3W_API_KEY'),
+    'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+  })
 
 def about(request):
   return render(request, 'about.html')
@@ -31,10 +42,25 @@ def locations_index(request):
     'locations': locations
   })
 
+def location_detail(request, location_name):
+  #/location?query=location_search
+  #/location?what3words_3wa
+
+  url = request.scheme + '://' + request.get_host() + '/api/data/ons'
+  params = {'query': location_name}
+  response = requests.get(url, params=params)
+  if response.status_code == 200:
+    stats = response.json()
+  else:
+    stats = None
+  return render(request, 'locations/detail.html', {
+    'stats': stats, 'lookup': inverse_names,
+  })
+
 @login_required
-def location_detail(request, location_id):
+def saved_location_detail(request, location_id):
   location = 'Placeholder'
-  return render(request, 'location/detail.html', {
+  return render(request, 'locations/detail.html', {
     'location': location
   })
 
@@ -137,3 +163,13 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
+
+#! API Keys
+@require_GET
+def apikey_w3w(request):
+  return env('W3W_API_KEY')
+
+@require_GET
+def apikey_google(request):
+  return env('GOOGLE_MAPS_API_KEY')

@@ -17,8 +17,8 @@
     <title>RightSpot</title>
 </head>
 <body class="bg-ivory">
-    <div id="sidebar" class="vertical-nav bg-secondary">
-        <button id="sidebarToggle" class="btn btn-secondary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
+    <div id="sidebar" class="vertical-nav bg-primary">
+        <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
             <i class="bi bi-list"></i>
         </button>
         <div class="py-4 py-3 mb-2">
@@ -93,46 +93,49 @@
         {% endblock content %}
     </main>
     <footer class="text-white">
-        <div class="container">
-            <div class="row">
-                <div class="col col-4 ">
-                    <p>&copy; RightSpot 2023</p>
-                </div>
-                <div class="col col-2">
-                    <p class="fw-bold mb-1">Quick Links</p>
-                    <ul class="nav flex-column">
-                        <li>
-                            <a href="{% url 'faq' %}" class="footer-link text-decoration-none">FAQs</a>
-                        </li>
-                        <li>
-                            <a href="#" class="footer-link text-decoration-none">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col col-3">
-                    <p class="fw-bold mb-1">Legal</p>
-                    <ul class="nav flex-column">
-                        <li>
-                            <a href="#" class="footer-link text-decoration-none">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'legal' %}" class="footer-link text-decoration-none">Terms of Service</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col col-3">
-                    <p class="fw-bold mb-2">Region</p>
-                    <div class="input-group">
-                        <label class="input-group-text"><span class="fi fi-gb"></span></label>
-                        <select class="form-select" disabled>
-                            <option value="United Kingdom"> United Kingdom</option>
-                            <option value="United States">United States</option>
-                            <option value="France">France</option>
-                        </select>
-                    </div>
-                    
+        <div class="wrapper"> 
+            <div class="">
+                <p class="mb-3">&copy; RightSpot 2023</p>
+                <p class="mb-1">Built by:</p>
+                <!-- <p class="mb-1">Find this project on Github <a href="https://github.com/rightspot-ga/RightSpot" class="link link-accent"><i class="bi bi-github"></i></a></p> -->
+                <p class="mb-0 mt-2"><span class="nowrap">Andy Ageenkov <a href="https://github.com/andy-ag" class="link link-accent"><i class="bi bi-github"></i></a></span> <span class="px-1">&</span> <span class="nowrap">Emanuel Dinssa <a href="https://www.linkedin.com/in/dinssa/" class="link link-accent"><i class="bi bi-linkedin"></i></a></span></p>
+            </div>
+            <div class="">
+                <p class="fw-bold mb-1">Quick Links</p>
+                <ul class="nav flex-column">
+                    <li>
+                        <a href="{% url 'faq' %}" class="footer-link text-decoration-none">FAQs</a>
+                    </li>
+                    <li>
+                        <a href="#" class="footer-link text-decoration-none">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="">
+                <p class="fw-bold mb-1">Legal</p>
+                <ul class="nav flex-column">
+                    <li>
+                        <a href="#" class="footer-link text-decoration-none">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'legal' %}" class="footer-link text-decoration-none">Terms of Service</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="">
+                <p class="fw-bold mb-2">Region</p>
+                <div class="input-group d-flex justify-content-center">
+                    <label class="input-group-text"><span class="fi fi-gb"></span></label>
+                    <select class="form-select" style="max-width: 300px;" disabled>
+                        <option value="United Kingdom"> United Kingdom</option>
+                        <option value="United States">United States</option>
+                        <option value="France">France</option>
+                    </select>
                 </div>
             </div>
+        </div>
+        <div>
+            <p class="text-center m-0">Find this project on Github <a href="https://github.com/rightspot-ga/RightSpot" class="link link-accent"><i class="bi bi-github"></i></a><p>
         </div>
     </footer>
 

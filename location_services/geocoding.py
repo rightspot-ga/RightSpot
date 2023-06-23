@@ -38,7 +38,7 @@ def geocodeWhat3Words(address):
     url = 'https://api.what3words.com/v3/convert-to-coordinates'
     params = {
         'words': address,
-        'key': os.environ['WHAT_3_WORDS_API_KEY']
+        'key': os.environ['W3W_API_KEY']
     }
 
     response = requests.get(url, params=params)
