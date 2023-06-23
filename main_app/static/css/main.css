@@ -147,6 +147,16 @@ footer{
     width: 100%;
 }
 
+.first-column{
+    max-width: 150px;
+    white-space: normal;
+    padding-right: 2px;
+}
+
+.value-cell{
+    text-align: center;
+}
+
 /* Forms */
 
 #login, #signup{
