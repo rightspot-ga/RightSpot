@@ -304,15 +304,21 @@ footer > .wrapper{
 } */
 
 
+
 /* Styles for screens smaller than 768px */
 @media screen and (max-width: 767px) {
 
     /* Footer */
     footer > .wrapper{
         text-align: center;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 0.7fr 1fr;
     }
+
+    footer > .wrapper > div:first-of-type, footer > .wrapper > div:last-of-type{
+        grid-column: span 2;
+    }
+
   }
 
   /* Styles for screens smaller than 690px */
