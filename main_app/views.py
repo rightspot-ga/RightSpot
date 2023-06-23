@@ -39,10 +39,6 @@ def locations_index(request):
   })
 
 def location_detail(request):
-  #/location?location_search=
-  #/location?what3words_3wa=
-  #/location?location_search=21+test+street
-  #/location?what3words_3wa=%2F%2F%2Flock.spout.from
   location_name = request.GET.get('location_search') or request.GET.get('what3words_3wa')
   if not location_name:
         return HttpResponseBadRequest("Missing location_search or what3words_3wa parameter")
