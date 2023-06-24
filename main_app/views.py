@@ -276,6 +276,7 @@ def location_detail(request):
   user_projects = Project.objects.filter(user=request.user)  
   # Render page
   return render(request, 'locations/detail.html', {
+      'name': f"{location['address']['postcode']}, {location['address']['country']}",
       'stats': stats,
       'names': inverse_names,
       'demographics': demographics_final_order_list,
@@ -323,9 +324,28 @@ def save_location(request):
 
 @login_required
 def saved_location_detail(request, location_id):
-  location = 'Placeholder'
+  saved_location = Location.objects.get(id=location_id)
+  location = saved_location.location
+  nearbyplaces = location['nearby']
+  addressparts = location['address']
+  district = check_uk_district(addressparts)
+  if district:
+      # Fetch ONS data
+      ons_url = get_api_base_url(request) + '/data/ons'
+      ons_params = {'query': district}
+      stats = fetch_from_api(ons_url, ons_params)
+  user_projects = Project.objects.filter(user=request.user)
   return render(request, 'locations/detail.html', {
-    'location': location
+      'name': saved_location.name,
+      'stats': stats,
+      'names': inverse_names,
+      'demographics': demographics_final_order_list,
+      'socioeconomics': socioeconomics_final_order_list,
+      'industry': industry_final_order_list,
+      'nearby': nearbyplaces,
+      'location': location,
+      'projects': user_projects,
+      'saved': saved_location
   })
 
 @login_required
