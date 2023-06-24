@@ -328,6 +328,10 @@ footer > .wrapper{
         grid-column: span 2;
     }
 
+    .region{
+        justify-content: center;
+    }
+
   }
 
   /* Styles for screens smaller than 690px */
