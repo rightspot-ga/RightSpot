@@ -111,9 +111,9 @@ footer.active {
     margin-left: 17rem;
     padding: 3rem;
     padding-top: 5rem;
+    padding-left: 4rem;
     transition: all 0.4s;
     overflow: auto;
-    
 }
 
 /* Footer */
@@ -337,6 +337,11 @@ footer > .wrapper{
 
     .region{
         justify-content: center;
+    }
+
+    .page-content{
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 
   }
