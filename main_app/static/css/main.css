@@ -147,6 +147,11 @@ footer > .wrapper{
     color: var(--accent-color);
 }
 
+/* Location Index */
+.btn-view{
+    border-radius: 5px;
+}
+
 /* Location Details */
 .map {
     height: 300px;

@@ -42,10 +42,8 @@ def settings(request):
 #! Locations 
 @login_required
 def locations_index(request):
-  locations = 'Placeholder'
-  return render(request, 'locations/index.html', {
-    'locations': locations
-  })
+    user_locations = Location.objects.filter(user=request.user)
+    return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
   location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')

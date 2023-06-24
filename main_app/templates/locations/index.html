@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Locations index</h1>
-
+<div class="d-flex flex-column">
+<div class="container my-5">
+    <h1 class="text-center mb-4" style="color: var(--primary-color);">Your Locations</h1>
+    <div class="d-flex flex-column align-items-center">
+        {% for location in user_locations %}
+        <div class="location-card w-100 mb-3">
+            <a href="{% url 'saved_location_detail' location.id %}" class="btn btn-secondary btn-view float-end">View</a>
+            <h4>{{ location.name }}</h4>
+            <small class="text-muted">{{ location.description }}</small>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</div>
 {% endblock %}
