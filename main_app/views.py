@@ -42,7 +42,7 @@ def settings(request):
 #! Locations 
 @login_required
 def locations_index(request):
-    user_locations = Location.objects.filter(user=request.user, project__isnull=True)
+    user_locations = Location.objects.filter(user=request.user, project__isnull=True).order_by('id')
     return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
@@ -150,10 +150,11 @@ def compare(request):
 class LocationUpdate(LoginRequiredMixin, UpdateView):
   model = Location
   fields = ['name', 'description']
+  success_url = '/locations/starred'
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
   model = Location
-  success_url = '/locations'
+  success_url = '/locations/starred'
 
 #! Decks 
 @login_required
