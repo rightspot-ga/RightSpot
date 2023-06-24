@@ -32,7 +32,29 @@
     </button>
     </div>
     </div>
-    <div class="map my-3 d-flex justify-content-center align-items-center">MAP</div>
+    <div class="nearby my-3">
+        {% if nearby %}
+        <h2>What's nearby</h2>
+        <p>You'll find the following within 1km of this location</p>
+        <ul>
+            {% for item in nearby %}
+                <li class="text-white p-2 container">
+                    <div class="row bg-secondary rounded me-2 align-items-center">
+                        <div class="col col-sm-2 me-2 fs-2">
+                            <i class="{{ item.icon }}"></i>
+                        </div>
+                        <div class="col col-sm-2">
+                            {{ item.count }}
+                        </div>
+                        <div class="col col-sm-7 text-center text-wrap">
+                            {{ item.name }}
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
     <div class="d-flex flex-column">
         {% if stats and stats.data %}
         <div>

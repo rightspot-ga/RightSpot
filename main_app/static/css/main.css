@@ -178,6 +178,15 @@ footer > .wrapper{
     border-radius: 5px;
 }
 
+.nearby > ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
 /* Forms */
 
 #login, #signup{
