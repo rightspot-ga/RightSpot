@@ -1,5 +1,19 @@
 london_boroughs = []
 
+comparison_variables = [
+    'all_ages',
+    'over_16_16_19',
+    'over_16_20_24',
+    'over_16_25_34',
+    'over_16_35_49',
+    'over_16_50_64',
+    'annual_pay_gross_median',
+    'unemployment_rate_16_64',
+    'gdhi_per_capita',
+    'gdhi_per_capita_growth',
+    'total_jobs'
+]
+
 districts = ['Babergh',
  'Basildon',
  'Bedford',

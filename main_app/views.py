@@ -1,22 +1,18 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import ListView, DetailView
 from .models import Project, Location, Deck, StaticOnsData
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
-from .static_data.lookups import inverse_names
+from .static_data.lookups import inverse_names, comparison_variables
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
-from .helpers import fetch_from_api, get_api_base_url
-
+from .helpers import fetch_from_api, get_api_base_url, format_value_as_integer_if_whole_number
 import json
-import requests
-import re
-
 import environ
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -48,7 +44,6 @@ def locations_index(request):
 def location_detail(request):
   location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')
     
-  # Fetch geocode
   geocode_url = get_api_base_url(request) + '/location_services/geocode'
   geocode_params = {'query': location_name}
   geocode_data = fetch_from_api(geocode_url, geocode_params)
@@ -65,31 +60,41 @@ def location_detail(request):
   if not nearbyplaces:
       return redirect('home')
     
-  # Fetch geo details
+  # Fetch address details
   geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
   geodetails_params = {'lat': lat, 'lng': lon}
   addressparts = fetch_from_api(geodetails_url, geodetails_params)
   if not addressparts:
       return redirect('home')
     
-  # Process data
+  # Get district name for ONS data matching
   district = check_uk_district(addressparts)
-  location = {
-      'query': geocode_params['query'],
-      'coords': (lat, lon),
-      'address': addressparts,
-      'nearby': nearbyplaces
-  }
-    
+  
   stats = None
+  comparison_variables_dict = {}
   if district:
       # Fetch ONS data
       ons_url = get_api_base_url(request) + '/data/ons'
       ons_params = {'query': district}
       stats = fetch_from_api(ons_url, ons_params)
-
+      for year_data in stats['data']:
+            for variable, value in year_data.items():
+                formatted_value = format_value_as_integer_if_whole_number(value)
+                year_data[variable] = formatted_value
+      for year_data in stats['data']:
+        year = year_data['date']
+        comparison_variables_dict[year] = []
+        for variable, value in year_data.items():
+          if variable in comparison_variables:
+            comparison_variables_dict[year].append({variable: value})
+  location = {
+      'query': geocode_params['query'],
+      'coords': (lat, lon),
+      'address': addressparts,
+      'nearby': nearbyplaces,
+      'comparison': comparison_variables_dict
+  }
   user_projects = Project.objects.filter(user=request.user)  
-  # Render page
   return render(request, 'locations/detail.html', {
       'name': f"{location['address']['postcode']}, {location['address']['country']}",
       'stats': stats,
@@ -164,7 +169,10 @@ def saved_location_detail(request, location_id):
 
 @login_required
 def compare(request):
-  return render(request, 'compare.html')
+  locations = Location.objects.filter(user=request.user)
+  return render(request, 'compare.html', {
+    'variables': comparison_variables
+  })
 
 
 class LocationUpdate(LoginRequiredMixin, UpdateView):
