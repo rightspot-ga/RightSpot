@@ -3,6 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, Deck, StaticOnsData
 from .forms import CustomUserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -99,18 +100,18 @@ def location_detail(request):
       'nearby': nearbyplaces,
       'comparison': comparison_variables_dict
   }
-  user_projects = Project.objects.filter(user=request.user)  
+  
   return render(request, 'locations/detail.html', {
-      'name': f"{location['address']['postcode']}, {location['address']['country']}",
-      'stats': stats,
-      'names': inverse_names,
-      'demographics': demographics_final_order_list,
-      'socioeconomics': socioeconomics_final_order_list,
-      'industry': industry_final_order_list,
-      'nearby': tallyPlaces(nearbyplaces),
-      'location': location,
-      'projects': user_projects,
-      'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+          'name': f"{location['address']['postcode']}, {location['address']['country']}",
+          'stats': stats,
+          'names': inverse_names,
+          'demographics': demographics_final_order_list,
+          'socioeconomics': socioeconomics_final_order_list,
+          'industry': industry_final_order_list,
+          'nearby': tallyPlaces(nearbyplaces),
+          'location': location,
+          'projects': Project.objects.filter(user=request.user) if isinstance(request.user, User) else None,
+          'google_api_key': env('GOOGLE_MAPS_API_KEY'),
   })
 
 @login_required
