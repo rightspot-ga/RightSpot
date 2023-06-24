@@ -28,12 +28,20 @@
   <div class="pt-4">
       <a href="/accounts/login?next=/" class="link-primary link-underline link-underline-opacity-0"><i class="bi bi-arrow-left-short"></i> Back to Login</a>
   </div>
+
+  {% if error_message %}
+  <div id="signup-error" class="mt-4 alert alert-danger" role="alert">
+    <span class="">{{ error_message }}</span>
+  </div>
+  {% endif %}
+
 </div>
 
 <script defer>
   const loginLabels = document.querySelectorAll('.signup-label > label');
   const helpText = document.querySelectorAll('small');
-  console.log(helpText);
+  const alert = document.querySelector('.alert');
+
   loginLabels.forEach(label => {
       label.innerHTML = label.textContent.slice(0, -1) + '<span class="text-danger ms-1">*<span>';
   })
@@ -43,6 +51,12 @@
   helpText[2].innerHTML = 'Please re-type your password';
   loginLabels[2].innerHTML = 'Confirm Password<span class="text-danger ms-1">*<span>';
 
+  if (alert) {
+    setInterval(function() {
+      alert.classList.add('fade');
+    }, 6000)
+  }
+  
 </script>
 
 {% endblock %}

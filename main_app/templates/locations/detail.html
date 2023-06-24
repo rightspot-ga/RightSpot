@@ -1,12 +1,18 @@
 {% extends 'base.html' %}
 {% load getvalue %}
+{% load json %}
 {% block content %}
+
+<!-- Embed the JSON data as a JavaScript variable -->
+<script>
+    const locationData = JSON.parse('{{ location|escapejs_json }}');
+</script>
 
 <!-- stats is a json object, with stats['data'] holding the data, separated by year -->
 <div class="d-flex flex-column">
     <div class="d-flex flex-row justify-content-between">
     <h2>Address</h2>
-    <button id="save-btn" class="btn btn-sm btn-outline-accent">SAVE</button>
+    <button id="save-btn" class="btn btn-sm btn-outline-accent" data-toggle="modal" data-target="#saveLocationModal">SAVE</button>
     </div>
     <div class="map my-3 d-flex justify-content-center align-items-center">MAP</div>
     <div class="d-flex flex-column">
@@ -68,4 +74,42 @@
         {% endif %}
     </div>
 </div>
+
+<div class="modal fade" id="saveLocationModal" tabindex="-1" role="dialog" aria-labelledby="saveLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="saveLocationModalLabel">Save Location</h5>
+          <button type="button" class="close btn btn-sm btn-outline-accent" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'save_location' %}" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Location Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+              </div>
+              <input type="hidden" id="location_info" name="location_info">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Location</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script defer>
+    document.getElementById('save-btn').addEventListener('click', function() {
+        // Retrieve the JSON data embedded in the script tag and parse it into a JavaScript object
+        document.getElementById('location_info').value = JSON.stringify(locationData);
+    });
+  </script>
 {% endblock %}

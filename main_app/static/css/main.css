@@ -232,6 +232,10 @@ footer > .wrapper{
     height: 100%;
 }
 
+#signup-error.fade{
+    visibility: hidden;
+}
+
 /* Home */
 
 .home-top > img{
