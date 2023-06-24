@@ -29,7 +29,7 @@ def check_uk_district(addressparts):
     for key, value in addressparts.items():
         if value in districts:
             return value
-        if key == 'borough' and value.startswith('London Borough of '):
+        if value.startswith('London Borough of '):
             borough = value.replace('London Borough of ', '')
             if borough in districts:
                 return borough
