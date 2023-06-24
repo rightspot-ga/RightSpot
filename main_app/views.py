@@ -42,7 +42,7 @@ def settings(request):
 #! Locations 
 @login_required
 def locations_index(request):
-    user_locations = Location.objects.filter(user=request.user)
+    user_locations = Location.objects.filter(user=request.user, project__isnull=True)
     return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
@@ -75,6 +75,7 @@ def location_detail(request):
   # Process data
   district = check_uk_district(addressparts)
   location = {
+      'query': geocode_params['query'],
       'coords': (lat, lon),
       'address': addressparts,
       'nearby': nearbyplaces
@@ -86,7 +87,8 @@ def location_detail(request):
       ons_url = get_api_base_url(request) + '/data/ons'
       ons_params = {'query': district}
       stats = fetch_from_api(ons_url, ons_params)
-    
+
+  user_projects = Project.objects.filter(user=request.user)  
   # Render page
   return render(request, 'locations/detail.html', {
       'stats': stats,
@@ -95,7 +97,8 @@ def location_detail(request):
       'socioeconomics': socioeconomics_final_order_list,
       'industry': industry_final_order_list,
       'nearby': nearbyplaces,
-      'location': location
+      'location': location,
+      'projects': user_projects,
   })
 
 @login_required
@@ -104,12 +107,33 @@ def save_location(request):
     name = request.POST.get('name')
     description = request.POST.get('description')
     user = request.user
-    location = json.loads(request.POST.get('location_info'))
+    project_id = request.POST.get('project')
 
-    new_location = Location(name=name, description=description, user=user, location=location)
-    new_location.save()
-    
-    return redirect('home')
+    location_info = request.POST.get('location-info')
+    star_location_info = request.POST.get('star-location-info')
+
+    if location_info:
+      location = json.loads(location_info)
+    elif star_location_info:
+      location = json.loads(star_location_info)
+
+    if not name:
+      name = f"{location['address']['postcode']}, {location['address']['country']}"
+
+    new_location = Location(name=name, user=user, location=location)
+
+    if project_id:
+      project = Project.objects.get(id=project_id)
+      new_location.project = project
+
+    if description:
+      new_location.description = description
+
+    new_location.save()  
+    if project_id:
+      return redirect('projects')
+    else:
+      return redirect('locations_index')
 
 @login_required
 def saved_location_detail(request, location_id):
