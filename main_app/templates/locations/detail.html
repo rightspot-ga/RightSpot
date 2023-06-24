@@ -32,6 +32,15 @@
     </button>
     </div>
     </div>
+    <div class="map my-4 d-flex justify-content-center align-items-center shadow">
+        <iframe
+        width="100%"
+        height="100%"
+        frameborder="0" style="border:0"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed/v1/place?key={{ google_api_key }}&q={{ location.coords.0 }},{{ location.coords.1 }}&zoom=15">
+        </iframe>
+    </div>
     <div class="nearby my-3">
         {% if nearby %}
         <h2>What's nearby</h2>

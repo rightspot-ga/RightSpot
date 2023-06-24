@@ -284,6 +284,7 @@ def location_detail(request):
       'nearby': places_types,
       'location': location,
       'projects': user_projects,
+      'google_api_key': env('GOOGLE_MAPS_API_KEY'),
   })
 
 @login_required
