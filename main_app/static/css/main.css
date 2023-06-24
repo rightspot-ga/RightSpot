@@ -130,6 +130,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
+    z-index: 9999 !important;
 }
 
 footer > .wrapper{
@@ -286,7 +287,7 @@ footer > .wrapper{
     left: 0 !important;
     width: 100% !important;
     height: auto !important;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 .what3words-autosuggest-message{
@@ -337,6 +338,11 @@ footer > .wrapper{
 
     .region{
         justify-content: center;
+    }
+
+    .page-content{
+        height: auto;
+        padding-bottom: 11rem;
     }
 
   }
