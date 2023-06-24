@@ -379,7 +379,7 @@ places_icon_lookup = {
     'travel_agency': 'fas fa-suitcase-rolling',
     'university': 'fas fa-graduation-cap',
     'veterinary_care': 'fas fa-paw',
-    'zoo': 'fas fa-elephant',
+    'zoo': 'fas fa-hippo',
     'place_of_worship': 'fas fa-church',
 }
 
