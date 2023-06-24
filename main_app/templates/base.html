@@ -39,7 +39,11 @@
 
         <div id="user-title" class="text-white text-center mb-4">
             {% if user.is_authenticated %}
-                <p>Welcome, {{ user.username|title }}!</p>
+                {% if user.first_name %}
+                    <p>Welcome, {{ user.first_name|title }}!</p>
+                {% else %}
+                    <p>Welcome, {{ user.username|title }}!</p>
+                {% endif %}
             {% endif %}
         </div>
 
