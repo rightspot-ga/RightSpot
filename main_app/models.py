@@ -5,7 +5,7 @@ import csv
 
 class Project(models.Model):
     name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
@@ -14,8 +14,9 @@ class Project(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     location = models.JSONField()
     def __str__(self):
         return self.name

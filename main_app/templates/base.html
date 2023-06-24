@@ -19,6 +19,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/50d1e12d7b.js" crossorigin="anonymous"></script>
     <title>RightSpot</title>
 </head>
 <body class="bg-ivory">
@@ -58,9 +60,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
+                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Starred Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
-                    <span class="nav-text">Saved Locations</span>
+                    <span class="nav-text">Starred Locations</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -129,7 +131,7 @@
             </div>
             <div class="">
                 <p class="fw-bold mb-2">Region</p>
-                <div class="input-group d-flex justify-content-center">
+                <div class="input-group d-flex region">
                     <label class="input-group-text"><span class="fi fi-gb"></span></label>
                     <select class="form-select" style="max-width: 300px;" disabled>
                         <option value="United Kingdom"> United Kingdom</option>

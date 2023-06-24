@@ -117,7 +117,6 @@ def geocode(request):
 def location_details(request):
     lat = request.GET.get('lat')
     lon = request.GET.get('lng')
-    print(lat, lon)
 
     if lat and lon:
         try:
