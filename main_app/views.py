@@ -9,9 +9,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
 from .static_data.lookups import inverse_names
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
-from location_services.geodetails import geoDetails, check_uk_district
-from location_services.geocoding import geocodeGoogle, geocodeWhat3Words
-from location_services.geoplaces import nearbyPlaces
+from location_services.geodetails import check_uk_district
+from .helpers import fetch_from_api, get_api_base_url
+
 import json
 import requests
 import re
@@ -19,7 +19,6 @@ import re
 import environ
 env = environ.Env()
 environ.Env.read_env()
-
 
 #! Static page renders
 def home(request):
@@ -50,37 +49,55 @@ def locations_index(request):
 
 def location_detail(request):
   location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')
-  w3w_pattern = r'^///\w+\.\w+\.\w+$'
-  if re.match(w3w_pattern, location_name):
-    lat, lon = geocodeWhat3Words(location_name.replace('///',''))
-  else:
-    lat, lon = geocodeGoogle(location_name)
-  nearbyplaces = nearbyPlaces(lat, lon, 500)  
-  addressparts = geoDetails(lat, lon)
+    
+  # Fetch geocode
+  geocode_url = get_api_base_url(request) + '/location_services/geocode'
+  geocode_params = {'query': location_name}
+  geocode_data = fetch_from_api(geocode_url, geocode_params)
+  if not geocode_data:
+      return redirect('home')
+    
+  lat = geocode_data['lat']
+  lon = geocode_data['lng']
+    
+  # Fetch nearby places
+  nearbyplaces_url = get_api_base_url(request) + '/location_services/nearbyplaces'
+  nearbyplaces_params = {'lat': lat, 'lng': lon, 'radius': 500}
+  nearbyplaces = fetch_from_api(nearbyplaces_url, nearbyplaces_params)
+  if not nearbyplaces:
+      return redirect('home')
+    
+  # Fetch geo details
+  geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
+  geodetails_params = {'lat': lat, 'lng': lon}
+  addressparts = fetch_from_api(geodetails_url, geodetails_params)
+  if not addressparts:
+      return redirect('home')
+    
+  # Process data
   district = check_uk_district(addressparts)
   location = {
-    'coords': (lat, lon),
-    'address': geoDetails(lat, lon),
-    'nearby': nearbyplaces
+      'coords': (lat, lon),
+      'address': addressparts,
+      'nearby': nearbyplaces
   }
+    
+  stats = None
   if district:
-    url = request.scheme + '://' + request.get_host() + '/api/data/ons'
-    params = {'query': district}
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        stats = response.json()
-    else:
-        stats = None
-  else:
-    stats = None
+      # Fetch ONS data
+      ons_url = get_api_base_url(request) + '/data/ons'
+      ons_params = {'query': district}
+      stats = fetch_from_api(ons_url, ons_params)
+    
+  # Render page
   return render(request, 'locations/detail.html', {
-    'stats': stats,
-    'names': inverse_names,
-    'demographics': demographics_final_order_list,
-    'socioeconomics': socioeconomics_final_order_list,
-    'industry': industry_final_order_list,
-    'nearby': nearbyplaces,
-    'location': location
+      'stats': stats,
+      'names': inverse_names,
+      'demographics': demographics_final_order_list,
+      'socioeconomics': socioeconomics_final_order_list,
+      'industry': industry_final_order_list,
+      'nearby': nearbyplaces,
+      'location': location
   })
 
 @login_required
