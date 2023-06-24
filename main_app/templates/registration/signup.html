@@ -42,8 +42,12 @@
   const helpText = document.querySelectorAll('small');
   const alert = document.querySelector('.alert');
 
-  loginLabels.forEach(label => {
+  loginLabels.forEach((label, index) => {
+    if (index === 0 || index == 1) {
+      label.innerHTML = label.textContent.slice(0, -1) + '<small class="text-white ms-2">optional<small>';
+    } else {
       label.innerHTML = label.textContent.slice(0, -1) + '<span class="text-danger ms-1">*<span>';
+    }
   })
 
   helpText[0].innerHTML = 'Max 150 characters. Only letters, digits and @/./+/-/_ allowed.';
