@@ -22,6 +22,7 @@ urlpatterns = [
   path('deck/<int:pk>/delete/', views.DeckDelete.as_view(), name='deck_delete'),
   path('project/<int:pk>/delete/', views.ProjectDelete.as_view(), name='project_delete'),
   path('accounts/signup/', views.signup, name='signup'),
+  path('accounts/signup-2/', views.signup2, name='signup2'),
   path('faq/', views.faq, name='faq'),
   path('legal/', views.legal, name='legal'),
   path('settings/', views.settings, name='settings'),
