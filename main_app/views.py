@@ -227,7 +227,6 @@ class DeckDelete(LoginRequiredMixin, DeleteView):
 def projects_index(request):
   user_projects = Project.objects.filter(user=request.user).order_by('id')
   user_locations = Location.objects.filter(user=request.user).order_by('id')
-  print(user_projects.last().locations)
   return render(request, 'projects/index.html', {
     'user_projects': user_projects,
     'user_locations': user_locations
