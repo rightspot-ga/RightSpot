@@ -171,6 +171,10 @@ def saved_location_detail(request, location_id):
       ons_url = get_api_base_url(request) + '/data/ons'
       ons_params = {'query': district}
       stats = fetch_from_api(ons_url, ons_params)
+      for year_data in stats['data']:
+            for variable, value in year_data.items():
+                formatted_value = format_value_as_integer_if_whole_number(value)
+                year_data[variable] = formatted_value
   user_projects = Project.objects.filter(user=request.user)
   return render(request, 'locations/detail.html', {
       'name': saved_location.name,

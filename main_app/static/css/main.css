@@ -183,6 +183,10 @@ footer > .wrapper{
     text-align: center;
 }
 
+.cell-centered {
+    vertical-align: middle;
+}
+
 #save-btn{
     border-radius: 5px;
 }
