@@ -210,16 +210,40 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
 @login_required
 def projects_index(request):
   user_projects = Project.objects.filter(user=request.user).order_by('id')
+  locations = Location.objects.filter(user=request.user)
   return render(request, 'projects/index.html', {
     'user_projects': user_projects,
+    'user_locations': locations
   })
 
 @login_required
 def project_detail(request, project_id):
   project = Project.objects.get(id=project_id)
   return render(request, 'projects/detail.html', {
-    'project': project
+    'project': project,
   })
+
+@login_required
+def create_project(request):
+    if request.method == 'POST':
+        # Retrieve form data
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        location_ids = request.POST.getlist('locations')
+        user = request.user
+        
+        project = Project(name=name, user=user)
+
+        if description:
+            project.description = description
+
+        project.save()
+
+        if location_ids:
+          for location_id in location_ids:
+              location = Location.objects.get(id=location_id)
+              project.location_set.add(location)
+        return redirect('project_detail', project_id=project.id)
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
