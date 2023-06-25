@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% for location in project.locations %}
-<h1>{{ location.name }}</h1>
-{% endfor %}
+<div class="testing d-flex flex-column align-items-center">
+    {% for location in project.location_set.all %}
+    <h1>{{ location.name }}</h1>
+    {% endfor %}
+</div>
 
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">

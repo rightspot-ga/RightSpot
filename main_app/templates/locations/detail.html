@@ -150,13 +150,15 @@
           {% csrf_token %}
           <div class="modal-body">
             <div class="form-group">
-                <label for="project">Select project (required)</label>
-                <select name="project" id="project" class="form-control" required>
-                    <option value="" selected disabled>Select a project</option>
+                <label for="projects">Select projects (required)</label>
+                <div class="projects-list" style="max-height: 150px; overflow-y: scroll;">
                     {% for project in projects %}
-                    <option value="{{ project.id }}">{{ project.name }}</option>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="project{{ project.id }}" name="projects" value="{{ project.id }}">
+                        <label class="custom-control-label" for="project{{ project.id }}">{{ project.name }}</label>
+                    </div>
                     {% endfor %}
-                </select>
+                </div>
             </div>  
             <div class="form-group">
                 <label for="name">Location Name (optional)</label>
@@ -167,6 +169,7 @@
                 <input type="text" class="form-control" id="description" name="description">
             </div>
             <input type="hidden" id="location-info" name="location-info">
+            <input type="hidden" name="location_id" id="location_id" value="{% if saved %}{{ saved.id }}{% endif %}">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

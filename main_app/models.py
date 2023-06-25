@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 import csv
 
@@ -21,6 +23,15 @@ class Location(models.Model):
     location = models.JSONField()
     def __str__(self):
         return self.name
+
+# Cleaning up relationships on deletion 
+@receiver(pre_delete, sender=Location)
+def remove_location_from_projects(sender, instance, **kwargs):
+    instance.projects.clear()
+
+@receiver(pre_delete, sender=Project)
+def remove_project_from_locations(sender, instance, **kwargs):
+    instance.location_set.clear()    
 
 # Create Django model using .csv file headers as fields
 csv_file_path = 'main_app/static_data/rightspot_wide.csv'

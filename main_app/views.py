@@ -41,7 +41,7 @@ def settings(request):
 #! Locations 
 @login_required
 def locations_index(request):
-    user_locations = Location.objects.filter(user=request.user, project__isnull=True).order_by('id')
+    user_locations = Location.objects.filter(user=request.user, projects__isnull=True).order_by('-id')
     return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
@@ -116,10 +116,11 @@ def location_detail(request):
 @login_required
 def save_location(request):
   if request.method == 'POST':
+    location_id = request.POST.get('location_id')
     name = request.POST.get('name')
     description = request.POST.get('description')
     user = request.user
-    project_id = request.POST.get('project')
+    project_ids = request.POST.getlist('projects')
 
     location_info = request.POST.get('location-info')
     star_location_info = request.POST.get('star-location-info')
@@ -132,20 +133,31 @@ def save_location(request):
     if not name:
       name = f"{location['address']['postcode']}, {location['address']['country']}"
 
-    new_location = Location(name=name, user=user, location=location)
-
-    if project_id:
-      project = Project.objects.get(id=project_id)
-      new_location.project = project
-
-    if description:
-      new_location.description = description
-
-    new_location.save()  
-    if project_id:
-      return redirect('projects')
+    if location_id:
+      existing_location = Location.objects.get(id=location_id)
+      if name: existing_location.name = name
+      if description: existing_location
+      if project_ids:
+        for project_id in project_ids:
+          existing_location.projects.add(project_id)
+      existing_location.save()       
+      return redirect('projects') 
+    
     else:
-      return redirect('locations_index')
+      new_location = Location(name=name, user=user, location=location)
+
+      if description:
+        new_location.description = description
+
+      new_location.save()
+
+      if project_ids:
+        for project_id in project_ids:
+          new_location.projects.add(project_id)
+      if project_ids:
+        return redirect('projects')
+      else:
+        return redirect('locations_index')
 
 @login_required
 def saved_location_detail(request, location_id):
@@ -234,7 +246,23 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
 class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
-  
+
+#! Data relationship handling
+@login_required
+@login_required
+def assoc_project(request, location_id):
+    if request.method == 'POST':
+        location = Location.objects.get(id=location_id)
+        project_ids = request.POST.getlist('projects')
+        for project_id in project_ids:
+            location.projects.add(project_id)
+    return redirect('saved_location_detail', location_id=location_id)
+
+@login_required
+def unassoc_project(request, location_id, project_id):
+  Location.objects.get(id=location_id).projects.remove(project_id)
+  return redirect('saved_location_detail', location_id=location_id)
+
 #! Auth 
 def signup(request):
   error_message = ''
