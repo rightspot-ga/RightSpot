@@ -20,6 +20,10 @@ html, body{
     white-space: nowrap;
 }
 
+.max-width-1000{
+    max-width: 1000px;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -111,9 +115,9 @@ footer.active {
     margin-left: 17rem;
     padding: 3rem;
     padding-top: 5rem;
+    padding-left: 4rem;
     transition: all 0.4s;
     overflow: auto;
-    
 }
 
 /* Footer */
@@ -130,6 +134,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
+    z-index: 9999 !important;
 }
 
 footer > .wrapper{
@@ -178,7 +183,7 @@ footer > .wrapper{
 
 .nearby > ul{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -286,13 +291,24 @@ footer > .wrapper{
     left: 0 !important;
     width: 100% !important;
     height: auto !important;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 .what3words-autosuggest-message{
     color: var(--accent-color) !important;
 }
 
+
+/* Project */
+
+.project-item:hover{
+    background-color: var(--light-color);
+
+}
+
+.projects-intro{
+    width: 75%;
+}
 
 
 /* .pac-container{
@@ -339,6 +355,15 @@ footer > .wrapper{
         justify-content: center;
     }
 
+    .page-content{
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .projects-intro{
+        width: 100%;
+    }
+
   }
 
   /* Styles for screens smaller than 690px */
@@ -346,5 +371,13 @@ footer > .wrapper{
     /* Home */
     #location_search_btn{
         margin-top: 10px;
+    }
+
+    .project-item{
+        text-align: center;
+    }
+
+    .project-item > div > a{
+        margin: auto;
     }
   }
