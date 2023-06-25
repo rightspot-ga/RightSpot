@@ -6,8 +6,8 @@ import csv
 class Project(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400, default='No description')
-    locations = models.JSONField(default=list)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    notes = models.TextField(default='No notes yet')
     def __str__(self):
         return self.name
     def get_absolute_url(self):
@@ -17,21 +17,10 @@ class Location(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    projects = models.ManyToManyField(Project)
     location = models.JSONField()
     def __str__(self):
         return self.name
-
-class Deck(models.Model):
-    name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    items = models.JSONField
-    def __str__(self):
-        return self.name
-    def get_absolute_url(self):
-        return reverse('deck_detail', kwargs={'pk': self.id}) 
 
 # Create Django model using .csv file headers as fields
 csv_file_path = 'main_app/static_data/rightspot_wide.csv'

@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Project, Location, Deck, StaticOnsData
+from .models import Project, Location, StaticOnsData
 from .forms import CustomUserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
@@ -19,8 +18,6 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()
-
-
 
 #! Static page renders
 def home(request):
@@ -188,7 +185,6 @@ def compare(request):
     'names': inverse_names, 
   })
 
-
 class LocationUpdate(LoginRequiredMixin, UpdateView):
   model = Location
   fields = ['name', 'description']
@@ -198,44 +194,12 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
   model = Location
   success_url = '/locations/starred'
 
-#! Decks 
-@login_required
-def decks_index(request):
-  decks = 'Placeholder'
-  return render(request, 'decks/index.html', {
-    'decks': decks
-  })
-
-@login_required
-def deck_detail(request, deck_id):
-  deck = 'Placeholder'
-  return render(request, 'deck/detail.html', {
-    'deck': deck
-  })
-
-class DeckCreate(LoginRequiredMixin, CreateView):
-  model = Deck
-  fields = ['name', 'description']
-  def form_valid(self, form):
-    form.instance.user = self.request.user
-    return super().form_valid(form)
-
-class DeckUpdate(LoginRequiredMixin, UpdateView):
-  model = Deck
-  fields = ['name', 'description']
-
-class DeckDelete(LoginRequiredMixin, DeleteView):
-  model = Deck
-  success_url = '/decks'
-
 #! Projects
 @login_required
 def projects_index(request):
   user_projects = Project.objects.filter(user=request.user).order_by('id')
-  user_locations = Location.objects.filter(user=request.user).order_by('id')
   return render(request, 'projects/index.html', {
     'user_projects': user_projects,
-    'user_locations': user_locations
   })
 
 @login_required
@@ -244,26 +208,6 @@ def project_detail(request, project_id):
   return render(request, 'projects/detail.html', {
     'project': project
   })
-
-@login_required
-def create_project(request):
-  if request.method == 'POST':
-    name = request.POST.get('name')
-    description = request.POST.get('description')
-    locations = request.POST.getlist('locations')
-    print(locations)
-    user = request.user
-
-    new_project = Project(name=name, user=user, description=description)
-
-    new_project.save()
-
-    for location_id in locations:
-      location = Location.objects.get(id=location_id)
-      location.project = new_project
-      location.save()
-
-  return redirect('projects')
 
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
@@ -291,8 +235,6 @@ class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
   
-
-
 #! Auth 
 def signup(request):
   error_message = ''
@@ -312,9 +254,6 @@ def signup(request):
   form = CustomUserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
-
-
-
 
 #! API Keys
 @require_GET
