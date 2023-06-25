@@ -24,6 +24,14 @@ html, body{
     max-width: 1000px;
 }
 
+.letter-spacing-1{
+    letter-spacing: 1px;
+}
+
+.letter-spacing-2{
+    letter-spacing: 2px;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -316,6 +324,27 @@ footer > .wrapper{
     width: 75%;
 }
 
+/* Account Settings */
+.settings-pill{
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    border-radius: 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.settings-pill:hover{
+    background-color: lightgray;
+    color: var(--dark-color); 
+}
+
+.nav-link.settings-pill.active{
+    background-color: var(--accent-color);
+    color: var(--dark-color);
+}
+
+
+/* Google Autocomplete */
 
 /* .pac-container{
     background-color: var(--primary-color);

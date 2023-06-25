@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, Deck, StaticOnsData
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EditUserForm
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -37,9 +37,6 @@ def faq(request):
 
 def legal(request):
   return render(request, 'legal.html')
-
-def settings(request):
-  return render(request, 'settings.html')
 
 #! Locations 
 @login_required
@@ -302,7 +299,28 @@ def signup(request):
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
 
+#! Account Settings
+@login_required
+def settings(request):
+    user = request.user
+    error_message = ''
+    if request.method == 'POST':
+        edit_user_form = EditUserForm(request.POST, instance=user)
+        if edit_user_form.is_valid():
+            edit_user_form.save()
+            return render(request, 'settings.html', {
+                'edit_user_form': edit_user_form,
+                'success_message': 'User details updated successfully.'
+            })
+        else:
+            error_message = 'Invalid changes made - try again'
+    else:       
+        edit_user_form = EditUserForm(instance=user)
 
+    return render(request, 'settings.html', {
+        'edit_user_form': edit_user_form,
+        'error_message': error_message
+    })
 
 
 #! API Keys

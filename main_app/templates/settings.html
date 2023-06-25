@@ -1,6 +1,71 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Settings</h1>
+<div class="d-flex flex-column align-items-center my-3">
+    <div class="row projects-top pb-3 text-center mb-1">
+        <h1 id="" class="text-primary">
+            Account Settings
+        </h1>
+    </div>
+    <div>
+        
+    </div>
+    <div class="row w-100 max-width-1000 bg-light rounded">
+        <div class="d-flex align-items-start p-0">
+            <div class="nav flex-column nav-pills m-3 " id="settings-tab">
+                <button class="nav-link settings-pill active" id="profile-tab"  data-target="#profile" type="button">Profile</button>
+                <button class="nav-link settings-pill" id="password-tab"  data-target="#password" type="button">Password</button>
+                <button class="nav-link settings-pill" id="advanced-tab"  data-target="#advanced" type="button">Advanced</button>
+            </div>
+            <div class="tab-content m-4 mb-5 w-100">
+                <div class="tab-pane fade show active" id="profile">
+                    <div>
+                        <p class="fs-5 fw-bold">Profile</p>
+                        <p class="fs-6">Update your profile information</p>
+                    </div>
+                    <div class="">
+                        <form id="settings" class="pt-2 ps-1" method="POST">
+                            <div class="d-flex flex-column justify-content-center">
+                                {% csrf_token %}
+                                {% for field in edit_user_form %}
+                                <p>
+                                    <span class="signup-label">{{ field.label_tag }}</span>
+                                    {{ field }}
+                                    <div>
+                                      {% if field.help_text %}
+                                      <small class="text-light d-block">{{ field.help_text }}</small>
+                                      {% endif %}
+                                    </div>
+                                    {% for error in field.errors %}
+                                      <p class="text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </p>
+                                {% endfor %}
+                                <button type="submit" class="btn btn-accent py-2 px-4 mt-3 fw-bold align-self-start text-dark letter-spacing-2">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+              <div class="tab-pane fade" id="password">..22.</div>
+              <div class="tab-pane fade" id="advanced">..44.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tabs = document.querySelectorAll('.nav-link');
+    const tabContent = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(item => item.classList.remove('active'));
+            tab.classList.add('active');
+            const target = tab.dataset.target;
+            tabContent.forEach(tab => tab.classList.remove('show', 'active'));
+            document.querySelector(target).classList.add('show', 'active');
+        });
+    });
+</script>
 
 {% endblock %}
