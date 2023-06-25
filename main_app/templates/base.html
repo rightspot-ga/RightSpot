@@ -25,9 +25,11 @@
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-primary">
-        <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="d-flex justify-content-end">
+            <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
         <div class="py-4 py-3 mb-2">
             <div class="d-inline-block" style="max-width: 100px;">
                 <img src="{% static 'img/rightspot_light.png' %}" alt="Logo" id="nav-logo" class="img-fluid px-1 px-sm-1 mt-1 mb-2 d-inline-block">
@@ -76,7 +78,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'logout' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
+                <a href="{% url 'logout' %}" class="nav-link font-italic" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
                     <i class="nav-icon bi bi-box-arrow-left px-1"></i>
                     <span class="nav-text">Logout</span>
                 </a>

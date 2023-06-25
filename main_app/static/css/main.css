@@ -38,9 +38,12 @@ html, body{
 }
 
 #sidebarToggle{
-    position: fixed;
-    left: 17rem;
-    transition: all 0.4s;
+    /* position: fixed; */
+    /* left: 17rem; */
+    /* transition: all 0.4s; */
+    background-color: transparent;
+    border: none;
+    width: 4rem;
 }
 
 #logo-title{
