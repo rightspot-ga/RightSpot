@@ -2,3 +2,4 @@ fly.toml
 node_modules
 .venv
 staticfiles
+.vscode

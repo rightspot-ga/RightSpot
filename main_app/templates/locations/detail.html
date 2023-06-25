@@ -1,14 +1,82 @@
 {% extends 'base.html' %}
 {% load getvalue %}
+{% load json %}
 {% block content %}
+
+<!-- Embed the JSON data as a JavaScript variable -->
+<script defer>
+    const locationData = JSON.parse('{{ location|escapejs_json }}');
+</script>
 
 <!-- stats is a json object, with stats['data'] holding the data, separated by year -->
 <div class="d-flex flex-column">
     <div class="d-flex flex-row justify-content-between">
-    <h2>Address</h2>
-    <button id="save-btn" class="btn btn-sm btn-outline-accent">SAVE</button>
+    <h2>{{ name }}</h2>
+    <div class="d-flex ml-auto gap-2">
+    {% if not saved %}
+        <form action="{% url 'save_location' %}" method="POST" id="star-location-form" class="d-flex">
+        {% csrf_token %}
+        <input type="hidden" name="star-location-info" id="star-location-info">
+        <button type="submit" class="btn btn-sm btn-outline-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+            </svg>
+        Star location
+        </button>
+        </form>
+    {% else %}
+        <form action="{% url 'location_delete' saved.pk %}" method="POST" id="star-location-form" class="d-flex">
+        {% csrf_token %}
+        <input type="hidden" name="star-location-info" id="star-location-info">
+        <button type="submit" class="btn btn-sm btn-outline-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+        Un-star location
+        </button>
+        </form>
+    {% endif %}    
+    <button id="save-btn" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#saveLocationModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+          </svg>
+        Add to project  
+    </button>
     </div>
-    <div class="map my-3 d-flex justify-content-center align-items-center">MAP</div>
+    </div>
+    <div class="map my-4 d-flex justify-content-center align-items-center shadow">
+        <iframe
+        width="100%"
+        height="100%"
+        frameborder="0" style="border:0"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps/embed/v1/place?key={{ google_api_key }}&q={{ location.coords.0 }},{{ location.coords.1 }}&zoom=15">
+        </iframe>
+    </div>
+    <div class="nearby my-3">
+        {% if nearby %}
+        <h2>What's nearby</h2>
+        <p>You'll find the following within 1km of this location</p>
+        <ul>
+            {% for item in nearby %}
+                <li class="text-white p-2 container">
+                    <div class="row bg-secondary rounded me-2 align-items-center">
+                        <div class="col col-sm-2 me-2 fs-2">
+                            <i class="{{ item.icon }}"></i>
+                        </div>
+                        <div class="col col-sm-2">
+                            {{ item.count }}
+                        </div>
+                        <div class="col col-sm-7 text-center text-wrap">
+                            {{ item.name }}
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
     <div class="d-flex flex-column">
         {% if stats and stats.data %}
         <div>
@@ -68,4 +136,49 @@
         {% endif %}
     </div>
 </div>
+
+<div class="modal fade" id="saveLocationModal" tabindex="-1" role="dialog" aria-labelledby="saveLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="saveLocationModalLabel">Save Location</h5>
+          <button type="button" class="close btn btn-sm btn-outline-accent" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'save_location' %}" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group">
+                <label for="project">Select project (required)</label>
+                <select name="project" id="project" class="form-control" required>
+                    <option value="" selected disabled>Select a project</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}">{{ project.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>  
+            <div class="form-group">
+                <label for="name">Location Name (optional)</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="description">Description (optional)</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+            <input type="hidden" id="location-info" name="location-info">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Location</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script defer>
+    document.getElementById('star-location-info').value = JSON.stringify(locationData)
+    document.getElementById('location-info').value = JSON.stringify(locationData)
+  </script>
 {% endblock %}

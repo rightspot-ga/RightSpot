@@ -20,11 +20,15 @@ html, body{
     white-space: nowrap;
 }
 
+.max-width-1000{
+    max-width: 1000px;
+}
+
 /* Sidebar */
 
 .vertical-nav{
-    min-width: 17rem;
-    width: 17rem;
+    min-width: 4rem;
+    width: 4rem;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -34,9 +38,9 @@ html, body{
 }
 
 #sidebarToggle{
-    position: fixed;
-    left: 17rem;
-    transition: all 0.4s;
+    background-color: transparent;
+    border: none;
+    width: 4rem;
 }
 
 #logo-title{
@@ -45,6 +49,7 @@ html, body{
 }
 
 .nav-icon{
+    font-size: 24px;
     transition: font-size 0.3s ease-in-out;
 }
 
@@ -64,38 +69,42 @@ img#nav-logo{
 }
 
 .vertical-nav.active {
-    width: 4rem;
-    min-width: 4rem;
+    width: 17rem;
+    min-width: 17rem;
 }
 
 #content.active {
-    width: calc(100% - 4rem);
+    width: calc(100% - 17rem);
     margin: 0;
-    margin-left: 4rem;
+    margin-left: 17rem;
 }
 
 footer.active {
-    width: calc(100% - 4rem);
+    width: calc(100% - 17rem);
 }
 
-#sidebarToggle.active{
-    left: 4rem;
-}
-
-.nav-text.active, #logo-title.active{
+.nav-text, #logo-title{
     display: none;
 }
 
-#user-title.active{
+#user-title{
     visibility: hidden;
 }
 
+.nav-text.active, #logo-title.active{
+    display: inline;
+}
+
+#user-title.active{
+    visibility: visible;
+}
+
 .nav-link.active{
-    text-align: center;
+    text-align: visible;
 }
 
 .nav-icon.active{
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .currentPage{
@@ -105,15 +114,16 @@ footer.active {
 /* Page Content */
 
 .page-content{
-    width: calc(100% - 17rem);
+    /* width: calc(100% - 17rem); */
+    width: calc(100% - 4rem);
     height: calc(100% - 10rem);
     min-height: calc(100vh - 10rem);
-    margin-left: 17rem;
+    margin-left: 4rem;
     padding: 3rem;
     padding-top: 5rem;
+    padding-left: 4rem;
     transition: all 0.4s;
     overflow: auto;
-    
 }
 
 /* Footer */
@@ -122,7 +132,7 @@ footer{
     position: fixed;
     bottom: 0;
     right: 0;
-    width: calc(100% - 17rem);
+    width: calc(100% - 4rem);
     height: 10rem;
     background-color: #000000;
     color: #fff;
@@ -130,6 +140,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
+    z-index: 9999 !important;
 }
 
 footer > .wrapper{
@@ -147,12 +158,15 @@ footer > .wrapper{
     color: var(--accent-color);
 }
 
+/* Location Index */
+.btn-radius{
+    border-radius: 5px;
+}
+
 /* Location Details */
 .map {
     height: 300px;
     width: 100%;
-    border: solid var(--primary-color) 2px;
-    border-radius: 5px;
 }
 
 .table {
@@ -172,6 +186,15 @@ footer > .wrapper{
 #save-btn{
     border-radius: 5px;
 }
+
+.nearby > ul{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 
 /* Forms */
 
@@ -232,6 +255,10 @@ footer > .wrapper{
     height: 100%;
 }
 
+#signup-error.fade{
+    visibility: hidden;
+}
+
 /* Home */
 
 .home-top > img{
@@ -270,13 +297,24 @@ footer > .wrapper{
     left: 0 !important;
     width: 100% !important;
     height: auto !important;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 .what3words-autosuggest-message{
     color: var(--accent-color) !important;
 }
 
+
+/* Project */
+
+.project-item:hover{
+    background-color: var(--light-color);
+
+}
+
+.projects-intro{
+    width: 75%;
+}
 
 
 /* .pac-container{
@@ -304,15 +342,34 @@ footer > .wrapper{
 } */
 
 
+
 /* Styles for screens smaller than 768px */
 @media screen and (max-width: 767px) {
 
     /* Footer */
     footer > .wrapper{
         text-align: center;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 0.7fr 1fr;
     }
+
+    footer > .wrapper > div:first-of-type, footer > .wrapper > div:last-of-type{
+        grid-column: span 2;
+    }
+
+    .region{
+        justify-content: center;
+    }
+
+    .page-content{
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .projects-intro{
+        width: 100%;
+    }
+
   }
 
   /* Styles for screens smaller than 690px */
@@ -320,5 +377,13 @@ footer > .wrapper{
     /* Home */
     #location_search_btn{
         margin-top: 10px;
+    }
+
+    .project-item{
+        text-align: center;
+    }
+
+    .project-item > div > a{
+        margin: auto;
     }
   }

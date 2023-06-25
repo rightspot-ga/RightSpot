@@ -13,14 +13,23 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <!-- Flag Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css"/>
-
+    <!-- jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/50d1e12d7b.js" crossorigin="anonymous"></script>
     <title>RightSpot</title>
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-primary">
-        <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="d-flex justify-content-end">
+            <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
         <div class="py-4 py-3 mb-2">
             <div class="d-inline-block" style="max-width: 100px;">
                 <img src="{% static 'img/rightspot_light.png' %}" alt="Logo" id="nav-logo" class="img-fluid px-1 px-sm-1 mt-1 mb-2 d-inline-block">
@@ -32,7 +41,11 @@
 
         <div id="user-title" class="text-white text-center mb-4">
             {% if user.is_authenticated %}
-                <p>Welcome, {{ user.username|title }}!</p>
+                {% if user.first_name %}
+                    <p>Welcome, {{ user.first_name|title }}!</p>
+                {% else %}
+                    <p>Welcome, {{ user.username|title }}!</p>
+                {% endif %}
             {% endif %}
         </div>
 
@@ -53,9 +66,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
+                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Starred Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
-                    <span class="nav-text">Saved Locations</span>
+                    <span class="nav-text">Starred Locations</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -65,7 +78,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'logout' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
+                <a href="{% url 'logout' %}" class="nav-link font-italic" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
                     <i class="nav-icon bi bi-box-arrow-left px-1"></i>
                     <span class="nav-text">Logout</span>
                 </a>
@@ -79,12 +92,6 @@
                     <span class="nav-text">Login</span>
                 </a>
             </li>
-            <!-- <li class="nav-item">
-                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/accounts/signup/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
-                    <i class="nav-icon bi bi-person-plus-fill px-1"></i>
-                    <span class="nav-text">Sign Up</span>
-                </a>
-            </li> -->
             {% endif %}
 
     </div>
@@ -124,7 +131,7 @@
             </div>
             <div class="">
                 <p class="fw-bold mb-2">Region</p>
-                <div class="input-group d-flex justify-content-center">
+                <div class="input-group d-flex region">
                     <label class="input-group-text"><span class="fi fi-gb"></span></label>
                     <select class="form-select" style="max-width: 300px;" disabled>
                         <option value="United Kingdom"> United Kingdom</option>
@@ -135,18 +142,13 @@
             </div>
         </div>
         <div>
-            <p class="text-center m-0">Find this project on Github <a href="https://github.com/rightspot-ga/RightSpot" class="link link-accent"><i class="bi bi-github"></i></a><p>
+            <p class="text-center m-0">Find this project on Github <a href="https://github.com/rightspot-ga/RightSpot" class="link link-light ps-1"><i class="bi bi-github"></i></a><p>
         </div>
     </footer>
 
-    <!-- jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
     <!-- Custom JS -->
-    <script>
+    <script defer>
         // Sidebar Toggle
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebarToggle');
@@ -161,10 +163,11 @@
         $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
         navLinks.forEach((navLink) => {
             $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
+            $(navLink).tooltip('dispose'); // dispose of the tooltip by default, add when sidebar is expanded
         });
 
         // Check if the sidebar is collapsed or not within the same session
-        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        if (localStorage.getItem('sidebarExpanded') === 'true') {
             sidebar.classList.add('active');
             sidebar.style.transition = 'none';
             sidebarToggle.classList.add('active');
@@ -207,7 +210,7 @@
         sidebarToggle.addEventListener('click', () => {
             $(sidebarToggle).tooltip('hide'); // hide the tooltip when button clicked
             sidebar.classList.toggle('active');
-            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('active')); // save the state in localStorage
+            localStorage.setItem('sidebarExpanded', sidebar.classList.contains('active')); // save the state in localStorage
             sidebarToggle.classList.toggle('active');
             content.classList.toggle('active');
             footer.classList.toggle('active');
@@ -216,13 +219,31 @@
             });
 
             if (logoTitle.classList.contains('active')) {
+                // .ie. when sidebar collapsing (expanded to collapsed)
 
-                // Remove the tooltip when expanding the sidebar
+                // Add the tooltip
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip(); // initialize the tooltip
+                });
+
+                // Set tooltip value for sidebar toggle button
+                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
+
+                // Remove the logo title and nav text when collapsing the sidebar, without delay
+                logoTitle.classList.toggle('active');
+                userTitle.classList.toggle('active');
+                navTexts.forEach((navText) => {
+                    navText.classList.toggle('active');
+                });  
+            } else {
+                // .ie. when sidebar expanding (collapsed to expanded)
+                
+                // Remove the tooltip
                 navLinks.forEach((navLink) => {
                     $(navLink).tooltip('dispose'); // destroy the tooltip
                 });
 
-                // Set tooltip for sidebar toggle button
+                // Set tooltip value for sidebar toggle button
                 sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
 
                 // Delay the transition of the logo title and nav text when expanding the sidebar
@@ -232,22 +253,7 @@
                     navTexts.forEach((navText) => {
                         navText.classList.toggle('active');
                     });
-                }, 250);
-            } else {
-                // Add the tooltip when collapsing the sidebar
-                navLinks.forEach((navLink) => {
-                    $(navLink).tooltip(); // initialize the tooltip
-                });
-
-                // Set tooltip for sidebar toggle button
-                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
-
-                // Remove the logo title and nav text when collapsing the sidebar, without delay
-                logoTitle.classList.toggle('active');
-                userTitle.classList.toggle('active');
-                navTexts.forEach((navText) => {
-                    navText.classList.toggle('active');
-                });                
+                }, 250);           
             }
         });
     </script>
