@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Project, Location, Deck, StaticOnsData
+from .models import Project, Location, StaticOnsData
 from .forms import CustomUserCreationForm, EditUserForm
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
@@ -19,8 +18,6 @@ import environ
 
 env = environ.Env()
 environ.Env.read_env()
-
-
 
 #! Static page renders
 def home(request):
@@ -41,7 +38,7 @@ def legal(request):
 #! Locations 
 @login_required
 def locations_index(request):
-    user_locations = Location.objects.filter(user=request.user, project__isnull=True).order_by('id')
+    user_locations = Location.objects.filter(user=request.user, projects__isnull=True).order_by('-id')
     return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
@@ -116,10 +113,11 @@ def location_detail(request):
 @login_required
 def save_location(request):
   if request.method == 'POST':
+    location_id = request.POST.get('location_id')
     name = request.POST.get('name')
     description = request.POST.get('description')
     user = request.user
-    project_id = request.POST.get('project')
+    project_ids = request.POST.getlist('projects')
 
     location_info = request.POST.get('location-info')
     star_location_info = request.POST.get('star-location-info')
@@ -132,20 +130,31 @@ def save_location(request):
     if not name:
       name = f"{location['address']['postcode']}, {location['address']['country']}"
 
-    new_location = Location(name=name, user=user, location=location)
-
-    if project_id:
-      project = Project.objects.get(id=project_id)
-      new_location.project = project
-
-    if description:
-      new_location.description = description
-
-    new_location.save()  
-    if project_id:
-      return redirect('projects')
+    if location_id:
+      existing_location = Location.objects.get(id=location_id)
+      if name: existing_location.name = name
+      if description: existing_location
+      if project_ids:
+        for project_id in project_ids:
+          existing_location.projects.add(project_id)
+      existing_location.save()       
+      return redirect('projects') 
+    
     else:
-      return redirect('locations_index')
+      new_location = Location(name=name, user=user, location=location)
+
+      if description:
+        new_location.description = description
+
+      new_location.save()
+
+      if project_ids:
+        for project_id in project_ids:
+          new_location.projects.add(project_id)
+      if project_ids:
+        return redirect('projects')
+      else:
+        return redirect('locations_index')
 
 @login_required
 def saved_location_detail(request, location_id):
@@ -185,7 +194,6 @@ def compare(request):
     'names': inverse_names, 
   })
 
-
 class LocationUpdate(LoginRequiredMixin, UpdateView):
   model = Location
   fields = ['name', 'description']
@@ -195,79 +203,44 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
   model = Location
   success_url = '/locations/starred'
 
-#! Decks 
-@login_required
-def decks_index(request):
-  decks = 'Placeholder'
-  return render(request, 'decks/index.html', {
-    'decks': decks
-  })
-
-@login_required
-def deck_detail(request, deck_id):
-  deck = 'Placeholder'
-  return render(request, 'deck/detail.html', {
-    'deck': deck
-  })
-
-class DeckCreate(LoginRequiredMixin, CreateView):
-  model = Deck
-  fields = ['name', 'description']
-  def form_valid(self, form):
-    form.instance.user = self.request.user
-    return super().form_valid(form)
-
-class DeckUpdate(LoginRequiredMixin, UpdateView):
-  model = Deck
-  fields = ['name', 'description']
-
-class DeckDelete(LoginRequiredMixin, DeleteView):
-  model = Deck
-  success_url = '/decks'
-
 #! Projects
 @login_required
 def projects_index(request):
   user_projects = Project.objects.filter(user=request.user).order_by('id')
-  user_locations = Location.objects.filter(user=request.user).order_by('id')
+  locations = Location.objects.filter(user=request.user)
   return render(request, 'projects/index.html', {
     'user_projects': user_projects,
-    'user_locations': user_locations
+    'user_locations': locations
   })
 
 @login_required
 def project_detail(request, project_id):
   project = Project.objects.get(id=project_id)
   return render(request, 'projects/detail.html', {
-    'project': project
+    'project': project,
   })
 
 @login_required
 def create_project(request):
-  if request.method == 'POST':
-    name = request.POST.get('name')
-    description = request.POST.get('description')
-    locations = request.POST.getlist('locations')
-    user = request.user
+    if request.method == 'POST':
+        # Retrieve form data
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        location_ids = request.POST.getlist('locations')
+        user = request.user
+        
+        project = Project(name=name, user=user)
 
-    new_project = Project(name=name, user=user, description=description)
+        if description:
+            project.description = description
 
-    new_project.save()
+        project.save()
 
-    for location_id in locations:
-      location = Location.objects.get(id=location_id)
-      location.project = new_project
-      location.save()
-
-  return redirect('projects')
-
-class ProjectCreate(LoginRequiredMixin, CreateView):
-  model = Project
-  fields = ['name', 'description', 'locations']
-  success_url = '/projects'
-  def form_valid(self, form):
-    form.instance.user = self.request.user
-    return super().form_valid(form)
+        if location_ids:
+          for location_id in location_ids:
+              location = Location.objects.get(id=location_id)
+              project.location_set.add(location)
+        return redirect('project_detail', project_id=project.id)
   
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
   model = Project
@@ -276,25 +249,18 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
 class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
-  
-
 
 #! Auth 
 def signup(request):
   error_message = ''
   if request.method == 'POST':
-    # This is how to create a 'user' form object
-    # that includes the data from the browser
     form = CustomUserCreationForm(request.POST)
     if form.is_valid():
-      # This will add the user to the database
       user = form.save()
-      # This is how we log a user in via code
       login(request, user)
       return redirect('home')
     else:
       error_message = 'Invalid sign up - try again'
-  # A bad POST or a GET request, so render signup.html with an empty form
   form = CustomUserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
