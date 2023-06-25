@@ -199,6 +199,9 @@ footer > .wrapper{
     margin: 0;
 }
 
+.modal-body, .modal-header, .modal-footer {
+    border: none;
+}
 
 /* Forms */
 
