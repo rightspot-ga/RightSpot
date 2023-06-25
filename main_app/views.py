@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
+from django.core.serializers import serialize
+from django.utils.safestring import mark_safe
 from .static_data.lookups import inverse_names, comparison_variables
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
@@ -63,9 +65,9 @@ def location_detail(request):
   nearbyplaces = fetch_from_api(nearbyplaces_url, nearbyplaces_params)
   if not nearbyplaces:
       return redirect('home')
-  
-  # nearbyplaces = tallyPlaces(nearbyplaces)
 
+  # nearbyplaces = tallyPlaces(nearbyplaces)
+  
   # Fetch address details
   geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
   geodetails_params = {'lat': lat, 'lng': lon}
@@ -178,8 +180,12 @@ def saved_location_detail(request, location_id):
 @login_required
 def compare(request):
   locations = Location.objects.filter(user=request.user)
+  locations_json = mark_safe(serialize('json', locations))
   return render(request, 'compare.html', {
-    'variables': comparison_variables
+    'locations': locations,
+    'locations_json': locations_json,
+    'variables': comparison_variables,
+    'names': inverse_names, 
   })
 
 
