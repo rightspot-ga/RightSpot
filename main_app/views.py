@@ -20,6 +20,8 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
+
+
 #! Static page renders
 def home(request):
   return render(request, 'home.html', {
@@ -64,6 +66,8 @@ def location_detail(request):
   if not nearbyplaces:
       return redirect('home')
 
+  # nearbyplaces = tallyPlaces(nearbyplaces)
+  
   # Fetch address details
   geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
   geodetails_params = {'lat': lat, 'lng': lon}
