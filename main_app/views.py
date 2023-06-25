@@ -244,24 +244,6 @@ def create_project(request):
               location = Location.objects.get(id=location_id)
               project.location_set.add(location)
         return redirect('project_detail', project_id=project.id)
-
-class ProjectCreate(LoginRequiredMixin, CreateView):
-  model = Project
-  fields = ['name', 'description', 'locations']
-  success_url = '/projects'
-
-  def form_valid(self, form):
-    locations = self.request.POST.getlist('locations') # get the list of locations from the form
-    location_objects = Location.objects.filter(id__in=locations)
-    for location in location_objects:
-      # update location.project to be the project id
-      location.project = form.instance.id
-      location.save()
-
-    print(location_objects)
-    form.instance.user = self.request.user
-    form.instance.save()
-    return super().form_valid(form)
   
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
   model = Project
@@ -271,38 +253,17 @@ class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
 
-#! Data relationship handling
-@login_required
-@login_required
-def assoc_project(request, location_id):
-    if request.method == 'POST':
-        location = Location.objects.get(id=location_id)
-        project_ids = request.POST.getlist('projects')
-        for project_id in project_ids:
-            location.projects.add(project_id)
-    return redirect('saved_location_detail', location_id=location_id)
-
-@login_required
-def unassoc_project(request, location_id, project_id):
-  Location.objects.get(id=location_id).projects.remove(project_id)
-  return redirect('saved_location_detail', location_id=location_id)
-
 #! Auth 
 def signup(request):
   error_message = ''
   if request.method == 'POST':
-    # This is how to create a 'user' form object
-    # that includes the data from the browser
     form = CustomUserCreationForm(request.POST)
     if form.is_valid():
-      # This will add the user to the database
       user = form.save()
-      # This is how we log a user in via code
       login(request, user)
       return redirect('home')
     else:
       error_message = 'Invalid sign up - try again'
-  # A bad POST or a GET request, so render signup.html with an empty form
   form = CustomUserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
