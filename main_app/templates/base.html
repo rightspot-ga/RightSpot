@@ -25,9 +25,11 @@
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-primary">
-        <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
-            <i class="bi bi-list"></i>
-        </button>
+        <div class="d-flex justify-content-end">
+            <button id="sidebarToggle" class="btn btn-primary fs-2"  data-toggle="tooltip" data-delay="50" data-placement="right" title="Menu">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
         <div class="py-4 py-3 mb-2">
             <div class="d-inline-block" style="max-width: 100px;">
                 <img src="{% static 'img/rightspot_light.png' %}" alt="Logo" id="nav-logo" class="img-fluid px-1 px-sm-1 mt-1 mb-2 d-inline-block">
@@ -76,7 +78,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'logout' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
+                <a href="{% url 'logout' %}" class="nav-link font-italic" data-toggle="tooltip" data-delay="50" data-placement="right" title="Logout">
                     <i class="nav-icon bi bi-box-arrow-left px-1"></i>
                     <span class="nav-text">Logout</span>
                 </a>
@@ -90,12 +92,6 @@
                     <span class="nav-text">Login</span>
                 </a>
             </li>
-            <!-- <li class="nav-item">
-                <a href="{% url 'signup' %}" class="nav-link font-italic {% if request.path == '/accounts/signup/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Sign Up">
-                    <i class="nav-icon bi bi-person-plus-fill px-1"></i>
-                    <span class="nav-text">Sign Up</span>
-                </a>
-            </li> -->
             {% endif %}
 
     </div>
@@ -167,10 +163,11 @@
         $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
         navLinks.forEach((navLink) => {
             $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
+            $(navLink).tooltip('dispose'); // dispose of the tooltip by default, add when sidebar is expanded
         });
 
         // Check if the sidebar is collapsed or not within the same session
-        if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        if (localStorage.getItem('sidebarExpanded') === 'true') {
             sidebar.classList.add('active');
             sidebar.style.transition = 'none';
             sidebarToggle.classList.add('active');
@@ -213,7 +210,7 @@
         sidebarToggle.addEventListener('click', () => {
             $(sidebarToggle).tooltip('hide'); // hide the tooltip when button clicked
             sidebar.classList.toggle('active');
-            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('active')); // save the state in localStorage
+            localStorage.setItem('sidebarExpanded', sidebar.classList.contains('active')); // save the state in localStorage
             sidebarToggle.classList.toggle('active');
             content.classList.toggle('active');
             footer.classList.toggle('active');
@@ -222,13 +219,31 @@
             });
 
             if (logoTitle.classList.contains('active')) {
+                // .ie. when sidebar collapsing (expanded to collapsed)
 
-                // Remove the tooltip when expanding the sidebar
+                // Add the tooltip
+                navLinks.forEach((navLink) => {
+                    $(navLink).tooltip(); // initialize the tooltip
+                });
+
+                // Set tooltip value for sidebar toggle button
+                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
+
+                // Remove the logo title and nav text when collapsing the sidebar, without delay
+                logoTitle.classList.toggle('active');
+                userTitle.classList.toggle('active');
+                navTexts.forEach((navText) => {
+                    navText.classList.toggle('active');
+                });  
+            } else {
+                // .ie. when sidebar expanding (collapsed to expanded)
+                
+                // Remove the tooltip
                 navLinks.forEach((navLink) => {
                     $(navLink).tooltip('dispose'); // destroy the tooltip
                 });
 
-                // Set tooltip for sidebar toggle button
+                // Set tooltip value for sidebar toggle button
                 sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
 
                 // Delay the transition of the logo title and nav text when expanding the sidebar
@@ -238,22 +253,7 @@
                     navTexts.forEach((navText) => {
                         navText.classList.toggle('active');
                     });
-                }, 250);
-            } else {
-                // Add the tooltip when collapsing the sidebar
-                navLinks.forEach((navLink) => {
-                    $(navLink).tooltip(); // initialize the tooltip
-                });
-
-                // Set tooltip for sidebar toggle button
-                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
-
-                // Remove the logo title and nav text when collapsing the sidebar, without delay
-                logoTitle.classList.toggle('active');
-                userTitle.classList.toggle('active');
-                navTexts.forEach((navText) => {
-                    navText.classList.toggle('active');
-                });                
+                }, 250);           
             }
         });
     </script>
