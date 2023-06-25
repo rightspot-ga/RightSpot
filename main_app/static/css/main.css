@@ -27,8 +27,8 @@ html, body{
 /* Sidebar */
 
 .vertical-nav{
-    min-width: 17rem;
-    width: 17rem;
+    min-width: 4rem;
+    width: 4rem;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -38,9 +38,6 @@ html, body{
 }
 
 #sidebarToggle{
-    /* position: fixed; */
-    /* left: 17rem; */
-    /* transition: all 0.4s; */
     background-color: transparent;
     border: none;
     width: 4rem;
@@ -52,6 +49,7 @@ html, body{
 }
 
 .nav-icon{
+    font-size: 24px;
     transition: font-size 0.3s ease-in-out;
 }
 
@@ -71,38 +69,42 @@ img#nav-logo{
 }
 
 .vertical-nav.active {
-    width: 4rem;
-    min-width: 4rem;
+    width: 17rem;
+    min-width: 17rem;
 }
 
 #content.active {
-    width: calc(100% - 4rem);
+    width: calc(100% - 17rem);
     margin: 0;
-    margin-left: 4rem;
+    margin-left: 17rem;
 }
 
 footer.active {
-    width: calc(100% - 4rem);
+    width: calc(100% - 17rem);
 }
 
-#sidebarToggle.active{
-    left: 4rem;
-}
-
-.nav-text.active, #logo-title.active{
+.nav-text, #logo-title{
     display: none;
 }
 
-#user-title.active{
+#user-title{
     visibility: hidden;
 }
 
+.nav-text.active, #logo-title.active{
+    display: inline;
+}
+
+#user-title.active{
+    visibility: visible;
+}
+
 .nav-link.active{
-    text-align: center;
+    text-align: visible;
 }
 
 .nav-icon.active{
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .currentPage{
@@ -112,10 +114,11 @@ footer.active {
 /* Page Content */
 
 .page-content{
-    width: calc(100% - 17rem);
+    /* width: calc(100% - 17rem); */
+    width: calc(100% - 4rem);
     height: calc(100% - 10rem);
     min-height: calc(100vh - 10rem);
-    margin-left: 17rem;
+    margin-left: 4rem;
     padding: 3rem;
     padding-top: 5rem;
     padding-left: 4rem;
@@ -129,7 +132,7 @@ footer{
     position: fixed;
     bottom: 0;
     right: 0;
-    width: calc(100% - 17rem);
+    width: calc(100% - 4rem);
     height: 10rem;
     background-color: #000000;
     color: #fff;
