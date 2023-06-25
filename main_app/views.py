@@ -245,6 +245,7 @@ def create_project(request):
     name = request.POST.get('name')
     description = request.POST.get('description')
     locations = request.POST.getlist('locations')
+    print(locations)
     user = request.user
 
     new_project = Project(name=name, user=user, description=description)
@@ -262,8 +263,18 @@ class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
   fields = ['name', 'description', 'locations']
   success_url = '/projects'
+
   def form_valid(self, form):
+    locations = self.request.POST.getlist('locations') # get the list of locations from the form
+    location_objects = Location.objects.filter(id__in=locations)
+    for location in location_objects:
+      # update location.project to be the project id
+      location.project = form.instance.id
+      location.save()
+
+    print(location_objects)
     form.instance.user = self.request.user
+    form.instance.save()
     return super().form_valid(form)
   
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
