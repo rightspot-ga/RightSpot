@@ -6,6 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
+from django.core.serializers import serialize
+from django.utils.safestring import mark_safe
 from .static_data.lookups import inverse_names, comparison_variables
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
@@ -16,153 +18,14 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
-places_icon_lookup = {
-    'accounting': 'fas fa-money-bill-wave',
-    'airport': 'fas fa-plane-arrival',
-    'amusement_park': 'fas fa-laugh-squint',
-    'aquarium': 'fas fa-fish',
-    'art_gallery': 'fas fa-palette',
-    'atm': 'fas fa-money-bill',
-    'bakery': 'fas fa-bread-slice',
-    'bank': 'fas fa-university',
-    'bar': 'fas fa-glass-martini-alt',
-    'beauty_salon': 'fas fa-cut',
-    'bicycle_store': 'fas fa-bicycle',
-    'book_store': 'fas fa-book',
-    'bowling_alley': 'fas fa-bowling-ball',
-    'bus_station': 'fas fa-bus-alt',
-    'cafe': 'fas fa-coffee',
-    'campground': 'fas fa-campground',
-    'car_dealer': 'fas fa-car',
-    'car_rental': 'fas fa-car-side',
-    'car_repair': 'fas fa-tools',
-    'car_wash': 'fas fa-car-wash',
-    'casino': 'fas fa-dice',
-    'cemetery': 'fas fa-tombstone',
-    'church': 'fas fa-church',
-    'city_hall': 'fas fa-building',
-    'clothing_store': 'fas fa-tshirt',
-    'convenience_store': 'fas fa-shopping-basket',
-    'courthouse': 'fas fa-balance-scale',
-    'dentist': 'fas fa-tooth',
-    'department_store': 'fas fa-store',
-    'doctor': 'fas fa-stethoscope',
-    'drugstore': 'fas fa-medkit',
-    'electrician': 'fas fa-bolt',
-    'electronics_store': 'fas fa-laptop',
-    'embassy': 'fas fa-flag',
-    'fire_station': 'fas fa-fire-extinguisher',
-    'florist': 'fas fa-flower',
-    'funeral_home': 'fas fa-home',
-    'furniture_store': 'fas fa-chair',
-    'gas_station': 'fas fa-gas-pump',
-    'gym': 'fas fa-dumbbell',
-    'hair_care': 'fas fa-cut',
-    'hardware_store': 'fas fa-hammer',
-    'hindu_temple': 'fas fa-om',
-    'home_goods_store': 'fas fa-lightbulb',
-    'hospital': 'fas fa-hospital',
-    'insurance_agency': 'fas fa-shield-alt',
-    'jewelry_store': 'fas fa-gem',
-    'laundry': 'fas fa-soap',
-    'lawyer': 'fas fa-briefcase',
-    'library': 'fas fa-bookshelf',
-    'light_rail_station': 'fas fa-subway',
-    'liquor_store': 'fas fa-wine-bottle',
-    'local_government_office': 'fas fa-building',
-    'locksmith': 'fas fa-key',
-    'lodging': 'fas fa-bed',
-    'meal_delivery': 'fas fa-truck',
-    'meal_takeaway': 'fas fa-drumstick-bite',
-    'mosque': 'fas fa-moon',
-    'movie_rental': 'fas fa-film',
-    'movie_theater': 'fas fa-film',
-    'moving_company': 'fas fa-truck',
-    'museum': 'fas fa-university',
-    'night_club': 'fas fa-music',
-    'painter': 'fas fa-paint-roller',
-    'park': 'fas fa-tree',
-    'parking': 'fas fa-parking',
-    'pet_store': 'fas fa-paw',
-    'pharmacy': 'fas fa-pills',
-    'physiotherapist': 'fas fa-heartbeat',
-    'plumber': 'fas fa-wrench',
-    'police': 'fas fa-shield-alt',
-    'post_office': 'fas fa-envelope',
-    'primary_school': 'fas fa-pencil-alt',
-    'real_estate_agency': 'fas fa-building',
-    'restaurant': 'fas fa-utensils',
-    'roofing_contractor': 'fas fa-tools',
-    'rv_park': 'fas fa-campground',
-    'school': 'fas fa-pencil-alt',
-    'secondary_school': 'fas fa-pencil-alt',
-    'shoe_store': 'fas fa-shoe-prints',
-    'shopping_mall': 'fas fa-shopping-bag',
-    'spa': 'fas fa-spa',
-    'stadium': 'fas fa-futbol',
-    'storage': 'fas fa-archive',
-    'store': 'fas fa-store',
-    'subway_station': 'fas fa-subway',
-    'supermarket': 'fas fa-shopping-cart',
-    'synagogue': 'fas fa-star-of-david',
-    'taxi_stand': 'fas fa-taxi',
-    'tourist_attraction': 'fas fa-binoculars',
-    'train_station': 'fas fa-train',
-    'transit_station': 'fas fa-bus-alt',
-    'travel_agency': 'fas fa-suitcase-rolling',
-    'university': 'fas fa-graduation-cap',
-    'veterinary_care': 'fas fa-paw',
-    'zoo': 'fas fa-elephant',
-    'place_of_worship': 'fas fa-church',
-}
+#! API Keys
+@require_GET
+def apikey_w3w(request):
+  return env('W3W_API_KEY')
 
-types_not_needed = ['point_of_interest', 
-                      'establishment', 
-                      'premise', 
-                      'neighborhood', 
-                      'natural_feature', 
-                      'political', 
-                      'roofing_contractor',
-                      'administrative_area_level_1', 
-                      'administrative_area_level_2', 
-                      'administrative_area_level_3', 
-                      'administrative_area_level_4', 
-                      'administrative_area_level_5', 
-                      'administrative_area_level_6', 
-                      'administrative_area_level_7',
-                      'archipelago', 
-                      'colloquial_area', 
-                      'continent', 
-                      'country', 
-                      'establishment', 
-                      'finance', 
-                      'floor', 
-                      'food', 
-                      'general_contractor', 
-                      'geocode', 
-                      'health', 
-                      'intersection', 
-                      'landmark', 
-                      'locality', 
-                      'natural_feature', 
-                      'neighborhood', 
-                      'plus_code', 
-                      'point_of_interest', 
-                      'political', 
-                      'post_box', 
-                      'postal_code', 
-                      'postal_code_prefix', 
-                      'postal_code_suffix', 
-                      'postal_town', 
-                      'premise', 
-                      'room', 
-                      'route', 
-                      'street_address', 
-                      'street_number', 
-                      'sublocality',
-                      'sublocality_level_1',
-                      'sublocality_level_2',
-                      'sublocality_level_3']
+@require_GET
+def apikey_google(request):
+  return env('GOOGLE_MAPS_API_KEY')
 
 #! Static page renders
 def home(request):
@@ -203,48 +66,11 @@ def location_detail(request):
     
   # Fetch nearby places
   nearbyplaces_url = get_api_base_url(request) + '/location_services/nearbyplaces'
-  nearbyplaces_params = {'lat': lat, 'lng': lon, 'radius': 1000}
+  nearbyplaces_params = {'lat': lat, 'lng': lon, 'radius': 500}
   nearbyplaces = fetch_from_api(nearbyplaces_url, nearbyplaces_params)
   if not nearbyplaces:
       return redirect('home')
-
-  # Tally nearby places types
-  places_type_counts = {}
-  for place in nearbyplaces['results']:
-      if 'types' in place:
-        for place_type in place['types']:
-            if place_type in places_type_counts:
-                places_type_counts[place_type] += 1
-            else:
-                places_type_counts[place_type] = 1
-
-  # Sort places types by count
-  places_type_counts = {k: v for k, v in sorted(places_type_counts.items(), key=lambda item: item[1], reverse=True)}
-
-  # Remove types not needed 
-  for type_not_needed in types_not_needed:
-      if type_not_needed in places_type_counts:
-          del places_type_counts[type_not_needed]
-
-  # Add icons to places types
-  places_types = []
-  for place_type in places_type_counts:
-      places_types.append({
-          'name': place_type,
-          'count': places_type_counts[place_type],
-          'icon': places_icon_lookup.get(place_type, 'bi-geo-alt')
-      })
-  
-  # Format places types
-  for place_type in places_types:
-    # Replace "_" with " " in place types
-    place_type['name'] = place_type['name'].replace('_', ' ')
-    # Add 's' to end of place types if count > 1
-    if place_type['count'] > 1:
-      place_type['name'] = place_type['name'] + 's'
-    # Capitalise place types
-    place_type['name'] = place_type['name'].title()
-
+    
   # Fetch address details
   geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
   geodetails_params = {'lat': lat, 'lng': lon}
@@ -287,10 +113,9 @@ def location_detail(request):
       'demographics': demographics_final_order_list,
       'socioeconomics': socioeconomics_final_order_list,
       'industry': industry_final_order_list,
-      'nearby': places_types,
+      'nearby': nearbyplaces,
       'location': location,
       'projects': user_projects,
-      'google_api_key': env('GOOGLE_MAPS_API_KEY'),
   })
 
 @login_required
@@ -356,8 +181,12 @@ def saved_location_detail(request, location_id):
 @login_required
 def compare(request):
   locations = Location.objects.filter(user=request.user)
+  locations_json = mark_safe(serialize('json', locations))
   return render(request, 'compare.html', {
-    'variables': comparison_variables
+    'locations': locations,
+    'locations_json': locations_json,
+    'variables': comparison_variables,
+    'names': inverse_names, 
   })
 
 
@@ -450,13 +279,3 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
-
-
-#! API Keys
-@require_GET
-def apikey_w3w(request):
-  return env('W3W_API_KEY')
-
-@require_GET
-def apikey_google(request):
-  return env('GOOGLE_MAPS_API_KEY')
