@@ -225,25 +225,48 @@ class DeckDelete(LoginRequiredMixin, DeleteView):
 #! Projects
 @login_required
 def projects_index(request):
-  projects = 'Placeholder'
+  user_projects = Project.objects.filter(user=request.user).order_by('id')
+  user_locations = Location.objects.filter(user=request.user).order_by('id')
+  print(user_projects.last().locations)
   return render(request, 'projects/index.html', {
-    'projects': projects
+    'user_projects': user_projects,
+    'user_locations': user_locations
   })
 
 @login_required
 def project_detail(request, project_id):
-  project = 'Placeholder'
-  return render(request, 'project/detail.html', {
+  project = Project.objects.get(id=project_id)
+  return render(request, 'projects/detail.html', {
     'project': project
   })
 
+@login_required
+def create_project(request):
+  if request.method == 'POST':
+    name = request.POST.get('name')
+    description = request.POST.get('description')
+    locations = request.POST.getlist('locations')
+    user = request.user
+
+    new_project = Project(name=name, user=user, description=description)
+
+    new_project.save()
+
+    for location_id in locations:
+      location = Location.objects.get(id=location_id)
+      location.project = new_project
+      location.save()
+
+  return redirect('projects')
+
 class ProjectCreate(LoginRequiredMixin, CreateView):
   model = Project
-  fields = ['name', 'description']
+  fields = ['name', 'description', 'locations']
+  success_url = '/projects'
   def form_valid(self, form):
     form.instance.user = self.request.user
     return super().form_valid(form)
-
+  
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
   model = Project
   fields = ['name', 'description']
@@ -251,6 +274,7 @@ class ProjectUpdate(LoginRequiredMixin, UpdateView):
 class ProjectDelete(LoginRequiredMixin, DeleteView):
   model = Project
   success_url = '/projects'
+  
 
 
 #! Auth 
@@ -382,7 +406,7 @@ places_icon_lookup = {
     'travel_agency': 'fas fa-suitcase-rolling',
     'university': 'fas fa-graduation-cap',
     'veterinary_care': 'fas fa-paw',
-    'zoo': 'fas fa-elephant',
+    'zoo': 'fas fa-hippo',
     'place_of_worship': 'fas fa-church',
 }
 

@@ -6,11 +6,12 @@ import csv
 class Project(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400, default='No description')
+    locations = models.JSONField(default=list)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
     def get_absolute_url(self):
-        return reverse('project_detail', kwargs={'pk': self.id}) 
+        return reverse('project_detail', kwargs={'project_id': self.id}) 
 
 class Location(models.Model):
     name = models.CharField(max_length=250)

@@ -20,6 +20,10 @@ html, body{
     white-space: nowrap;
 }
 
+.max-width-1000{
+    max-width: 1000px;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -111,9 +115,9 @@ footer.active {
     margin-left: 17rem;
     padding: 3rem;
     padding-top: 5rem;
+    padding-left: 4rem;
     transition: all 0.4s;
     overflow: auto;
-    
 }
 
 /* Footer */
@@ -295,6 +299,17 @@ footer > .wrapper{
 }
 
 
+/* Project */
+
+.project-item:hover{
+    background-color: var(--light-color);
+
+}
+
+.projects-intro{
+    width: 75%;
+}
+
 
 /* .pac-container{
     background-color: var(--primary-color);
@@ -341,8 +356,12 @@ footer > .wrapper{
     }
 
     .page-content{
-        height: auto;
-        padding-bottom: 11rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .projects-intro{
+        width: 100%;
     }
 
   }
@@ -352,5 +371,13 @@ footer > .wrapper{
     /* Home */
     #location_search_btn{
         margin-top: 10px;
+    }
+
+    .project-item{
+        text-align: center;
+    }
+
+    .project-item > div > a{
+        margin: auto;
     }
   }
