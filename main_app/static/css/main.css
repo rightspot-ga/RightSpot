@@ -32,6 +32,10 @@ html, body{
     letter-spacing: 2px;
 }
 
+.mobile-show{
+    display: none;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -397,6 +401,10 @@ footer > .wrapper{
 
     .projects-intro{
         width: 100%;
+    }
+
+    .mobile-show{
+        display: inline;
     }
 
   }
