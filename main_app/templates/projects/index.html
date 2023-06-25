@@ -1,6 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Projects index</h1>
+<div class="d-flex flex-column align-items-center my-3">
+    <div class="row projects-top pb-3 text-center mb-1">
+        <h1 id="" class="text-primary">
+            Projects
+        </h1>
+    </div>
+    <div class="row w-100 max-width-1000 mb-5">
+        <div class="col bg-primary mx-4 my-2 p-4 text-white text-center  rounded">
+            {% if not user_projects %}
+                <p class="fs-5 fw-bold">Do you have a great idea? Want to collect information about one or more potential locations?</p>
+                <p class="fs-6">Projects allow you to save multiple locations under one roof and come back to them later.</p>
+                <p class="fs-6">Get started now and create your next project...</p>
+            {% else %}
+                <p class="fs-5 fw-bold">You've got <span class="text-secondary fs-2">{{ user_projects|length }}</span> great projects</p>
+                <p class="fs-6">Create another?</p>
+            {% endif %}
+                <button id="create-project-btn" class="btn btn-accent fw-bold mt-2" data-toggle="modal" data-target="#createProjectModal">
+                    Create Project
+                </button>
+        </div>
+    </div>
+    <div class="row d-flex flex-row w-100 max-width-1000">
+        {% for project in user_projects %}
+            <div class="project-item row gap-2 p-4 ms-1" >
+                <div class="col">
+                    <div class="row">
+                        <h4>{{ project.name }}</h4>
+                    </div>
+                    <div class="row">
+                        <small class="text-muted">{{ project.description }}</small>
+                    </div>
+                    {% if project.locations|length > 0 %}
+                        {% for location in project.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <a href="{% url 'project_detail' project.id %}" class="btn btn-radius btn-secondary mx-2">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'project_update' project.pk %}" class="btn btn-radius btn-accent mx-2 text-white">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="{% url 'project_delete' project.id %}" class="btn btn-radius btn-danger mx-2">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="createProjectModal" tabindex="-1" role="dialog" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-primary text-white p-3">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createProjectModalLabel">Create Project</h5>
+          <button type="button" class="close btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <form action="{% url 'project_create' %}" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group mb-2">
+                <label class="mb-1" for="name">Project Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group mb-2">
+                <label class="mb-1" for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
+            <div class="form-group mb-2">
+                <label class="mb-1" for="locations">Saved Locations</label>
+                <select name="locations" id="locations" class="form-select" multiple required>
+                    <option value="" selected disabled>Select location(s)</option>
+                    {% for location in user_locations %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>  
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="submit" class="btn btn-accent fw-bold">Save Location</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
 
 {% endblock %}

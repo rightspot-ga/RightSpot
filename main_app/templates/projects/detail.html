@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Project detail</h1>
+<div class="d-flex flex-column align-items-center my-3">
+    <div class="row projects-top pb-3 text-center mb-1">
+        <h1 id="" class="text-primary">
+            {{ project.name }}
+        </h1>
+    </div>
+    <div class="row w-100 max-width-1000 mb-2 text-white ">
+        <div class="col bg-primary mx-4 my-2 p-4 rounded">
+            <div class="d-flex align-items-center justify-content-center">
+                <span class="fs-6">{{ project.description }}</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

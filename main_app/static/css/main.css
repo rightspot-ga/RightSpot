@@ -20,6 +20,10 @@ html, body{
     white-space: nowrap;
 }
 
+.max-width-1000{
+    max-width: 1000px;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -294,6 +298,17 @@ footer > .wrapper{
 }
 
 
+/* Project */
+
+.project-item:hover{
+    background-color: var(--light-color);
+
+}
+
+.projects-intro{
+    width: 75%;
+}
+
 
 /* .pac-container{
     background-color: var(--primary-color);
@@ -344,6 +359,10 @@ footer > .wrapper{
         padding-right: 2rem;
     }
 
+    .projects-intro{
+        width: 100%;
+    }
+
   }
 
   /* Styles for screens smaller than 690px */
@@ -351,5 +370,13 @@ footer > .wrapper{
     /* Home */
     #location_search_btn{
         margin-top: 10px;
+    }
+
+    .project-item{
+        text-align: center;
+    }
+
+    .project-item > div > a{
+        margin: auto;
     }
   }
