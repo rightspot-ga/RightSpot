@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, StaticOnsData
-from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm
+from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm, ProjectUpdateForm
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
 from django.core.serializers import serialize
 from django.utils.safestring import mark_safe
+from django.urls import reverse_lazy
 from .static_data.lookups import inverse_names, comparison_variables
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
@@ -248,7 +249,16 @@ def create_project(request):
 	
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
 	model = Project
-	fields = ['name', 'description']
+	form_class = ProjectUpdateForm
+
+	def get_form_kwargs(self):
+		kwargs = super(ProjectUpdate, self).get_form_kwargs()
+		kwargs['user'] = self.request.user
+		return kwargs
+	def form_valid(self, form):
+		response = super(ProjectUpdate, self).form_valid(form)
+		form.instance.location_set.set(form.cleaned_data['locations'])
+		return redirect('project_detail', project_id=self.object.id)
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):
 	model = Project

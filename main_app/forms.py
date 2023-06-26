@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from .models import Project, Location
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -43,5 +44,19 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         self.fields['new_password1'].help_text = mark_safe("<ul><li>Cannot be too similar to your other personal information.</li><li>Must be at least 8 characters.</li><li>Cannot be a commonly used password.</li><li>Cannot be entirely numeric.</li></ul>")
         self.prefix = 'password_change'
 
+class ProjectUpdateForm(forms.ModelForm):
+    locations = forms.ModelMultipleChoiceField(queryset=Location.objects.none(), widget=forms.CheckboxSelectMultiple())
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ProjectUpdateForm, self).__init__(*args, **kwargs)
+
+        if user:
+            self.fields['locations'].queryset = Location.objects.filter(user=user)
+        if self.instance and self.instance.pk:
+            self.fields['locations'].initial = self.instance.location_set.all()
+
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'locations']
 
