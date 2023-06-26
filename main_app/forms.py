@@ -69,3 +69,18 @@ class ProjectUpdateForm(forms.ModelForm):
         model = Project
         fields = ['name', 'description', 'locations']
 
+class LocationUpdateForm(forms.ModelForm):
+    projects = forms.ModelMultipleChoiceField(queryset=Project.objects.none(), widget=forms.CheckboxSelectMultiple())
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(LocationUpdateForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields['projects'].queryset = Project.objects.filter(location__user=user).distinct()
+            if self.instance:
+                self.fields['projects'].initial = self.instance.projects.all()
+
+    class Meta:
+        model = Location
+        fields = ['name', 'description', 'projects']        
+

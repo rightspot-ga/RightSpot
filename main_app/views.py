@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, StaticOnsData
-from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm, ProjectUpdateForm
+from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm, ProjectUpdateForm, LocationUpdateForm
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -200,9 +200,18 @@ def compare(request):
 	})
 
 class LocationUpdate(LoginRequiredMixin, UpdateView):
-	model = Location
-	fields = ['name', 'description']
-	success_url = '/locations/starred'
+    model = Location
+    form_class = LocationUpdateForm
+    
+    def get_form_kwargs(self):
+        kwargs = super(LocationUpdate, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.projects.set(form.cleaned_data['projects'])
+        return redirect('saved_location_detail', location_id=self.object.id) 
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
 	model = Location
