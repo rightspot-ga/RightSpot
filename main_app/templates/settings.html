@@ -85,15 +85,36 @@
                         <span>Delete your account?</span>
                     </div>
                     <div class="col-auto d-flex align-items-center justify-content-center">
-                        <form id="delete-account" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_id" value="delete-account">
-                            <button type="submit" class="btn btn-danger py-2 px-4 mt-3 me-2 fw-bold letter-spacing-2">Delete</button>
-                        </form>
+                        <button id="delete-account-btn" class="btn btn-danger fw-bold py-2 px-4 mt-3 me-2 letter-spacing-2" data-toggle="modal" data-target="#deleteAccountModal">
+                            Delete
+                        </button>
                     </div>                    
                 </div>
               </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" role="dialog" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-primary text-white p-3 text-center">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModalLabel">Delete Account</h5>
+                <button type="button" class="close btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+            <div>
+                <p class="fs-3">Are you sure?</p>
+                <p>This action cannot be undone.</p>
+                <p>All projects will be deleted.</p>
+            </div>
+            <form id="delete-account" class="pb-3" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="form_id" value="delete-account">
+                <button type="submit" class="btn btn-danger py-2 px-4 mt-3 me-2 fw-bold letter-spacing-2">Delete</button>
+            </form>
         </div>
     </div>
 </div>
@@ -127,7 +148,7 @@
 </script>
 
 <script defer>
-    const formLabels = document.querySelectorAll('.password-label > label', '.profile-label > label');
+    const formLabels = document.querySelectorAll('.password-label > label , .profile-label > label');
     formLabels.forEach((label, index) => {
         label.innerHTML = label.textContent.slice(0, -1);
     })
