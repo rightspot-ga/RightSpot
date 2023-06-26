@@ -34,7 +34,7 @@
             <hr>
         </div>
         <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
-            <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter project notes here">{{ project.notes }}</textarea>
+            <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter notes here...">{{ project.notes }}</textarea>
             <div id="notes-buttons" class="mt-4">
               <button id="edit-button" class="btn btn-accent text-white" style="min-width: 5rem;">Edit</button>
               <button id="save-button" class="btn btn-secondary ms-2 text-white" style="min-width: 5rem;" disabled>Save</button>
@@ -45,9 +45,16 @@
         <div class=" p-4 pb-2 my-1">
             <h3>Locations</h3>
             <hr>
+            <div class="d-flex justify-content-end align-items-center">
+                <span id="compare-message" class="me-3 text-muted letter-spacing-1">Select 2 to compare</span>
+                <button id="compare-button" class="btn btn-info text-white" style="min-width: 5rem;" disabled>Compare</button>
+            </div>
         </div>
         {% for location in project.location_set.all %}
             <div class="project-item row gap-2 p-4 justify-self-center" >
+                <div class="col-auto d-flex justify-content-center align-items-center ">
+                    <input type="checkbox" class="compare-checkbox" data-location-id="{{ location.pk }}">
+                </div>
                 <div class="col">
                     <div class="row">
                         <h4>{{ location.name }}</h4>
@@ -154,9 +161,61 @@
         });
     };
 
+    function compare(){
+        const compareButton = document.getElementById('compare-button');
+        const compareMessage = document.getElementById('compare-message');
+        const checkboxes = document.getElementsByClassName('compare-checkbox');
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function() {
+                checkCheckboxes();
+            });
+        }
+
+        function checkCheckboxes(){
+            checkedCount = 0;
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checkedCount++;
+                }
+            }
+            if (checkedCount == 2) {
+                compareButton.disabled = false;
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (!checkboxes[i].checked) {
+                        checkboxes[i].disabled = true;
+                    }
+                }
+                compareMessage.innerText = 'Ready!'
+                compareMessage.classList.add('text-success');
+                compareMessage.classList.remove('text-muted');
+            } else {
+                compareButton.disabled = true;
+                for (let i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].disabled = false;
+                }
+                compareMessage.innerText = 'Select 2 to compare'
+                compareMessage.classList.add('text-muted');
+                compareMessage.classList.remove('text-success');
+            }
+        }
+
+        compareButton.addEventListener('click', function() {
+            const checkedLocations = [];
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checkedLocations.push(checkboxes[i].dataset.locationId);
+                }
+            }
+            window.location.href = '/compare?left=' + checkedLocations[0] + '&right=' + checkedLocations[1];
+        });
+
+    }
+
     window.onload = function() {
         initMap();
         notes();
+        compare();
     };
 </script>
 

@@ -40,7 +40,7 @@ def legal(request):
 #! Locations 
 @login_required
 def locations_index(request):
-		user_locations = Location.objects.filter(user=request.user, projects__isnull=True).order_by('-id')
+		user_locations = Location.objects.filter(user=request.user).order_by('-id')
 		return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):

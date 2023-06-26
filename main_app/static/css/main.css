@@ -385,6 +385,11 @@ footer > .wrapper{
     color: var(--light-color);
 }
 
+.compare-checkbox{
+    width: 30px;
+    height: 30px;
+}
+
 
 /* Google Autocomplete */
 
