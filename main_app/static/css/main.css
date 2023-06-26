@@ -341,7 +341,7 @@ footer > .wrapper{
 
 /* Project */
 
-.project-item:hover{
+.project-item:hover, .starred-item:hover{
     background-color: var(--light-color);
 
 }
