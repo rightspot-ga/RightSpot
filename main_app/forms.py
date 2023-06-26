@@ -19,6 +19,15 @@ class CustomUserCreationForm(UserCreationForm):
         if 'email' in self.data:
             self.fields['email'].initial = self.data['email']
         self.fields['username'].help_text = 'Max 150 characters. Only letters, digits and @/./+/-/_ allowed.'
+        self.fields['password1'].help_text = mark_safe("<ul><li>Cannot be too similar to your other personal information.</li><li>Must be at least 8 characters.</li><li>Cannot be a commonly used password.</li><li>Cannot be entirely numeric.</li></ul>")
+        self.fields['password2'].help_text = 'Please re-type your password'
+        self.fields['password1'].label = 'Password <span class="text-danger ms-1">*<span>'
+        self.fields['password2'].label = 'Confirm Password <span class="text-danger ms-1">*<span>'
+        self.fields['first_name'].label = 'First Name <small class="text-white ms-2 fw-light">optional<small>'
+        self.fields['last_name'].label = 'Last Name <small class="text-white ms-2 fw-light">optional<small>'
+        self.fields['email'].label = 'Email Address <span class="text-danger ms-1">*<span>'
+        self.fields['username'].label = 'Username <span class="text-danger ms-1">*<span>'
+
 
 class EditUserForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100, label='First Name', required=False)

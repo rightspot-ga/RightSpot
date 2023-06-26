@@ -255,13 +255,7 @@ footer > .wrapper{
     font-weight: 650;
 }
 
-.profile-label > label {
-    min-width: 9rem;
-    color: var(--primary-color);
-    font-weight: 650;
-}
-
-.password-label > label {
+.password-label > label, .profile-label > label  {
     min-width: 15rem;
     color: var(--primary-color);
     font-weight: 650;
@@ -286,10 +280,6 @@ footer > .wrapper{
 }
 
 #profile-settings > div > p > input, #password-settings > div > p > input{
-    width: calc(100% - 10rem);
-}
-
-#password-settings > div > p > input{
     width: calc(100% - 16rem);
 }
 
