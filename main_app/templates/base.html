@@ -23,7 +23,15 @@
     <script src="https://kit.fontawesome.com/50d1e12d7b.js" crossorigin="anonymous"></script>
     <!-- Custom JS -->
     <script defer src="{% static 'js/navbar.js' %}"></script>
-    <title>RightSpot</title>
+
+    {% block extra_head %}
+    {% endblock extra_head %}
+
+    <title>
+        {% block title %}
+        {% endblock title %}
+        | RightSpot
+    </title>
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-primary">
@@ -154,7 +162,7 @@
         </div>
     </footer>
 
-    
-    
+    {% block body_bottom %}
+    {% endblock body_bottom %}
 </body>
 </html>
