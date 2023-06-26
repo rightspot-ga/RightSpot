@@ -89,17 +89,12 @@ function updateComparison() {
     years.forEach(year => {
         leftComparison[year].forEach(entry => {
             const variable = Object.keys(entry)[0];
-            const leftValue = parseFloat(entry[variable]);
+            let leftRawValue = entry[variable];
+            let leftValue = (leftRawValue && variable !== 'date') ? parseFloat(leftRawValue) : leftRawValue;
 
             const rightEntry = rightComparison[year].find(e => Object.keys(e)[0] == variable);
-            const rightValue = parseFloat(rightEntry[variable]);
-
-            let formattedLeftValue = leftValue === 0 ? '-' : leftValue;
-            let formattedRightValue = rightValue === 0 ? '-' : rightValue;
-            if (variable !== 'date') {
-                formattedLeftValue = formatWithCommas(leftValue);
-                formattedRightValue = formatWithCommas(rightValue);
-            }
+            let rightRawValue = (rightEntry ? rightEntry[variable] : null);
+            let rightValue = (rightRawValue && variable !== 'date') ? parseFloat(rightRawValue) : rightRawValue;
 
             const leftRow = document.createElement("tr");
 
@@ -116,7 +111,7 @@ function updateComparison() {
             leftArrowCell.classList.add("text-center")
 
             leftVariableCell.textContent = names[variable];
-            leftValueCell.textContent = formattedLeftValue;
+
 
             if (leftValue > rightValue) {
                 leftArrowCell.innerHTML = '<span style="color:green">▲</span>';
@@ -145,7 +140,16 @@ function updateComparison() {
                 rightArrowCell.classList.add("text-center")
 
                 rightVariableCell.textContent = names[variable];
-                rightValueCell.textContent = formattedRightValue;
+
+                if (variable === 'date') {
+                    leftValueCell.textContent = leftValue;
+                    rightValueCell.textContent = rightValue;
+                } else {
+                    leftValueCell.textContent = (!leftRawValue || isNaN(leftValue)) ? '-' : formatWithCommas(leftValue);
+                    if (rightEntry) {
+                        rightValueCell.textContent = (!rightRawValue || isNaN(rightValue)) ? '-' : formatWithCommas(rightValue);
+                    }
+                }
 
                 if (rightValue > leftValue) {
                     rightArrowCell.innerHTML = '<span style="color:green">▲</span>';
