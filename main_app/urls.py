@@ -20,5 +20,5 @@ urlpatterns = [
   path('faq/', views.faq, name='faq'),
   path('legal/', views.legal, name='legal'),
   path('settings/', views.settings, name='settings'),
-  # path('update_project_notes/', views.update_project_notes, name='update_project_notes'),
+  path('update_project_notes/', views.update_project_notes, name='update_project_notes'),
 ]
