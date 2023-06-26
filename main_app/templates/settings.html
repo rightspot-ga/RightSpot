@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Account Settings
+{% endblock title %}
+
 {% block content %}
 
 <div class="d-flex flex-column align-items-center my-3">
@@ -119,6 +124,9 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block body_bottom %}
 <script>
     const tabs = document.querySelectorAll('.settings-tab');
     const tabContent = document.querySelectorAll('.tab-pane');
@@ -154,6 +162,4 @@
     })
 </script>
 
-
-
-{% endblock %}
+{% endblock body_bottom %}
