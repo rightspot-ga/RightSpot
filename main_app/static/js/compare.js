@@ -13,12 +13,17 @@ document.addEventListener("DOMContentLoaded", function() {
     const leftLocationId = getUrlParameter('left');
     const rightLocationId = getUrlParameter('right');
 
+    // Only select locations if IDs are passed in URL parameters
     if (leftLocationId) {
         document.getElementById("left-location-select").value = leftLocationId;
+    } else {
+        document.getElementById("left-location-select").value = "";
     }
 
     if (rightLocationId) {
         document.getElementById("right-location-select").value = rightLocationId;
+    } else {
+        document.getElementById("right-location-select").value = "";
     }
 
     // Filter initial dropdowns to avoid duplicate locations
@@ -29,6 +34,11 @@ document.addEventListener("DOMContentLoaded", function() {
         updateComparison();
     }
 });
+
+
+function formatWithCommas(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function getUrlParameter(name) {
     const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -52,6 +62,11 @@ function filterLocations(source, target) {
 
     // Update the options of the target dropdown
     targetSelect.innerHTML = optionsHtml;
+    
+    // Ensure that if there is no location selected, the 'Select a location' option remains selected
+    if (!currentTargetSelected) {
+        targetSelect.value = "";
+    }
 }
     
 function updateComparison() {
@@ -79,6 +94,13 @@ function updateComparison() {
             const rightEntry = rightComparison[year].find(e => Object.keys(e)[0] == variable);
             const rightValue = parseFloat(rightEntry[variable]);
 
+            let formattedLeftValue = leftValue === 0 ? '-' : leftValue;
+            let formattedRightValue = rightValue === 0 ? '-' : rightValue;
+            if (variable !== 'date') {
+                formattedLeftValue = formatWithCommas(leftValue);
+                formattedRightValue = formatWithCommas(rightValue);
+            }
+
             const leftRow = document.createElement("tr");
 
             if (variable === 'date') {
@@ -94,7 +116,7 @@ function updateComparison() {
             leftArrowCell.classList.add("text-center")
 
             leftVariableCell.textContent = names[variable];
-            leftValueCell.textContent = leftValue == 0 ? '-' : leftValue;
+            leftValueCell.textContent = formattedLeftValue;
 
             if (leftValue > rightValue) {
                 leftArrowCell.innerHTML = '<span style="color:green">▲</span>';
@@ -123,7 +145,7 @@ function updateComparison() {
                 rightArrowCell.classList.add("text-center")
 
                 rightVariableCell.textContent = names[variable];
-                rightValueCell.textContent = rightValue == 0 ? '-' : rightValue;
+                rightValueCell.textContent = formattedRightValue;
 
                 if (rightValue > leftValue) {
                     rightArrowCell.innerHTML = '<span style="color:green">▲</span>';

@@ -14,7 +14,7 @@
         <!-- Left Side -->
         <div class="d-flex flex-column flex-grow-1 mr-2">
             <select id="left-location-select" class="form-control mb-4 text-center">
-                <option value="" selected disabled>Select a location</option>
+                <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
@@ -30,7 +30,7 @@
         <!-- Right Side -->
         <div class="d-flex flex-column flex-grow-1 ml-2">
             <select id="right-location-select" class="form-control mb-4 text-center">
-                <option value="" selected disabled>Select a location</option>
+                <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
