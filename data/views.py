@@ -1,8 +1,48 @@
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
-from main_app.models import StaticOnsData
+# HTTP Request: GET {{baseURL}}/api/data/ons
+# Query Parameters: district (string)
 
-@require_GET
+from django.http import JsonResponse
+from main_app.models import StaticOnsData
+from rest_framework.decorators import api_view
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+@swagger_auto_schema(
+    method='get',
+    operation_summary='Get ONS data for a district',
+    manual_parameters=[
+        openapi.Parameter(
+            name='query',
+            in_=openapi.IN_QUERY,
+            type=openapi.TYPE_STRING,
+            description='The name of the district to retrieve data for.',
+            required=True,
+        ),
+    ],
+    responses={
+        200: openapi.Response(
+            description='Successful data retrieval',
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'data': openapi.Schema(
+                        type=openapi.TYPE_STRING
+                    ),
+                },
+            ),
+        ),
+        400: openapi.Response(
+            description='Invalid input or data retrieval error',
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'error': openapi.Schema(type=openapi.TYPE_STRING),
+                },
+            ),
+        ),
+    },
+)
+@api_view(['GET'])
 def ons(request):
     query = request.GET.get('query')
     if query:

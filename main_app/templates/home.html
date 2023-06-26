@@ -1,6 +1,66 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
 
-<h1>Home</h1>
+<div class="container d-flex flex-column align-items-center">
+    <div class="home-top pb-3 text-center">
+        <img src="{% static 'img/rightspot_dark.png' %}" alt="RightSpot logo" class="">
+        <span id="site-title" class="fs-1">
+            RightSpot
+        </span>
+    </div>
+    <div class="row">
+        <h3 class="fw-light text-center" style="letter-spacing: 2px;">Your premier service to gather data</h3>
+    </div>
+    <div class="row d-flex flex-column">
+        <div class="bg-secondary text-white text-center py-3 px-5 my-5 shadow rounded d-flex flex-column justify-content-center align-items-center">
+            <h4 class="mt-3 fw-bold">Show Me Data</h4>
+            <p>
+                Search by location your desired spot & view detailed statistics to help you make your decision
+            </p>
+            <form id="normal-search" class="" action="/locations/" method="GET">
+                <span class="input-group d-flex justify-content-center align-items-center ">
+                    <input type="text" id="location_search" name="gQuery" class="" placeholder="Enter a location...">
+                    <button type="submit" id="location_search_btn" class="btn btn-accent text-white fw-bold px-3"><span class="pe-3 fw-normal letter-spacing-2 mobile-show">Search</span><i class="bi bi-search"></i></button>
+                </span>
+            </form>
+            <form id="what3-auto" class="my-4" action="/locations/" method="GET">
+                <div class="input-group d-flex flex-row align-items-stretch justify-content-center">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text h-100 ">or use what3words (optional) </span>
+                    </div>
+                    <div class="input-group full-width nowrap d-flex justify-content-center">
+                        <div>
+                            <what3words-autosuggest api_key="{{ w3w_api_key }}" clip_to_country="GB">
+                                <input type="text" />
+                            </what3words-autosuggest>
+                        </div>   
+                        <div>
+                            <button type="submit" class="btn btn-accent text-white fw-bold px-3 h-100"><i class="bi bi-search"></i></button>
+                        </div>  
+                    </div>         
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <script type="module" src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.esm.js"></script>
+    <script nomodule src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.js"></script>
+
+    <script>
+        const locationSearch = document.getElementById("location_search");
+        function initAutocomplete(){
+            autocomplete = new google.maps.places.Autocomplete(
+                locationSearch,
+                {
+                    componentRestrictions: {'country': ['gb']},
+
+                }
+            );
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+</div>
 {% endblock %}

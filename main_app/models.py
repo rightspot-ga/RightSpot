@@ -1,41 +1,37 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.contrib.auth.models import User
 import csv
 
 class Project(models.Model):
     name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    notes = models.TextField(default='No notes yet')
     def __str__(self):
         return self.name
     def get_absolute_url(self):
-        return reverse('project_detail', kwargs={'pk': self.id}) 
+        return reverse('project_detail', kwargs={'project_id': self.id}) 
 
 class Location(models.Model):
     name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    what3words = models.CharField
-    #! Setting as JSONFields here and lower for now as that seems like a decent way to potentially store complex info in one field
-    location = models.JSONField
-    stats = models.JSONField
+    projects = models.ManyToManyField(Project)
+    location = models.JSONField()
     def __str__(self):
         return self.name
-    def get_absolute_url(self):
-        return reverse('location_detail', kwargs={'pk': self.id}) 
 
-class Deck(models.Model):
-    name = models.CharField(max_length=250)
-    description = models.CharField(max_length=400)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    items = models.JSONField
-    def __str__(self):
-        return self.name
-    def get_absolute_url(self):
-        return reverse('deck_detail', kwargs={'pk': self.id}) 
+# Cleaning up relationships on deletion 
+@receiver(pre_delete, sender=Location)
+def remove_location_from_projects(sender, instance, **kwargs):
+    instance.projects.clear()
+
+@receiver(pre_delete, sender=Project)
+def remove_project_from_locations(sender, instance, **kwargs):
+    instance.location_set.clear()    
 
 # Create Django model using .csv file headers as fields
 csv_file_path = 'main_app/static_data/rightspot_wide.csv'
