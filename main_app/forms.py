@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label='Email Address')
@@ -15,6 +17,7 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         if 'email' in self.data:
             self.fields['email'].initial = self.data['email']
+        self.fields['username'].help_text = 'Max 150 characters. Only letters, digits and @/./+/-/_ allowed.'
 
 class EditUserForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100, label='First Name', required=False)
@@ -24,3 +27,21 @@ class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields =  ('first_name', 'last_name','username', 'email',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.prefix = 'edit_user'
+        self.fields['username'].help_text = 'Max 150 characters. Only letters, digits and @/./+/-/_ allowed.'
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['old_password'].label = 'Current Password'
+        self.fields['new_password1'].label = 'New Password'
+        self.fields['new_password2'].label = 'Confirm New Password'
+        self.fields['new_password1'].help_text = mark_safe("<ul><li>Cannot be too similar to your other personal information.</li><li>Must be at least 8 characters.</li><li>Cannot be a commonly used password.</li><li>Cannot be entirely numeric.</li></ul>")
+        self.prefix = 'password_change'
+
+
+

@@ -210,11 +210,6 @@ footer > .wrapper{
 
 /* Forms */
 
-#login, #signup{
-    /* width: 100%;
-    height: 100%; */
-}
-
 #login > div >  p{
     text-align: left;
 }
@@ -253,7 +248,19 @@ footer > .wrapper{
     font-weight: 650;
 }
 
-#signup > div > p > input, #login > div > p > input {
+.profile-label > label {
+    min-width: 9rem;
+    color: var(--primary-color);
+    font-weight: 650;
+}
+
+.password-label > label {
+    min-width: 15rem;
+    color: var(--primary-color);
+    font-weight: 650;
+}
+
+#signup > div > p > input, #login > div > p > input, #profile-settings > div > p > input, #password-settings > div > p > input{
     height: 40px;
     font-size: 16px;
     color: #333;
@@ -269,6 +276,14 @@ footer > .wrapper{
 
 #signup-error.fade{
     visibility: hidden;
+}
+
+#profile-settings > div > p > input, #password-settings > div > p > input{
+    width: calc(100% - 10rem);
+}
+
+#password-settings > div > p > input{
+    width: calc(100% - 16rem);
 }
 
 /* Home */
@@ -329,7 +344,7 @@ footer > .wrapper{
 }
 
 /* Account Settings */
-.settings-pill{
+.settings-tab{
     background-color: var(--light-color);
     color: var(--dark-color);
     border-radius: 0;
@@ -337,15 +352,17 @@ footer > .wrapper{
     letter-spacing: 1px;
 }
 
-.settings-pill:hover{
+.settings-tab:hover{
     background-color: lightgray;
     color: var(--dark-color); 
 }
 
-.nav-link.settings-pill.active{
-    background-color: var(--accent-color);
-    color: var(--dark-color);
+.nav-link.settings-tab.active{
+    background-color: var(--secondary-color);
+    color: var(--light-color);
 }
+
+
 
 
 /* Google Autocomplete */
