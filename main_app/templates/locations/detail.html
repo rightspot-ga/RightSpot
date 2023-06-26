@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load getvalue %}
-{% load json %}
+{% load getvalue json humanize %}
 {% block content %}
 
 <!-- Embed the JSON data as a JavaScript variable -->
@@ -99,7 +98,7 @@
                     <tr>
                         <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key|intcomma }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -118,7 +117,7 @@
                     <tr>
                         <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key|intcomma }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -137,7 +136,7 @@
                     <tr>
                         <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key|intcomma }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
