@@ -10,12 +10,13 @@
     <div class="row w-100 max-width-1000 mb-5">
         <div class="col bg-primary mx-4 my-2 p-4 text-white text-center page-intro rounded">
             {% if not user_projects %}
-                <p class="fs-5 fw-bold">Do you have a great idea? Want to collect information about potential locations?</p>
+                <p class="fs-5 fw-bold">Do you have a great idea for a business?</p>
+                <p class="fs-6">Are you looking for information about potential locations?</p>
                 <p class="fs-6">Projects allow you to save multiple locations under one roof and come back to them later.</p>
-                <p class="fs-6">Get started now and create your next project...</p>
+                <p class="fs-6">Get started now and create your next project!</p>
             {% else %}
-                <p class="fs-5 fw-bold">You've got <span class="text-secondary fs-2">{{ user_projects|length }}</span> projects</p>
-                <p class="fs-6">Create another and collect your starred locations?</p>
+                <p class="fs-5 fw-bold">You've got <span class="text-secondary fs-2">{{ user_projects|length }}</span> {% if user_projects|length == 1 %} project{% else %} projects{% endif %}</p>
+                <p class="fs-6">Create another?</p>
             {% endif %}
                 <button id="create-project-btn" class="btn btn-accent fw-bold mt-2" data-toggle="modal" data-target="#createProjectModal">
                     Create project
