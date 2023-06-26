@@ -219,6 +219,7 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
 @login_required
 def projects_index(request):
 	user_projects = Project.objects.filter(user=request.user).order_by('id')
+	locations = Location.objects.filter(user=request.user)
 
 	for project in user_projects:
 		project.locations = Location.objects.filter(projects=project.id)
@@ -226,6 +227,7 @@ def projects_index(request):
 	return render(request, 'projects/index.html', {
 		'user_projects': user_projects,
 		'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+		'user_locations': locations
 	})
 
 @login_required
