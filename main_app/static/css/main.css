@@ -36,6 +36,10 @@ html, body{
     display: none;
 }
 
+.modal{
+    z-index: 9999 !important;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -156,7 +160,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 footer > .wrapper{
@@ -390,6 +394,12 @@ footer > .wrapper{
     height: 30px;
 }
 
+.locations-list{
+    max-height: 150px;
+    overflow-y: scroll;
+    background-color: rgb(0,0,0,0.2);
+    padding: 20px;
+}
 
 /* Google Autocomplete */
 
@@ -467,6 +477,44 @@ footer > .wrapper{
     #user-title.active {
         display: inline;
         margin-bottom: 0 !important;
+    }
+
+    .mobile-pt-1 {
+        padding-top: 1rem;
+    }
+
+    .mobile-pb-1 {
+        padding-bottom: 1rem;
+    }
+
+    .mobile-pb-2{
+        padding-bottom: 2rem;
+    }
+
+    .mobile-width-100{
+        width: 100%;
+    }
+
+    .mobile-remove{
+        display: none;
+    }
+
+    .mobile-m-0{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .mobile-p-0{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .mobile-mb-1{
+        margin-bottom: 1rem !important;
+    }
+
+    .mobile-flex-column{
+        flex-direction: column;
     }
 
   }

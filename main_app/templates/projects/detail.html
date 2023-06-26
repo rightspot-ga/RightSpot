@@ -25,13 +25,13 @@
     </div>
     {% if project.locations %}
     <div class="row project-map w-100 max-width-1000 mb-2">
-        <div class="px-4">
+        <div class="px-4 mobile-p-0">
             <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
         </div>
     </div>
     {% endif %}
     <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 pb-2 mb-1">
+        <div class=" p-4 pb-2 mb-1 mobile-p-0">
             <h3 class="letter-spacing-1">Notes</h3>
             <hr>
         </div>
@@ -44,12 +44,12 @@
         </div>
     </div>
     <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 pb-2 my-1">
+        <div class=" p-4 pb-2 my-1 mobile-p-0">
             <h3 class="letter-spacing-1">Locations</h3>
             <hr>
             {% if project.locations %}
-            <div class="d-flex justify-content-end align-items-center">
-                <span id="compare-message" class="me-3 text-muted letter-spacing-1">Select 2 to compare</span>
+            <div class="d-flex justify-content-end align-items-center mobile-flex-column">
+                <span id="compare-message" class="me-3 text-muted letter-spacing-1 mobile-m-0 mobile-mb-1">Select 2 to compare</span>
                 <button id="compare-button" class="btn btn-info text-white letter-spacing-2" style="min-width: 5rem;" disabled>Compare</button>
             </div>
             {% endif %}
@@ -63,11 +63,11 @@
                     <div class="row">
                         <h4 class="letter-spacing-1">{{ location.name }}</h4>
                     </div>
-                    <div class="row">
+                    <div class="row mobile-remove">
                         <small class="text-muted">{{ location.description }}</small>
                     </div>
                 </div>
-                <div class="col-auto d-flex align-items-center">
+                <div class="mobile-width-100 mobile-pt-1 col-auto d-flex align-items-center justify-content-center">
                     <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
                         <i class="fa-solid fa-eye"></i>
                     </a>
