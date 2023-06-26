@@ -62,19 +62,25 @@
             <li class="nav-item">
                 <a href="{% url 'projects' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
                     <i class="nav-icon bi bi-journals px-1"></i>
-                    <span class="nav-text">My Projects</span>
+                    <span class="nav-text">My projects</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Starred Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
-                    <span class="nav-text">Starred Locations</span>
+                    <span class="nav-text">Starred locations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
+                <a href="{% url 'compare' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Compare locations">
+                    <i class="nav-icon bi bi-clipboard-data px-1"></i>
+                    <span class="nav-text">Compare locations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Account Settings">
                     <i class="nav-icon bi bi-gear-fill px-1"></i>
-                    <span class="nav-text">Settings</span>
+                    <span class="nav-text">Account Settings</span>
                 </a>
             </li>
             <li class="nav-item">

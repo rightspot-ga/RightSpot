@@ -24,6 +24,18 @@ html, body{
     max-width: 1000px;
 }
 
+.letter-spacing-1{
+    letter-spacing: 1px;
+}
+
+.letter-spacing-2{
+    letter-spacing: 2px;
+}
+
+.mobile-show{
+    display: none;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -183,6 +195,10 @@ footer > .wrapper{
     text-align: center;
 }
 
+.cell-centered {
+    vertical-align: middle;
+}
+
 #save-btn{
     border-radius: 5px;
 }
@@ -195,13 +211,11 @@ footer > .wrapper{
     margin: 0;
 }
 
+.modal-body, .modal-header, .modal-footer {
+    border: none;
+}
 
 /* Forms */
-
-#login, #signup{
-    /* width: 100%;
-    height: 100%; */
-}
 
 #login > div >  p{
     text-align: left;
@@ -241,7 +255,19 @@ footer > .wrapper{
     font-weight: 650;
 }
 
-#signup > div > p > input, #login > div > p > input {
+.profile-label > label {
+    min-width: 9rem;
+    color: var(--primary-color);
+    font-weight: 650;
+}
+
+.password-label > label {
+    min-width: 15rem;
+    color: var(--primary-color);
+    font-weight: 650;
+}
+
+#signup > div > p > input, #login > div > p > input, #profile-settings > div > p > input, #password-settings > div > p > input{
     height: 40px;
     font-size: 16px;
     color: #333;
@@ -257,6 +283,14 @@ footer > .wrapper{
 
 #signup-error.fade{
     visibility: hidden;
+}
+
+#profile-settings > div > p > input, #password-settings > div > p > input{
+    width: calc(100% - 10rem);
+}
+
+#password-settings > div > p > input{
+    width: calc(100% - 16rem);
 }
 
 /* Home */
@@ -316,6 +350,29 @@ footer > .wrapper{
     width: 75%;
 }
 
+/* Account Settings */
+.settings-tab{
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    border-radius: 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.settings-tab:hover{
+    background-color: lightgray;
+    color: var(--dark-color); 
+}
+
+.nav-link.settings-tab.active{
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+}
+
+
+
+
+/* Google Autocomplete */
 
 /* .pac-container{
     background-color: var(--primary-color);
@@ -368,6 +425,10 @@ footer > .wrapper{
 
     .projects-intro{
         width: 100%;
+    }
+
+    .mobile-show{
+        display: inline;
     }
 
   }

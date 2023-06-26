@@ -21,7 +21,7 @@
                   {% endfor %}
               </p>
               {% endfor %}
-              <button type="submit" class="btn btn-accent py-2 px-4 mt-3 fw-bold">Sign Up</button>
+              <button type="submit" class="btn btn-accent py-2 px-4 mt-3 fw-bold letter-spacing-2">Sign Up</button>
           </div>
       </form>
   </div>
@@ -38,11 +38,11 @@
 </div>
 
 <script defer>
-  const loginLabels = document.querySelectorAll('.signup-label > label');
+  const signUpLabels = document.querySelectorAll('.signup-label > label');
   const helpText = document.querySelectorAll('small');
   const alert = document.querySelector('.alert');
 
-  loginLabels.forEach((label, index) => {
+  signUpLabels.forEach((label, index) => {
     if (index === 0 || index == 1) {
       label.innerHTML = label.textContent.slice(0, -1) + '<small class="text-white ms-2 fw-light">optional<small>';
     } else {
@@ -53,7 +53,7 @@
   helpText[0].innerHTML = 'Max 150 characters. Only letters, digits and @/./+/-/_ allowed.';
   helpText[1].innerHTML = "<ul><li>Cannot be too similar to your other personal information.</li><li>Must be at least 8 characters.</li><li>Cannot be a commonly used password.</li><li>Cannot be entirely numeric.</li></ul>";
   helpText[2].innerHTML = 'Please re-type your password';
-  loginLabels[5].innerHTML = 'Confirm Password<span class="text-danger ms-1">*<span>';
+  signUpLabels[5].innerHTML = 'Confirm Password<span class="text-danger ms-1">*<span>';
 
   if (alert) {
     setInterval(function() {
