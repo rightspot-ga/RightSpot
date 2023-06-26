@@ -158,30 +158,34 @@ def save_location(request):
 
 @login_required
 def saved_location_detail(request, location_id):
-	saved_location = Location.objects.get(id=location_id)
-	location = saved_location.location
-	nearbyplaces = location['nearby']
-	addressparts = location['address']
-	district = check_uk_district(addressparts)
-	if district:
-			# Fetch ONS data
-			ons_url = get_api_base_url(request) + '/data/ons'
-			ons_params = {'query': district}
-			stats = fetch_from_api(ons_url, ons_params)
-	user_projects = Project.objects.filter(user=request.user)
-	return render(request, 'locations/detail.html', {
-			'name': saved_location.name,
-			'stats': stats,
-			'names': inverse_names,
-			'demographics': demographics_final_order_list,
-			'socioeconomics': socioeconomics_final_order_list,
-			'industry': industry_final_order_list,
-			'nearby': tallyPlaces(nearbyplaces),
-			'location': location,
-			'projects': user_projects,
-			'saved': saved_location,
-			'google_api_key': env('GOOGLE_MAPS_API_KEY'),
-	})
+  saved_location = Location.objects.get(id=location_id)
+  location = saved_location.location
+  nearbyplaces = location['nearby']
+  addressparts = location['address']
+  district = check_uk_district(addressparts)
+  if district:
+      # Fetch ONS data
+      ons_url = get_api_base_url(request) + '/data/ons'
+      ons_params = {'query': district}
+      stats = fetch_from_api(ons_url, ons_params)
+      for year_data in stats['data']:
+            for variable, value in year_data.items():
+                formatted_value = format_value_as_integer_if_whole_number(value)
+                year_data[variable] = formatted_value
+  user_projects = Project.objects.filter(user=request.user)
+  return render(request, 'locations/detail.html', {
+      'name': saved_location.name,
+      'stats': stats,
+      'names': inverse_names,
+      'demographics': demographics_final_order_list,
+      'socioeconomics': socioeconomics_final_order_list,
+      'industry': industry_final_order_list,
+      'nearby': tallyPlaces(nearbyplaces),
+      'location': location,
+      'projects': user_projects,
+      'saved': saved_location,
+      'google_api_key': env('GOOGLE_MAPS_API_KEY'),
+  })
 
 @login_required
 def compare(request):

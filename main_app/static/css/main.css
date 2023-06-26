@@ -195,6 +195,10 @@ footer > .wrapper{
     text-align: center;
 }
 
+.cell-centered {
+    vertical-align: middle;
+}
+
 #save-btn{
     border-radius: 5px;
 }
@@ -207,6 +211,9 @@ footer > .wrapper{
     margin: 0;
 }
 
+.modal-body, .modal-header, .modal-footer {
+    border: none;
+}
 
 /* Forms */
 
