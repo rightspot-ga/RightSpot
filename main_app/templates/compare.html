@@ -14,6 +14,7 @@
         <!-- Left Side -->
         <div class="d-flex flex-column flex-grow-1 mr-2">
             <select id="left-location-select" class="form-control mb-4 text-center">
+                <option value="" selected disabled>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
@@ -29,6 +30,7 @@
         <!-- Right Side -->
         <div class="d-flex flex-column flex-grow-1 ml-2">
             <select id="right-location-select" class="form-control mb-4 text-center">
+                <option value="" selected disabled>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
@@ -64,7 +66,8 @@
         leftTableBody.innerHTML = '';
         rightTableBody.innerHTML = '';
 
-        Object.keys(leftComparison).forEach(year => {
+        const years = Object.keys(leftComparison).sort((a, b) => b - a);
+        years.forEach(year => {
             leftComparison[year].forEach(entry => {
                 const variable = Object.keys(entry)[0];
                 const leftValue = parseFloat(entry[variable]);

@@ -21,6 +21,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/50d1e12d7b.js" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script defer src="{% static 'js/navbar.js' %}"></script>
     <title>RightSpot</title>
 </head>
 <body class="bg-ivory">
@@ -62,19 +64,25 @@
             <li class="nav-item">
                 <a href="{% url 'projects' %}" class="nav-link font-italic {% if request.path == '/projects' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="My Projects">
                     <i class="nav-icon bi bi-journals px-1"></i>
-                    <span class="nav-text">My Projects</span>
+                    <span class="nav-text">My projects</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Starred Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
-                    <span class="nav-text">Starred Locations</span>
+                    <span class="nav-text">Starred locations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Settings">
+                <a href="{% url 'compare' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Compare locations">
+                    <i class="nav-icon bi bi-clipboard-data px-1"></i>
+                    <span class="nav-text">Compare locations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'settings' %}" class="nav-link font-italic {% if request.path == '/settings/' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Account Settings">
                     <i class="nav-icon bi bi-gear-fill px-1"></i>
-                    <span class="nav-text">Settings</span>
+                    <span class="nav-text">Account Settings</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -147,115 +155,6 @@
     </footer>
 
     
-    <!-- Custom JS -->
-    <script defer>
-        // Sidebar Toggle
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const content = document.getElementById('content');
-        const footer = document.querySelector('footer');
-        const navTexts = document.querySelectorAll('.nav-text');
-        const navIcons = document.querySelectorAll('.nav-icon');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const logoTitle = document.getElementById('logo-title');
-        const userTitle = document.getElementById('user-title');
-
-        $(sidebarToggle).tooltip(); // initialise sidebartoggle button tooltip
-        navLinks.forEach((navLink) => {
-            $(navLink).tooltip(); // initialise jQuery tooltip, overriding the default
-            $(navLink).tooltip('dispose'); // dispose of the tooltip by default, add when sidebar is expanded
-        });
-
-        // Check if the sidebar is collapsed or not within the same session
-        if (localStorage.getItem('sidebarExpanded') === 'true') {
-            sidebar.classList.add('active');
-            sidebar.style.transition = 'none';
-            sidebarToggle.classList.add('active');
-            sidebarToggle.style.transition = 'none';
-            sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
-            content.classList.add('active');
-            content.style.transition = 'none';
-            footer.classList.add('active');
-            footer.style.transition = 'none';
-            navIcons.forEach((navIcon) => {
-                navIcon.classList.add('active');
-                navIcon.style.transition = 'none';
-            });
-            logoTitle.classList.add('active');
-            userTitle.classList.add('active');
-            navTexts.forEach((navText) => {
-                navText.classList.add('active');
-            });
-
-            // Restore transition after the sidebar is collapsed
-            setTimeout(() => {
-                sidebar.style.transition = '';
-                sidebarToggle.style.transition = '';
-                content.style.transition = '';
-                footer.style.transition = '';
-                navIcons.forEach((navIcon) => {
-                    navIcon.style.transition = '';
-                });
-            }, 250);
-        } else{
-            // Destroy the default tooltip when first loading the page, as menu is expanded by default
-            (function(){
-                navLinks.forEach((navLink) => {
-                    $(navLink).tooltip('dispose'); // destroy the tooltip
-                });
-            })();
-            sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
-        }
-
-        sidebarToggle.addEventListener('click', () => {
-            $(sidebarToggle).tooltip('hide'); // hide the tooltip when button clicked
-            sidebar.classList.toggle('active');
-            localStorage.setItem('sidebarExpanded', sidebar.classList.contains('active')); // save the state in localStorage
-            sidebarToggle.classList.toggle('active');
-            content.classList.toggle('active');
-            footer.classList.toggle('active');
-            navIcons.forEach((navIcon) => {
-                navIcon.classList.toggle('active');
-            });
-
-            if (logoTitle.classList.contains('active')) {
-                // .ie. when sidebar collapsing (expanded to collapsed)
-
-                // Add the tooltip
-                navLinks.forEach((navLink) => {
-                    $(navLink).tooltip(); // initialize the tooltip
-                });
-
-                // Set tooltip value for sidebar toggle button
-                sidebarToggle.setAttribute('data-original-title', 'Expand Menu');
-
-                // Remove the logo title and nav text when collapsing the sidebar, without delay
-                logoTitle.classList.toggle('active');
-                userTitle.classList.toggle('active');
-                navTexts.forEach((navText) => {
-                    navText.classList.toggle('active');
-                });  
-            } else {
-                // .ie. when sidebar expanding (collapsed to expanded)
-                
-                // Remove the tooltip
-                navLinks.forEach((navLink) => {
-                    $(navLink).tooltip('dispose'); // destroy the tooltip
-                });
-
-                // Set tooltip value for sidebar toggle button
-                sidebarToggle.setAttribute('data-original-title', 'Collapse Menu');
-
-                // Delay the transition of the logo title and nav text when expanding the sidebar
-                setTimeout(() => {
-                    logoTitle.classList.toggle('active');
-                    userTitle.classList.toggle('active');
-                    navTexts.forEach((navText) => {
-                        navText.classList.toggle('active');
-                    });
-                }, 250);           
-            }
-        });
-    </script>
+    
 </body>
 </html>

@@ -83,51 +83,61 @@
             <h2>District-level statistics - {{ stats.data.0.district }} </h2>
             <p>Data provided by the Office for National Statistics</p>
         </div>
-        <table class="table-striped">
-            <thead>
-                <tr>
-                    <th class="variable-name">Indicator</th>
-                    {% for year in stats.data %}
-                        <th>{{ year.date }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
+        <table class="table table-striped text-center">
             <tbody>
                 <!-- Demographics Section -->
                 <tr>
-                    <td colspan="{{ stats.data|length|add:1 }}" class="table-subheading">Demographics</td>
+                    <td colspan="{{ stats.data|length|add:1 }}" class="font-weight-bold h5 py-2" style="background-color: #C89933;">Demographics</td>
+                </tr>
+                <tr>
+                    <th class="font-weight-bold text-center">Indicator</th>
+                    {% for year in stats.data %}
+                        <th class="font-weight-bold text-center">{{ year.date }}</th>
+                    {% endfor %}
                 </tr>
                 {% for key in demographics %}
                     <tr>
-                        <td class="first-column">{{ names|getvalue:key }}</td>
+                        <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
-
+        
                 <!-- Socioeconomics Section -->
                 <tr>
-                    <td colspan="{{ stats.data|length|add:1 }}" class="table-subheading">Socioeconomics</td>
+                    <td colspan="{{ stats.data|length|add:1 }}" class="font-weight-bold h5 py-2" style="background-color: #C89933;">Socioeconomics</td>
+                </tr>
+                <tr>
+                    <th class="font-weight-bold text-center">Indicator</th>
+                    {% for year in stats.data %}
+                        <th class="font-weight-bold text-center">{{ year.date }}</th>
+                    {% endfor %}
                 </tr>
                 {% for key in socioeconomics %}
                     <tr>
-                        <td class="first-column">{{ names|getvalue:key }}</td>
+                        <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
-
+        
                 <!-- Industry Section -->
                 <tr>
-                    <td colspan="{{ stats.data|length|add:1 }}" class="table-subheading">Industry</td>
+                    <td colspan="{{ stats.data|length|add:1 }}" class="font-weight-bold h5 py-2" style="background-color: #C89933;">Industry</td>
+                </tr>
+                <tr>
+                    <th class="font-weight-bold text-center">Indicator</th>
+                    {% for year in stats.data %}
+                        <th class="font-weight-bold text-center">{{ year.date }}</th>
+                    {% endfor %}
                 </tr>
                 {% for key in industry %}
                     <tr>
-                        <td class="first-column">{{ names|getvalue:key }}</td>
+                        <td class="first-column font-weight-bold text-center cell-centered">{{ names|getvalue:key }}</td>
                         {% for year in stats.data %}
-                            <td class="value-cell">{{ year|getvalue:key }}</td>
+                            <td class="value-cell text-center cell-centered">{{ year|getvalue:key }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -171,9 +181,9 @@
             <input type="hidden" id="location-info" name="location-info">
             <input type="hidden" name="location_id" id="location_id" value="{% if saved %}{{ saved.id }}{% endif %}">
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save Location</button>
+          <div class="modal-footer d-flex justify-content-center gap-3">
+            <button type="button" class="btn btn-radius btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-radius btn-primary">Save Location</button>
           </div>
         </form>
       </div>
