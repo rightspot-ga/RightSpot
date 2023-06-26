@@ -117,6 +117,8 @@ function updateComparison() {
                 leftArrowCell.innerHTML = '<span style="color:green">▲</span>';
             } else if (leftValue < rightValue) {
                 leftArrowCell.innerHTML = '<span style="color:red">▼</span>';
+            } else if (leftValue !== 0 && leftValue === rightValue) {
+                leftArrowCell.innerHTML = '<span style="color:#C89933; font-weight:900;">=</span>';
             }
 
             leftRow.appendChild(leftVariableCell);
@@ -155,6 +157,8 @@ function updateComparison() {
                     rightArrowCell.innerHTML = '<span style="color:green">▲</span>';
                 } else if (rightValue < leftValue) {
                     rightArrowCell.innerHTML = '<span style="color:red">▼</span>';
+                } else if (leftValue !== 0 && leftValue === rightValue) {
+                    rightArrowCell.innerHTML = '<span style="color:#C89933; font-weight:900;">=</span>';
                 }
 
                 rightRow.appendChild(rightArrowCell);
