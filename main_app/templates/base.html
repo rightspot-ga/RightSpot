@@ -23,15 +23,7 @@
     <script src="https://kit.fontawesome.com/50d1e12d7b.js" crossorigin="anonymous"></script>
     <!-- Custom JS -->
     <script defer src="{% static 'js/navbar.js' %}"></script>
-
-    {% block extra_head %}
-    {% endblock extra_head %}
-
-    <title>
-        {% block title %}
-        {% endblock title %}
-        | RightSpot
-    </title>
+    <title>RightSpot</title>
 </head>
 <body class="bg-ivory">
     <div id="sidebar" class="vertical-nav bg-primary">
@@ -76,13 +68,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Starred Locations">
+                <a href="{% url 'locations_index' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Saved Locations">
                     <i class="nav-icon bi bi-map-fill px-1"></i>
-                    <span class="nav-text">Starred Locations</span>
+                    <span class="nav-text">Saved Locations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{% url 'compare' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Compare locations">
+                <a href="{% url 'compare' %}" class="nav-link font-italic {% if request.path == '/locations' %} currentPage {% endif %}" data-toggle="tooltip" data-delay="50" data-placement="right" title="Compare Locations">
                     <i class="nav-icon bi bi-clipboard-data px-1"></i>
                     <span class="nav-text">Compare Locations</span>
                 </a>
@@ -162,8 +154,7 @@
         </div>
     </footer>
 
-    {% block body_bottom %}
-    {% endblock body_bottom %}
+    
     
 </body>
 </html>
