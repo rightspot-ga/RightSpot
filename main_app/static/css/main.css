@@ -40,6 +40,14 @@ html, body{
     z-index: 9999 !important;
 }
 
+.scrollable-y{
+    overflow-y: auto;
+}
+
+.scrollable-x{
+    overflow-x: auto;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -517,6 +525,31 @@ footer > .wrapper{
     .mobile-flex-column{
         flex-direction: column;
     }
+
+    .mobile-max-v-width-50{
+        max-width: 50vw
+    }
+
+    table{
+        font-size: 12px;
+    }
+
+    #left-location-select, #right-location-select{
+        width: 100%;
+        font-size: 11.5px;
+    }
+
+    /* #right-location-data > tr {
+        overflow: hidden !important;
+    } */
+
+    /* #right-location-data > tr > td:last-of-type{
+        visibility: hidden !important;
+        width: 0px !important;
+        overflow: hidden !important;
+        position: relative;
+        left: -50%;
+    } */
 
   }
 
