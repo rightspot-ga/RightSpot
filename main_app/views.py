@@ -221,8 +221,10 @@ def projects_index(request):
 @login_required
 def project_detail(request, project_id):
 	project = Project.objects.get(id=project_id)
+	project.locations = Location.objects.filter(projects=project_id)
 	return render(request, 'projects/detail.html', {
 		'project': project,
+		'google_api_key': env('GOOGLE_MAPS_API_KEY'),
 	})
 
 @login_required

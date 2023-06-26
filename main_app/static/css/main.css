@@ -344,6 +344,11 @@ footer > .wrapper{
     box-shadow: 0 0 10px rgba(193, 193, 193, 0.5);
 }
 
+.project-detail-map{
+    height: 400px;
+    width: 100%;
+}
+
 /* Account Settings */
 .settings-tab{
     background-color: var(--light-color);
