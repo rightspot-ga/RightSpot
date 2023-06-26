@@ -1,20 +1,25 @@
 {% extends 'base.html' %}
-{% load json %}
-{% block content %}
+{% load json static %}
 
+{% block title %}
+Compare Locations
+{% endblock title %}
+
+{% block content %}
 <script defer>
     const locations_j = JSON.parse(JSON.parse('{{ locations_json|escapejs_json }}'));
     const names = JSON.parse('{{ names|escapejs_json }}');
 </script>
+<script defer src="{% static 'js/compare.js' %}"></script>
 
-<h1 class="text-center">Choose locations to compare</h1>
+<h1 class="text-center">Compare Locations</h1>
 <div class="container my-5">
     <div class="d-flex justify-content-between">
 
         <!-- Left Side -->
         <div class="d-flex flex-column flex-grow-1 mr-2">
             <select id="left-location-select" class="form-control mb-4 text-center">
-                <option value="" selected disabled>Select a location</option>
+                <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
@@ -30,7 +35,7 @@
         <!-- Right Side -->
         <div class="d-flex flex-column flex-grow-1 ml-2">
             <select id="right-location-select" class="form-control mb-4 text-center">
-                <option value="" selected disabled>Select a location</option>
+                <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
@@ -45,96 +50,5 @@
 
     </div>
 </div>
-<script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script defer>
-    document.getElementById("left-location-select").addEventListener("change", updateComparison);
-    document.getElementById("right-location-select").addEventListener("change", updateComparison);
 
-    function updateComparison() {
-        const leftLocationId = document.getElementById("left-location-select").value;
-        const rightLocationId = document.getElementById("right-location-select").value;
-
-        const leftLocation = locations_j.find(location => location.pk == leftLocationId);
-        const rightLocation = locations_j.find(location => location.pk == rightLocationId);
-
-        const leftComparison = leftLocation.fields.location.comparison;
-        const rightComparison = rightLocation.fields.location.comparison;
-
-        const leftTableBody = document.getElementById("left-location-data");
-        const rightTableBody = document.getElementById("right-location-data");
-
-        leftTableBody.innerHTML = '';
-        rightTableBody.innerHTML = '';
-
-        const years = Object.keys(leftComparison).sort((a, b) => b - a);
-        years.forEach(year => {
-            leftComparison[year].forEach(entry => {
-                const variable = Object.keys(entry)[0];
-                const leftValue = parseFloat(entry[variable]);
-
-                const rightEntry = rightComparison[year].find(e => Object.keys(e)[0] == variable);
-                const rightValue = parseFloat(rightEntry[variable]);
-
-                const leftRow = document.createElement("tr");
-
-                if (variable === 'date') {
-                    leftRow.style.setProperty("--bs-table-bg", "#C89933");
-                }
-
-                const leftVariableCell = document.createElement("td");
-                const leftValueCell = document.createElement("td");
-                const leftArrowCell = document.createElement("td");
-
-                leftVariableCell.classList.add("text-center")
-                leftValueCell.classList.add("text-center")
-                leftArrowCell.classList.add("text-center")
-
-                leftVariableCell.textContent = names[variable];
-                leftValueCell.textContent = leftValue == 0 ? '-' : leftValue;
-
-                if (leftValue > rightValue) {
-                    leftArrowCell.innerHTML = '<span style="color:green">▲</span>';
-                } else if (leftValue < rightValue) {
-                    leftArrowCell.innerHTML = '<span style="color:red">▼</span>';
-                }
-
-                leftRow.appendChild(leftVariableCell);
-                leftRow.appendChild(leftValueCell);
-                leftRow.appendChild(leftArrowCell);
-                leftTableBody.appendChild(leftRow);
-
-                if (rightEntry) {
-                    const rightRow = document.createElement("tr");
-
-                    if (variable === 'date') {
-                    rightRow.style.setProperty("--bs-table-bg", "#C89933");
-                    }
-
-                    const rightArrowCell = document.createElement("td");
-                    const rightValueCell = document.createElement("td");
-                    const rightVariableCell = document.createElement("td");
-
-                    rightVariableCell.classList.add("text-center")
-                    rightValueCell.classList.add("text-center")
-                    rightArrowCell.classList.add("text-center")
-
-                    rightVariableCell.textContent = names[variable];
-                    rightValueCell.textContent = rightValue == 0 ? '-' : rightValue;
-
-                    if (rightValue > leftValue) {
-                        rightArrowCell.innerHTML = '<span style="color:green">▲</span>';
-                    } else if (rightValue < leftValue) {
-                        rightArrowCell.innerHTML = '<span style="color:red">▼</span>';
-                    }
-
-                    rightRow.appendChild(rightArrowCell);
-                    rightRow.appendChild(rightValueCell);
-                    rightRow.appendChild(rightVariableCell);
-                    rightTableBody.appendChild(rightRow);
-                }
-            });
-        });
-    }
-updateComparison();
-</script>
 {% endblock %}

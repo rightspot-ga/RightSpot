@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Editing - {{ location.name }}
+{% endblock title %}
+
 {% block content %}
 
 <div class="d-flex flex-column align-items-center my-5">
@@ -12,6 +17,17 @@
         <div class="mb-3">
             <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
             <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}" rows="3">{{ form.description.value|default:'' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Projects</label>
+            {% for project in form.projects.field.queryset %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="{{ form.projects.html_name }}" value="{{ project.id }}" id="project_{{ project.id }}" {% if project in form.projects.initial %}checked{% endif %}>
+                    <label class="form-check-label" for="project_{{ project.id }}">
+                        {{ project.name }}
+                    </label>
+                </div>
+            {% endfor %}
         </div>
         <div class="d-flex justify-content-center gap-3">
             <button type="submit" class="btn btn-radius btn-secondary">Save changes</button>

@@ -65,6 +65,10 @@ html, body{
     transition: font-size 0.3s ease-in-out;
 }
 
+a.nav-link:focus{
+    color: var(--accent-color);
+}
+
 img#nav-logo{
     transition: all 0.3s ease-in-out;
 }
@@ -255,13 +259,7 @@ footer > .wrapper{
     font-weight: 650;
 }
 
-.profile-label > label {
-    min-width: 9rem;
-    color: var(--primary-color);
-    font-weight: 650;
-}
-
-.password-label > label {
+.password-label > label, .profile-label > label  {
     min-width: 15rem;
     color: var(--primary-color);
     font-weight: 650;
@@ -286,10 +284,6 @@ footer > .wrapper{
 }
 
 #profile-settings > div > p > input, #password-settings > div > p > input{
-    width: calc(100% - 10rem);
-}
-
-#password-settings > div > p > input{
     width: calc(100% - 16rem);
 }
 
@@ -312,9 +306,10 @@ footer > .wrapper{
     width: 100%;
 }
 
-#normal-search > span > input{
-    border: var(--accent-color) 2px solid;
-    padding: 5px;
+#location_search{
+    border: transparent;
+    font-size: 18px;
+    padding: 12px;
     min-width: 20rem;
 }
 
@@ -341,13 +336,35 @@ footer > .wrapper{
 
 /* Project */
 
-.project-item:hover{
+.project-item:hover, .starred-item:hover{
     background-color: var(--light-color);
-
+    box-shadow: 0 0 20px rgba(193, 193, 193, 0.5);
 }
 
 .projects-intro{
     width: 75%;
+}
+
+.project-index-img{
+    box-shadow: 0 0 10px rgba(193, 193, 193, 0.5);
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.project-detail-map{
+    height: 400px;
+    width: 100%;
+}
+
+#notes-textarea{
+    font-size: 16px;
+    min-height: 100px;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Account Settings */
@@ -369,7 +386,10 @@ footer > .wrapper{
     color: var(--light-color);
 }
 
-
+.compare-checkbox{
+    width: 30px;
+    height: 30px;
+}
 
 
 /* Google Autocomplete */
@@ -429,6 +449,25 @@ footer > .wrapper{
 
     .mobile-show{
         display: inline;
+    }
+
+    .page-intro{
+        margin-left: 1rem !important;
+        margin-right: 1rem !important;
+    }
+
+    .page-item{
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    #user-title{
+        display: none;
+    }
+
+    #user-title.active {
+        display: inline;
+        margin-bottom: 0 !important;
     }
 
   }

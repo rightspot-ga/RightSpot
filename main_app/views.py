@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, StaticOnsData
-from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm
+from .forms import CustomUserCreationForm, EditUserForm, CustomPasswordChangeForm, ProjectUpdateForm, LocationUpdateForm
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -9,10 +10,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_GET
 from django.core.serializers import serialize
 from django.utils.safestring import mark_safe
-from .static_data.lookups import inverse_names, comparison_variables
+from django.urls import reverse_lazy
+from .static_data.lookups import inverse_names, comparison_variables, places_icon_lookup, types_not_needed
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
-from .helpers import fetch_from_api, get_api_base_url, format_value_as_integer_if_whole_number
+from .helpers import fetch_from_api, get_api_base_url, format_value_as_integer_or_dash
 import json
 import environ
 
@@ -38,7 +40,7 @@ def legal(request):
 #! Locations 
 @login_required
 def locations_index(request):
-		user_locations = Location.objects.filter(user=request.user, projects__isnull=True).order_by('-id')
+		user_locations = Location.objects.filter(user=request.user).order_by('-id')
 		return render(request, 'locations/index.html', {'user_locations': user_locations})
 
 def location_detail(request):
@@ -59,8 +61,6 @@ def location_detail(request):
 	nearbyplaces = fetch_from_api(nearbyplaces_url, nearbyplaces_params)
 	if not nearbyplaces:
 			return redirect('home')
-
-	# nearbyplaces = tallyPlaces(nearbyplaces)
 	
 	# Fetch address details
 	geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
@@ -81,7 +81,7 @@ def location_detail(request):
 			stats = fetch_from_api(ons_url, ons_params)
 			for year_data in stats['data']:
 						for variable, value in year_data.items():
-								formatted_value = format_value_as_integer_if_whole_number(value)
+								formatted_value = format_value_as_integer_or_dash(value)
 								year_data[variable] = formatted_value
 			for year_data in stats['data']:
 				year = year_data['date']
@@ -170,7 +170,7 @@ def saved_location_detail(request, location_id):
       stats = fetch_from_api(ons_url, ons_params)
       for year_data in stats['data']:
             for variable, value in year_data.items():
-                formatted_value = format_value_as_integer_if_whole_number(value)
+                formatted_value = format_value_as_integer_or_dash(value)
                 year_data[variable] = formatted_value
   user_projects = Project.objects.filter(user=request.user)
   return render(request, 'locations/detail.html', {
@@ -199,29 +199,47 @@ def compare(request):
 	})
 
 class LocationUpdate(LoginRequiredMixin, UpdateView):
-	model = Location
-	fields = ['name', 'description']
-	success_url = '/locations/starred'
+    model = Location
+    form_class = LocationUpdateForm
+    def get_form_kwargs(self):
+        kwargs = super(LocationUpdate, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.projects.set(form.cleaned_data['projects'])
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else redirect('saved_location_detail', location_id=self.object.id)
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
-	model = Location
-	success_url = '/locations/starred'
+    model = Location
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else '/locations/starred'
 
 #! Projects
 @login_required
 def projects_index(request):
 	user_projects = Project.objects.filter(user=request.user).order_by('id')
 	locations = Location.objects.filter(user=request.user)
+
+	for project in user_projects:
+		project.locations = Location.objects.filter(projects=project.id)
+	
 	return render(request, 'projects/index.html', {
 		'user_projects': user_projects,
+		'google_api_key': env('GOOGLE_MAPS_API_KEY'),
 		'user_locations': locations
 	})
 
 @login_required
 def project_detail(request, project_id):
 	project = Project.objects.get(id=project_id)
+	project.locations = Location.objects.filter(projects=project_id)
 	return render(request, 'projects/detail.html', {
 		'project': project,
+		'google_api_key': env('GOOGLE_MAPS_API_KEY'),
 	})
 
 @login_required
@@ -245,10 +263,31 @@ def create_project(request):
 							location = Location.objects.get(id=location_id)
 							project.location_set.add(location)
 				return redirect('project_detail', project_id=project.id)
+
+@login_required
+def update_project_notes(request):
+	if request.method == 'POST':
+		project_id = request.POST.get('project_id')
+		notes_content = request.POST.get('notes_content')
+		project = Project.objects.get(id=project_id)
+		project.notes = notes_content
+		project.save()
+		return JsonResponse({'success': True})
+	else:
+		return redirect('project_detail', project_id=project.id)	
 	
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
 	model = Project
-	fields = ['name', 'description']
+	form_class = ProjectUpdateForm
+
+	def get_form_kwargs(self):
+		kwargs = super(ProjectUpdate, self).get_form_kwargs()
+		kwargs['user'] = self.request.user
+		return kwargs
+	def form_valid(self, form):
+		response = super(ProjectUpdate, self).form_valid(form)
+		form.instance.location_set.set(form.cleaned_data['locations'])
+		return redirect('project_detail', project_id=self.object.id)
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):
 	model = Project
@@ -323,165 +362,7 @@ def settings(request):
 				'tab': tab
 		})
 
-
-#! API Keys
-@require_GET
-def apikey_w3w(request):
-	return env('W3W_API_KEY')
-
-@require_GET
-def apikey_google(request):
-	return env('GOOGLE_MAPS_API_KEY')
-
 #! Helper functions
-places_icon_lookup = {
-		'accounting': 'fas fa-money-bill-wave',
-		'airport': 'fas fa-plane-arrival',
-		'amusement_park': 'fas fa-laugh-squint',
-		'aquarium': 'fas fa-fish',
-		'art_gallery': 'fas fa-palette',
-		'atm': 'fas fa-money-bill',
-		'bakery': 'fas fa-bread-slice',
-		'bank': 'fas fa-university',
-		'bar': 'fas fa-glass-martini-alt',
-		'beauty_salon': 'fas fa-cut',
-		'bicycle_store': 'fas fa-bicycle',
-		'book_store': 'fas fa-book',
-		'bowling_alley': 'fas fa-bowling-ball',
-		'bus_station': 'fas fa-bus-alt',
-		'cafe': 'fas fa-coffee',
-		'campground': 'fas fa-campground',
-		'car_dealer': 'fas fa-car',
-		'car_rental': 'fas fa-car-side',
-		'car_repair': 'fas fa-tools',
-		'car_wash': 'fas fa-car-wash',
-		'casino': 'fas fa-dice',
-		'cemetery': 'fas fa-tombstone',
-		'church': 'fas fa-church',
-		'city_hall': 'fas fa-building',
-		'clothing_store': 'fas fa-tshirt',
-		'convenience_store': 'fas fa-shopping-basket',
-		'courthouse': 'fas fa-balance-scale',
-		'dentist': 'fas fa-tooth',
-		'department_store': 'fas fa-store',
-		'doctor': 'fas fa-stethoscope',
-		'drugstore': 'fas fa-medkit',
-		'electrician': 'fas fa-bolt',
-		'electronics_store': 'fas fa-laptop',
-		'embassy': 'fas fa-flag',
-		'fire_station': 'fas fa-fire-extinguisher',
-		'florist': 'fas fa-flower',
-		'funeral_home': 'fas fa-home',
-		'furniture_store': 'fas fa-chair',
-		'gas_station': 'fas fa-gas-pump',
-		'gym': 'fas fa-dumbbell',
-		'hair_care': 'fas fa-cut',
-		'hardware_store': 'fas fa-hammer',
-		'hindu_temple': 'fas fa-om',
-		'home_goods_store': 'fas fa-lightbulb',
-		'hospital': 'fas fa-hospital',
-		'insurance_agency': 'fas fa-shield-alt',
-		'jewelry_store': 'fas fa-gem',
-		'laundry': 'fas fa-soap',
-		'lawyer': 'fas fa-briefcase',
-		'library': 'fas fa-bookshelf',
-		'light_rail_station': 'fas fa-subway',
-		'liquor_store': 'fas fa-wine-bottle',
-		'local_government_office': 'fas fa-building',
-		'locksmith': 'fas fa-key',
-		'lodging': 'fas fa-bed',
-		'meal_delivery': 'fas fa-truck',
-		'meal_takeaway': 'fas fa-drumstick-bite',
-		'mosque': 'fas fa-moon',
-		'movie_rental': 'fas fa-film',
-		'movie_theater': 'fas fa-film',
-		'moving_company': 'fas fa-truck',
-		'museum': 'fas fa-university',
-		'night_club': 'fas fa-music',
-		'painter': 'fas fa-paint-roller',
-		'park': 'fas fa-tree',
-		'parking': 'fas fa-parking',
-		'pet_store': 'fas fa-paw',
-		'pharmacy': 'fas fa-pills',
-		'physiotherapist': 'fas fa-heartbeat',
-		'plumber': 'fas fa-wrench',
-		'police': 'fas fa-shield-alt',
-		'post_office': 'fas fa-envelope',
-		'primary_school': 'fas fa-pencil-alt',
-		'real_estate_agency': 'fas fa-building',
-		'restaurant': 'fas fa-utensils',
-		'roofing_contractor': 'fas fa-tools',
-		'rv_park': 'fas fa-campground',
-		'school': 'fas fa-pencil-alt',
-		'secondary_school': 'fas fa-pencil-alt',
-		'shoe_store': 'fas fa-shoe-prints',
-		'shopping_mall': 'fas fa-shopping-bag',
-		'spa': 'fas fa-spa',
-		'stadium': 'fas fa-futbol',
-		'storage': 'fas fa-archive',
-		'store': 'fas fa-store',
-		'subway_station': 'fas fa-subway',
-		'supermarket': 'fas fa-shopping-cart',
-		'synagogue': 'fas fa-star-of-david',
-		'taxi_stand': 'fas fa-taxi',
-		'tourist_attraction': 'fas fa-binoculars',
-		'train_station': 'fas fa-train',
-		'transit_station': 'fas fa-bus-alt',
-		'travel_agency': 'fas fa-suitcase-rolling',
-		'university': 'fas fa-graduation-cap',
-		'veterinary_care': 'fas fa-paw',
-		'zoo': 'fas fa-hippo',
-		'place_of_worship': 'fas fa-church',
-}
-
-types_not_needed = ['point_of_interest', 
-											'establishment', 
-											'premise', 
-											'neighborhood', 
-											'natural_feature', 
-											'political', 
-											'roofing_contractor',
-											'administrative_area_level_1', 
-											'administrative_area_level_2', 
-											'administrative_area_level_3', 
-											'administrative_area_level_4', 
-											'administrative_area_level_5', 
-											'administrative_area_level_6', 
-											'administrative_area_level_7',
-											'archipelago', 
-											'colloquial_area', 
-											'continent', 
-											'country', 
-											'establishment', 
-											'finance', 
-											'floor', 
-											'food', 
-											'general_contractor', 
-											'geocode', 
-											'health', 
-											'intersection', 
-											'landmark', 
-											'locality', 
-											'natural_feature', 
-											'neighborhood', 
-											'plus_code', 
-											'point_of_interest', 
-											'political', 
-											'post_box', 
-											'postal_code', 
-											'postal_code_prefix', 
-											'postal_code_suffix', 
-											'postal_town', 
-											'premise', 
-											'room', 
-											'route', 
-											'street_address', 
-											'street_number', 
-											'sublocality',
-											'sublocality_level_1',
-											'sublocality_level_2',
-											'sublocality_level_3']
-
 def tallyPlaces(nearbyplaces):
 	# Tally nearby places types
 	places_type_counts = {}

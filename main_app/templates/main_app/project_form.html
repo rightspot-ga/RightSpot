@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Editing - {{ project.name }}
+{% endblock title %}
+
 {% block content %}
 
 <div class="d-flex flex-column align-items-center my-5">
@@ -14,12 +19,8 @@
             <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.html_name }}" rows="3">{{ form.description.value|default:'' }}</textarea>
         </div>
         <div class="mb-3">
-            <label for="{{ form.locations.id_for_label }}" class="form-label">Locations</label>
-            <select class="form-control" id="{{ form.locations.id_for_label }}" name="{{ form.locations.html_name }}" multiple>
-                {% for location in form.locations.field.queryset %}
-                <option value="{{ location.id }}" {% if location in form.locations.value %}selected{% endif %}>{{ location.name }}</option>
-                {% endfor %}
-            </select>
+            <label class="form-label">{{ form.locations.label }}</label>
+            {{ form.locations }}
         </div>
         <div class="d-flex justify-content-center gap-3">
             <button type="submit" class="btn btn-radius btn-secondary">Save changes</button>
