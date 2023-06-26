@@ -17,7 +17,7 @@
         </h1>
     </div>
     <div class="row w-100 max-width-1000 mb-4 text-white ">
-        <div class="col bg-primary mx-4 my-2 p-4 rounded">
+        <div class="col bg-primary mx-4 my-2 p-4 rounded mobile-m-0">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="fs-6">{{ project.description }}</span>
             </div>
@@ -84,7 +84,7 @@
         <div class="d-flex flex-column justify-content-center align-items-center">
             <p class="text-center fw-bold letter-spacing-2">No Locations</p>
             <p class="text-center letter-spacing-1">Search for and save locations. Then edit the project and select one or more.</p>
-            <a href="{% url 'project_update' project.pk %}" class="btn btn-radius btn-accent px-auto mt-2 text-white letter-spacing-2">
+            <a href="{% url 'project_update' project.pk %}" class="btn btn-accent px-auto mt-2 text-white letter-spacing-2">
                 <i class="bi bi-pencil-fill pe-1"></i> Edit Project
             </a>
         </div>
