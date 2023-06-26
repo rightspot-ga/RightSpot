@@ -1,10 +1,40 @@
 // Script to handle selection of data from drop-downs for comparing two locations
+// Can take preset locations from query parameters:
+// /compare?left=location1.id&right=location2.id
 
 document.getElementById("left-location-select").addEventListener("change", updateComparison);
 document.getElementById("right-location-select").addEventListener("change", updateComparison);
 
 document.getElementById("left-location-select").addEventListener("change", () => filterLocations('left', 'right'));
 document.getElementById("right-location-select").addEventListener("change", () => filterLocations('right', 'left'));
+
+// Check if location IDs are passed as URL parameters and set the selectors
+document.addEventListener("DOMContentLoaded", function() {
+    const leftLocationId = getUrlParameter('left');
+    const rightLocationId = getUrlParameter('right');
+
+    if (leftLocationId) {
+        document.getElementById("left-location-select").value = leftLocationId;
+    }
+
+    if (rightLocationId) {
+        document.getElementById("right-location-select").value = rightLocationId;
+    }
+
+    // Filter initial dropdowns to avoid duplicate locations
+    filterLocations('left', 'right');
+    filterLocations('right', 'left');
+
+    if (leftLocationId && rightLocationId) {
+        updateComparison();
+    }
+});
+
+function getUrlParameter(name) {
+    const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    const results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
 
 function filterLocations(source, target) {
     const sourceSelect = document.getElementById(`${source}-location-select`);
