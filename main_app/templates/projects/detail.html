@@ -12,7 +12,7 @@
 {% csrf_token %} 
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
-        <h1 id="" class="text-primary">
+        <h1 id="" class="text-primary letter-spacing-2">
             {{ project.name }}
         </h1>
     </div>
@@ -32,7 +32,7 @@
     {% endif %}
     <div class="row d-flex flex-column w-100 max-width-1000">
         <div class=" p-4 pb-2 mb-1">
-            <h3 class="">Notes</h3>
+            <h3 class="letter-spacing-1">Notes</h3>
             <hr>
         </div>
         <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
@@ -45,7 +45,7 @@
     </div>
     <div class="row d-flex flex-column w-100 max-width-1000">
         <div class=" p-4 pb-2 my-1">
-            <h3>Locations</h3>
+            <h3 class="letter-spacing-1">Locations</h3>
             <hr>
             {% if project.locations %}
             <div class="d-flex justify-content-end align-items-center">
