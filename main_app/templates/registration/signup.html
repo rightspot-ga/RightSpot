@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block title %}
+Sign Up
+{% endblock title %}
+
+
+{% block content %}
 <div id="signup-container" class="d-flex flex-column justify-content-center align-items-center">
   <div id="signup-inner" class="d-flex flex-column justify-content-center align-items-center p-4 bg-primary shadow rounded">
       <h1 class="text-white">Sign Up</h1>
@@ -36,8 +41,11 @@
   {% endif %}
 
 </div>
+{% endblock %}
 
-<script defer>
+
+{% block body_bottom %}
+<script>
   const signUpLabels = document.querySelectorAll('.signup-label > label');
   const helpText = document.querySelectorAll('small');
   const alert = document.querySelector('.alert');
@@ -54,5 +62,4 @@
   }
   
 </script>
-
-{% endblock %}
+{% endblock body_bottom %}
