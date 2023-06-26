@@ -310,9 +310,10 @@ footer > .wrapper{
     width: 100%;
 }
 
-#normal-search > span > input{
-    border: var(--accent-color) 2px solid;
-    padding: 5px;
+#location_search{
+    border: transparent;
+    font-size: 18px;
+    padding: 12px;
     min-width: 20rem;
 }
 
