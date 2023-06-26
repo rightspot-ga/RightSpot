@@ -202,7 +202,6 @@ def compare(request):
 class LocationUpdate(LoginRequiredMixin, UpdateView):
     model = Location
     form_class = LocationUpdateForm
-    
     def get_form_kwargs(self):
         kwargs = super(LocationUpdate, self).get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -211,11 +210,14 @@ class LocationUpdate(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         self.object = form.save()
         self.object.projects.set(form.cleaned_data['projects'])
-        return redirect('saved_location_detail', location_id=self.object.id) 
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else redirect('saved_location_detail', location_id=self.object.id)
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
-	model = Location
-	success_url = '/locations/starred'
+    model = Location
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        return next_url if next_url else '/locations/starred'
 
 #! Projects
 @login_required
