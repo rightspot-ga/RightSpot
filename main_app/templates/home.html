@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_head %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+<script type="module" src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.esm.js"></script>
+<script nomodule src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.js"></script>
+{% endblock extra_head %}
+
+{% block title %}
+Search & Get Location Data
+{% endblock title %}
+
 {% block content %}
 
 <div class="container d-flex flex-column align-items-center">
@@ -44,23 +54,21 @@
             </form>
         </div>
     </div>
-
-    <script type="module" src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.esm.js"></script>
-    <script nomodule src="https://cdn.what3words.com/javascript-components@4-latest/dist/what3words/what3words.js"></script>
-
-    <script>
-        const locationSearch = document.getElementById("location_search");
-        function initAutocomplete(){
-            autocomplete = new google.maps.places.Autocomplete(
-                locationSearch,
-                {
-                    componentRestrictions: {'country': ['gb']},
-
-                }
-            );
-        }
-    </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
 </div>
 {% endblock %}
+
+
+{% block body_bottom %}
+<script>
+    const locationSearch = document.getElementById("location_search");
+    function initAutocomplete(){
+        autocomplete = new google.maps.places.Autocomplete(
+            locationSearch,
+            {
+                componentRestrictions: {'country': ['gb']},
+
+            }
+        );
+    }
+</script>
+{% endblock body_bottom %}

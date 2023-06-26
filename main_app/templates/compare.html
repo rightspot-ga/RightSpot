@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 {% load json static %}
-{% block content %}
+
+{% block extra_head %}
 <script defer>
     const locations_j = JSON.parse(JSON.parse('{{ locations_json|escapejs_json }}'));
     const names = JSON.parse('{{ names|escapejs_json }}');
 </script>
 <script defer src="{% static 'js/compare.js' %}"></script>
+{% endblock extra_head %}
 
-<h1 class="text-center">Compare locations</h1>
+{% block title %}
+Compare Locations
+{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Compare Locations</h1>
 <div class="container my-5">
     <div class="d-flex justify-content-between">
 

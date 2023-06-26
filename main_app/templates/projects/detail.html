@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
+
+{% block extra_head %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap" async defer></script>
+{% endblock extra_head %}
+
+{% block title %}
+{{ project.name }}
+{% endblock title %}
+
 {% block content %}
 {% csrf_token %} 
-
-<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap" async defer></script>
-
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
         <h1 id="" class="text-primary">
@@ -66,51 +72,12 @@
     </div>
 </div>
 
+
+{% endblock %}
+
+{% block body_bottom %}
 <script defer>
-    const notesTextarea = document.getElementById('notes-textarea');
-    const editButton = document.getElementById('edit-button');
-    const saveButton = document.getElementById('save-button');
-
-    editButton.addEventListener('click', function() {
-        notesTextarea.disabled = false;
-        editButton.disabled = true;
-        saveButton.disabled = false;
-    });
-
-    saveButton.addEventListener('click', function() {
-        const notesContent = notesTextarea.value;
-        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-        fetch('/update_project_notes/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken
-            },
-            body: new URLSearchParams({
-                'project_id': '{{ project.id }}',
-                'notes_content': notesContent
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                notesTextarea.disabled = true;
-                editButton.disabled = false;
-                saveButton.disabled = true;
-            } else {
-                throw new Error('Failed to update project notes');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    });
-
-
-</script>
-
-
-<script async defer>
-    function initMap() {
+    function initMap(){
 
         const mapElement = document.getElementById('map');
 
@@ -145,8 +112,53 @@
                 title: locationsFormatted[i].name
             });
         }
-    }
+    };
 
-    initMap();
+    function notes(){
+        const notesTextarea = document.getElementById('notes-textarea');
+        const editButton = document.getElementById('edit-button');
+        const saveButton = document.getElementById('save-button');
+
+        editButton.addEventListener('click', function() {
+            notesTextarea.disabled = false;
+            editButton.disabled = true;
+            saveButton.disabled = false;
+        });
+
+        saveButton.addEventListener('click', function() {
+            const notesContent = notesTextarea.value;
+            const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            fetch('/update_project_notes/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({
+                    'project_id': '{{ project.id }}',
+                    'notes_content': notesContent
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    notesTextarea.disabled = true;
+                    editButton.disabled = false;
+                    saveButton.disabled = true;
+                } else {
+                    throw new Error('Failed to update project notes');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+    };
+
+    window.onload = function() {
+        initMap();
+        notes();
+    };
 </script>
-{% endblock %}
+
+
+{% endblock body_bottom %}
