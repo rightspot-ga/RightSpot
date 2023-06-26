@@ -9,7 +9,7 @@ class Project(models.Model):
     name = models.CharField(max_length=250)
     description = models.CharField(max_length=400, default='No description')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    notes = models.TextField(default='No notes yet')
+    notes = models.TextField(default='')
     def __str__(self):
         return self.name
     def get_absolute_url(self):

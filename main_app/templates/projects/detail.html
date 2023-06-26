@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% csrf_token %} 
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap" async defer></script>
 
@@ -9,20 +10,35 @@
             {{ project.name }}
         </h1>
     </div>
-    <div class="row w-100 max-width-1000 mb-2 text-white ">
+    <div class="row w-100 max-width-1000 mb-4 text-white ">
         <div class="col bg-primary mx-4 my-2 p-4 rounded">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="fs-6">{{ project.description }}</span>
             </div>
         </div>
     </div>
-    <div class="row project-map w-100 max-width-1000 mb-5">
-        <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
+    <div class="row project-map w-100 max-width-1000 mb-2">
+        <div class="px-4">
+            <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
+        </div>
     </div>
-    
     <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 my-2">
+        <div class=" p-4 pb-2 mb-1">
+            <h3 class="">Notes</h3>
+            <hr>
+        </div>
+        <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
+            <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter project notes here">{{ project.notes }}</textarea>
+            <div id="notes-buttons" class="mt-4">
+              <button id="edit-button" class="btn btn-accent text-white" style="min-width: 5rem;">Edit</button>
+              <button id="save-button" class="btn btn-secondary ms-2 text-white" style="min-width: 5rem;" disabled>Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex flex-column w-100 max-width-1000">
+        <div class=" p-4 pb-2 my-1">
             <h3>Locations</h3>
+            <hr>
         </div>
         {% for location in project.location_set.all %}
             <div class="project-item row gap-2 p-4 justify-self-center" >
@@ -49,6 +65,49 @@
         {% endfor %}
     </div>
 </div>
+
+<script defer>
+    const notesTextarea = document.getElementById('notes-textarea');
+    const editButton = document.getElementById('edit-button');
+    const saveButton = document.getElementById('save-button');
+
+    editButton.addEventListener('click', function() {
+        notesTextarea.disabled = false;
+        editButton.disabled = true;
+        saveButton.disabled = false;
+    });
+
+    saveButton.addEventListener('click', function() {
+        const notesContent = notesTextarea.value;
+        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        fetch('/update_project_notes/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken
+            },
+            body: new URLSearchParams({
+                'project_id': '{{ project.id }}',
+                'notes_content': notesContent
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                notesTextarea.disabled = true;
+                editButton.disabled = false;
+                saveButton.disabled = true;
+            } else {
+                throw new Error('Failed to update project notes');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    });
+
+
+</script>
+
 
 <script async defer>
     function initMap() {
