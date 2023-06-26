@@ -14,7 +14,7 @@ from django.urls import reverse_lazy
 from .static_data.lookups import inverse_names, comparison_variables, places_icon_lookup, types_not_needed
 from .filtering import demographics_final_order_list, socioeconomics_final_order_list, industry_final_order_list
 from location_services.geodetails import check_uk_district
-from .helpers import fetch_from_api, get_api_base_url, format_value_as_integer_if_whole_number
+from .helpers import fetch_from_api, get_api_base_url, format_value_as_integer_or_dash
 import json
 import environ
 
@@ -81,7 +81,7 @@ def location_detail(request):
 			stats = fetch_from_api(ons_url, ons_params)
 			for year_data in stats['data']:
 						for variable, value in year_data.items():
-								formatted_value = format_value_as_integer_if_whole_number(value)
+								formatted_value = format_value_as_integer_or_dash(value)
 								year_data[variable] = formatted_value
 			for year_data in stats['data']:
 				year = year_data['date']
@@ -170,7 +170,7 @@ def saved_location_detail(request, location_id):
       stats = fetch_from_api(ons_url, ons_params)
       for year_data in stats['data']:
             for variable, value in year_data.items():
-                formatted_value = format_value_as_integer_if_whole_number(value)
+                formatted_value = format_value_as_integer_or_dash(value)
                 year_data[variable] = formatted_value
   user_projects = Project.objects.filter(user=request.user)
   return render(request, 'locations/detail.html', {
