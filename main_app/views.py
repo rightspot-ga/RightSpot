@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Project, Location, StaticOnsData
@@ -260,6 +261,18 @@ def create_project(request):
 							location = Location.objects.get(id=location_id)
 							project.location_set.add(location)
 				return redirect('project_detail', project_id=project.id)
+
+@login_required
+def update_project_notes(request):
+	if request.method == 'POST':
+		project_id = request.POST.get('project_id')
+		notes_content = request.POST.get('notes_content')
+		project = Project.objects.get(id=project_id)
+		project.notes = notes_content
+		project.save()
+		return JsonResponse({'success': True})
+	else:
+		return redirect('project_detail', project_id=project.id)	
 	
 class ProjectUpdate(LoginRequiredMixin, UpdateView):
 	model = Project

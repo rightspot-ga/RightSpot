@@ -8,7 +8,7 @@
         </h1>
     </div>
     <div class="row w-100 max-width-1000 mb-5">
-        <div class="col bg-primary mx-4 my-2 p-4 text-white text-center  rounded">
+        <div class="col bg-primary mx-4 my-2 p-4 text-white text-center page-intro rounded">
             {% if not user_projects %}
                 <p class="fs-5 fw-bold">Do you have a great idea? Want to collect information about potential locations?</p>
                 <p class="fs-6">Projects allow you to save multiple locations under one roof and come back to them later.</p>
@@ -24,12 +24,12 @@
     </div>
     <div class="row d-flex flex-row w-100 max-width-1000">
         {% for project in user_projects %}
-            <div class="project-item row gap-2 p-4 ms-1" >
+            <div class="project-item row gap-2 p-4 ms-1 page-item" >
                 <div class="col">
                     <div class="row">
                         <h4>{{ project.name }}</h4>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <small class="text-muted">{{ project.description }}</small>
                     </div>
                 </div>
