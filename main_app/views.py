@@ -59,8 +59,6 @@ def location_detail(request):
 	nearbyplaces = fetch_from_api(nearbyplaces_url, nearbyplaces_params)
 	if not nearbyplaces:
 			return redirect('home')
-
-	# nearbyplaces = tallyPlaces(nearbyplaces)
 	
 	# Fetch address details
 	geodetails_url = get_api_base_url(request) + '/location_services/geodetails'
@@ -211,10 +209,13 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
 @login_required
 def projects_index(request):
 	user_projects = Project.objects.filter(user=request.user).order_by('id')
-	locations = Location.objects.filter(user=request.user)
+
+	for project in user_projects:
+		project.locations = Location.objects.filter(projects=project.id)
+	
 	return render(request, 'projects/index.html', {
 		'user_projects': user_projects,
-		'user_locations': locations
+		'google_api_key': env('GOOGLE_MAPS_API_KEY'),
 	})
 
 @login_required

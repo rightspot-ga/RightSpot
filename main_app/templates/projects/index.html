@@ -32,9 +32,9 @@
                     <div class="row">
                         <small class="text-muted">{{ project.description }}</small>
                     </div>
-                    {% if project.locations|length > 0 %}
-                        {% for location in project.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    {% endif %}
+                </div>
+                <div class="col col-auto">
+                    <img class="project-index-img" src="https://maps.googleapis.com/maps/api/staticmap?{% for location in project.locations %}&markers=color:0x14213D%7Clabel:{{ forloop.counter }}%7C{{ location.location.coords.0 }},{{ location.location.coords.1 }}{% endfor %}&size=300x200&key={{ google_api_key }}">
                 </div>
                 <div class="col-auto d-flex align-items-center">
                     <a href="{% url 'project_detail' project.id %}" class="btn btn-radius btn-secondary mx-2">
