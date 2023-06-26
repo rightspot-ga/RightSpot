@@ -333,11 +333,20 @@ footer > .wrapper{
 
 .project-item:hover, .starred-item:hover{
     background-color: var(--light-color);
-
+    box-shadow: 0 0 20px rgba(193, 193, 193, 0.5);
 }
 
 .projects-intro{
     width: 75%;
+}
+
+.project-index-img{
+    box-shadow: 0 0 10px rgba(193, 193, 193, 0.5);
+}
+
+.project-detail-map{
+    height: 400px;
+    width: 100%;
 }
 
 /* Account Settings */
@@ -358,8 +367,6 @@ footer > .wrapper{
     background-color: var(--secondary-color);
     color: var(--light-color);
 }
-
-
 
 
 /* Google Autocomplete */

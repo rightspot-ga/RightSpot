@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap" async defer></script>
+
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
         <h1 id="" class="text-primary">
@@ -13,31 +16,78 @@
             </div>
         </div>
     </div>
-
-<div class="row d-flex flex-column w-100 max-width-1000">
-    {% for location in project.location_set.all %}
-        <div class="project-item row gap-2 p-4 ms-1 justify-self-center" >
-            <div class="col">
-                <div class="row">
-                    <h4>{{ location.name }}</h4>
-                </div>
-                <div class="row">
-                    <small class="text-muted">{{ location.description }}</small>
-                </div>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
-                    <i class="fa-solid fa-eye"></i>
-                </a>
-                <a href="{% url 'location_update' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-accent mx-2 text-white">
-                    <i class="bi bi-pencil-fill"></i>
-                </a>
-                <a href="{% url 'location_delete' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-danger mx-2">
-                    <i class="bi bi-trash3"></i>
-                </a>
-            </div>
+    <div class="row project-map w-100 max-width-1000 mb-5">
+        <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
+    </div>
+    
+    <div class="row d-flex flex-column w-100 max-width-1000">
+        <div class=" p-4 my-2">
+            <h3>Locations</h3>
         </div>
-    {% endfor %}
+        {% for location in project.location_set.all %}
+            <div class="project-item row gap-2 p-4 justify-self-center" >
+                <div class="col">
+                    <div class="row">
+                        <h4>{{ location.name }}</h4>
+                    </div>
+                    <div class="row">
+                        <small class="text-muted">{{ location.description }}</small>
+                    </div>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'location_update' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-accent mx-2 text-white">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="{% url 'location_delete' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-danger mx-2">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-</div>
+
+<script async defer>
+    function initMap() {
+
+        const mapElement = document.getElementById('map');
+
+        const project_locations = mapElement.dataset.coords.split('&');
+        project_locations.splice(-1, 1);
+
+        locationsFormatted = [];
+        for (let i = 0; i < project_locations.length; i++) {
+            const location = project_locations[i].split('%');
+            locationsFormatted.push({name:location[0], lat: parseFloat(location[1]), lng: parseFloat(location[2])});
+        }
+
+        let latSum = 0;
+        let lngSum = 0;
+
+        for (let i = 0; i < locationsFormatted.length; i++) {
+            latSum += parseFloat(locationsFormatted[i].lat);
+            lngSum += parseFloat(locationsFormatted[i].lng);
+        }
+
+        const center = {lat: latSum / locationsFormatted.length, lng: lngSum / locationsFormatted.length};
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7,
+            center: center
+        });
+
+        for (let i = 0; i < locationsFormatted.length; i++) {
+            const marker = new google.maps.Marker({
+                position: {lat: parseFloat(locationsFormatted[i].lat), lng: parseFloat(locationsFormatted[i].lng)},
+                map: map,
+                title: locationsFormatted[i].name
+            });
+        }
+    }
+
+    initMap();
+</script>
 {% endblock %}
