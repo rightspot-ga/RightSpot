@@ -52,6 +52,10 @@ html, body{
     overflow-x: auto;
 }
 
+.display-none{
+    display: none;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -512,7 +516,7 @@ footer > .wrapper{
     }
 
     .mobile-width-100{
-        width: 100%;
+        width: 100% !important;
     }
 
     .mobile-remove{
