@@ -21,7 +21,7 @@ Saved Locations
             {% else %}
                 <p class="fs-5 fw-bold">You've saved <span class="text-secondary fs-2">{{ user_locations|length }}</span>{% if user_locations|length == 1 %} location{% else %} locations{% endif %}</p>
             {% endif %}
-                <a href="{% url 'home'%}" class="btn btn-accent fw-bold mt-2">
+                <a href="{% url 'home'%}" class="btn btn-accent mt-2 text-white letter-spacing-2">
                     Search
                 </a>
         </div>
@@ -37,8 +37,11 @@ Saved Locations
                         <small class="text-muted">{{ location.description }}</small>
                     </div>
                 </div>
-                <div class="col-auto d-flex align-items-center justify-content-center mobile-width-100">
+                <div class="col col-auto mobile-p-0 mobile-width-100">
                     <div>
+                        <img class="project-index-img" src="https://maps.googleapis.com/maps/api/staticmap?center={{location.location.coords.0}},{{ location.location.coords.1 }}&zoom=15&size=400x200&markers=color:0x14213D%7C{{location.location.coords.0}},{{ location.location.coords.1 }}&key={{ google_api_key }}">
+                    </div>
+                    <div class="col-auto d-flex align-items-center justify-content-center mt-4">
                         <a href="{% url 'saved_location_detail' location.id %}" class="btn btn-radius btn-secondary mx-2">
                             <i class="fa-solid fa-eye"></i>
                         </a>
