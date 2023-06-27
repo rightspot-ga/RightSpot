@@ -425,6 +425,13 @@ footer > .wrapper{
     padding: 20px;
 }
 
+/* FAQs */
+.accordion-button:not(.collapsed) {
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+}
+
+
 /* Google Autocomplete */
 
 /* .pac-container{
