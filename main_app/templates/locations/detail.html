@@ -151,8 +151,8 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="saveLocationModalLabel">Save Location</h5>
-          <button type="button" class="close btn btn-sm btn-outline-accent" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title letter-spacing-1" id="saveLocationModalLabel">Save Location</h5>
+          <button type="button" class="close btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -160,8 +160,8 @@
           {% csrf_token %}
           <div class="modal-body">
             <div class="form-group">
-                <label for="projects">Select projects (required)</label>
-                <div class="projects-list" style="max-height: 150px; overflow-y: scroll;">
+                <label for="projects" class="mb-2 letter-spacing-1">Select projects (required)</label>
+                <div class="projects-list mb-2" style="max-height: 150px; overflow-y: scroll;">
                     {% for project in projects %}
                     <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="project{{ project.id }}" name="projects" value="{{ project.id }}">
@@ -171,19 +171,18 @@
                 </div>
             </div>  
             <div class="form-group">
-                <label for="name">Location Name (optional)</label>
-                <input type="text" class="form-control" id="name" name="name">
+                <label for="name" class="mb-2 letter-spacing-1">Location Name (optional)</label>
+                <input type="text" class="form-control mb-2" id="name" name="name">
             </div>
             <div class="form-group">
-                <label for="description">Description (optional)</label>
-                <input type="text" class="form-control" id="description" name="description">
+                <label for="description" class="mb-2 letter-spacing-1">Description (optional)</label>
+                <input type="text" class="form-control mb-2" id="description" name="description">
             </div>
             <input type="hidden" id="location-info" name="location-info">
             <input type="hidden" name="location_id" id="location_id" value="{% if saved %}{{ saved.id }}{% endif %}">
           </div>
           <div class="modal-footer d-flex justify-content-center gap-3">
-            <button type="button" class="btn btn-radius btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-radius btn-primary">Save Location</button>
+            <button type="submit" class="btn btn-radius btn-primary letter-spacing-2">Save Location</button>
           </div>
         </form>
       </div>
