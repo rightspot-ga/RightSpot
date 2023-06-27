@@ -105,6 +105,12 @@
 
         const mapElement = document.getElementById('map');
 
+        // console.log(mapElement.dataset.coords);
+
+        if (!mapElement) {
+            return;
+        }
+
         const project_locations = mapElement.dataset.coords.split('&');
         project_locations.splice(-1, 1);
 
@@ -181,6 +187,10 @@
         const compareButton = document.getElementById('compare-button');
         const compareMessage = document.getElementById('compare-message');
         const checkboxes = document.getElementsByClassName('compare-checkbox');
+
+        if (!compareButton) {
+            return;
+        }
 
         for (let i = 0; i < checkboxes.length; i++) {
             checkboxes[i].addEventListener('change', function() {

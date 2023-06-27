@@ -54,7 +54,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         self.prefix = 'password_change'
 
 class ProjectUpdateForm(forms.ModelForm):
-    locations = forms.ModelMultipleChoiceField(queryset=Location.objects.none(), widget=forms.CheckboxSelectMultiple())
+    locations = forms.ModelMultipleChoiceField(queryset=Location.objects.none(), widget=forms.CheckboxSelectMultiple(), required=False)
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -76,6 +76,7 @@ class LocationUpdateForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(LocationUpdateForm, self).__init__(*args, **kwargs)
         if user:
+            self.fields['projects'].required = False
             self.fields['projects'].queryset = Project.objects.filter(location__user=user).distinct()
             if self.instance:
                 self.fields['projects'].initial = self.instance.projects.all()
