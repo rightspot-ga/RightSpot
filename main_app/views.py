@@ -398,5 +398,12 @@ def tallyPlaces(nearbyplaces):
 		place_type['name'] = place_type['name'].replace('_', ' ')
 		# Capitalise place types
 		place_type['name'] = place_type['name'].title()
+		# Lowecase "And", "Of", and "Or" in place types
+		place_type['name'] = place_type['name'].replace('And', 'and')
+		place_type['name'] = place_type['name'].replace('Of', 'of')
+		place_type['name'] = place_type['name'].replace('Or', 'or')
+		# Override place types
+		if place_type['name'] == 'Grocery or Supermarket':
+			place_type['name'] = 'Grocery'
 
 	return places_types
