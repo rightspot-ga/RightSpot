@@ -208,16 +208,18 @@ class LocationUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        self.object = form.save()
-        self.object.projects.set(form.cleaned_data['projects'])
+        self.object = form.save(commit=False)
+        projects = form.cleaned_data.get('projects', [])
+        self.object.projects.set(projects)
+        self.object.save()
         next_url = self.request.GET.get('next')
-        return next_url if next_url else redirect('saved_location_detail', location_id=self.object.id)
+        return redirect(next_url) if next_url else redirect('saved_location_detail', location_id=self.object.id)
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
     model = Location
     def get_success_url(self):
         next_url = self.request.GET.get('next')
-        return next_url if next_url else '/locations/starred'
+        return redirect(next_url) if next_url else '/locations/starred'
 
 #! Projects
 @login_required

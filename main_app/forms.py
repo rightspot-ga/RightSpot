@@ -76,6 +76,7 @@ class LocationUpdateForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super(LocationUpdateForm, self).__init__(*args, **kwargs)
         if user:
+            self.fields['projects'].required = False
             self.fields['projects'].queryset = Project.objects.filter(location__user=user).distinct()
             if self.instance:
                 self.fields['projects'].initial = self.instance.projects.all()
