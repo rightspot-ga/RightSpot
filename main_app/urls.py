@@ -18,7 +18,8 @@ urlpatterns = [
   path('project/<int:pk>/delete/', views.ProjectDelete.as_view(), name='project_delete'),
   path('accounts/signup/', views.signup, name='signup'),
   path('faq/', views.faq, name='faq'),
-  path('legal/', views.legal, name='legal'),
+  path('privacy/', views.privacy, name='privacy'),
+  path('terms/', views.terms, name='terms'),
   path('settings/', views.settings, name='settings'),
   path('update_project_notes/', views.update_project_notes, name='update_project_notes'),
 ]

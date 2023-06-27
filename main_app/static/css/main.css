@@ -56,6 +56,10 @@ html, body{
     display: none;
 }
 
+.text-right{
+    text-align: right;
+}
+
 /* Sidebar */
 
 .vertical-nav{
@@ -425,6 +429,13 @@ footer > .wrapper{
     padding: 20px;
 }
 
+/* FAQs */
+.accordion-button:not(.collapsed) {
+    background-color: var(--secondary-color);
+    color: var(--light-color);
+}
+
+
 /* Google Autocomplete */
 
 /* .pac-container{
@@ -585,5 +596,46 @@ footer > .wrapper{
 
     .project-item > div > a{
         margin: auto;
+    }
+  }
+
+
+  /* Mobile portrait */
+@media screen and (max-width: 320px) {
+    /* Add styles here */
+    .location_search{
+
+    }
+  }
+  
+  /* Mobile landscape */
+  @media screen and (min-width: 321px) and (max-width: 480px) {
+    
+  }
+  
+  /* Tablet portrait */
+  @media screen and (min-width: 481px) and (max-width: 768px) {
+    
+  }
+  
+  /* Tablet landscape/small desktop */
+  @media screen and (min-width: 769px) and (max-width: 992px) {
+    #location_search{
+        width: 25em;
+    }
+  }
+  
+  /* Large desktop */
+  @media screen and (min-width: 993px) and (max-width: 1200px) {
+    /* Add styles here */
+    #location_search{
+        width: 40rem;
+    }
+  }
+  
+  /* Extra large desktop */
+  @media screen and (min-width: 1201px) {
+    #location_search{
+        width: 40rem;
     }
   }
