@@ -211,6 +211,13 @@ footer > .wrapper{
     text-align: center;
 }
 
+.location-detail-title{
+    text-align: left;
+    padding-left: 1rem !important;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
 .cell-centered {
     vertical-align: middle;
 }
@@ -538,6 +545,8 @@ footer > .wrapper{
         width: 100%;
         font-size: 11.5px;
     }
+
+    
 
     /* #right-location-data > tr {
         overflow: hidden !important;

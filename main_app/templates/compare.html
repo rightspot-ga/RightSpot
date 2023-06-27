@@ -24,12 +24,13 @@ Compare Locations
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-
-            <table class="table">
-                <tbody id="left-location-data">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody id="left-location-data">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Right Side -->
@@ -40,14 +41,14 @@ Compare Locations
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-
-            <table class="table">
-                <tbody id="right-location-data">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody id="right-location-data">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 </div>
 {% endblock %}
