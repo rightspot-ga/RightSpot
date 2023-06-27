@@ -219,7 +219,7 @@ class LocationDelete(LoginRequiredMixin, DeleteView):
     model = Location
     def get_success_url(self):
         next_url = self.request.GET.get('next')
-        return redirect(next_url) if next_url else '/locations/starred'
+        return next_url if next_url else '/locations/starred'
 
 #! Projects
 @login_required
