@@ -30,22 +30,26 @@
         </div>
     </div>
     {% endif %}
-    <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 pb-2 mb-1 mobile-p-0">
-            <h3 class="letter-spacing-1">Notes</h3>
+    <div class="row d-flex flex-column w-100 max-width-1000 mb-4">
+        <div class="p-4 pb-0 mb-1 mt-4 mobile-p-0 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h3 class="letter-spacing-1 mb-0">Notes</h3>
+            </div>
+            <div id="notes-buttons" class="d-flex align-items-center">
+                <button id="edit-button" class="btn btn-accent text-white letter-spacing-2 btn-radius"><i class="bi bi-pencil-fill"></i></button>
+                <button id="save-button" class="btn btn-success ms-3 text-white letter-spacing-2 btn-radius display-none" disabled><i class="fa-solid fa-floppy-disk"></i></button>
+            </div>
+        </div>
+        <div class="px-4 pb-2 mb-1 mobile-p-0 ">
             <hr>
         </div>
         <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
-            <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter notes here...">{{ project.notes }}</textarea>
-            <div id="notes-buttons" class="mt-4">
-              <button id="edit-button" class="btn btn-accent text-white letter-spacing-2" style="min-width: 5rem;">Edit</button>
-              <button id="save-button" class="btn btn-secondary ms-2 text-white letter-spacing-2" style="min-width: 5rem;" disabled>Save</button>
-            </div>
+            <textarea id="notes-textarea" disabled class="mobile-width-100 w-75" rows="10" placeholder="Enter notes here...">{{ project.notes }}</textarea>
         </div>
     </div>
     <div class="row d-flex flex-column w-100 max-width-1000">
         <div class=" p-4 pb-2 my-1 mobile-p-0">
-            <h3 class="letter-spacing-1">Locations</h3>
+            <h3 class="letter-spacing-1 pb-1">Locations</h3>
             <hr>
             {% if project.locations %}
             <div class="d-flex justify-content-end align-items-center mobile-flex-column">
@@ -138,6 +142,8 @@
             notesTextarea.disabled = false;
             editButton.disabled = true;
             saveButton.disabled = false;
+            editButton.classList.add('display-none');
+            saveButton.classList.remove('display-none');
         });
 
         saveButton.addEventListener('click', function() {
@@ -159,6 +165,8 @@
                     notesTextarea.disabled = true;
                     editButton.disabled = false;
                     saveButton.disabled = true;
+                    saveButton.classList.add('display-none');
+                    editButton.classList.remove('display-none');
                 } else {
                     throw new Error('Failed to update project notes');
                 }

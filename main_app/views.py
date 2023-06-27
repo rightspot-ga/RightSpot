@@ -396,9 +396,6 @@ def tallyPlaces(nearbyplaces):
 	for place_type in places_types:
 		# Replace "_" with " " in place types
 		place_type['name'] = place_type['name'].replace('_', ' ')
-		# Add 's' to end of place types if count > 1
-		if place_type['count'] > 1:
-			place_type['name'] = place_type['name'] + 's'
 		# Capitalise place types
 		place_type['name'] = place_type['name'].title()
 
