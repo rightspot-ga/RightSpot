@@ -110,28 +110,23 @@
             locationsFormatted.push({name:location[0], lat: parseFloat(location[1]), lng: parseFloat(location[2])});
         }
 
-        let latSum = 0;
-        let lngSum = 0;
-
-        for (let i = 0; i < locationsFormatted.length; i++) {
-            latSum += parseFloat(locationsFormatted[i].lat);
-            lngSum += parseFloat(locationsFormatted[i].lng);
-        }
-
-        const center = {lat: latSum / locationsFormatted.length, lng: lngSum / locationsFormatted.length};
-
         const map = new google.maps.Map(document.getElementById('map'), {
             zoom: 7,
-            center: center
+            center: {lat: 0, lng: 0}
         });
 
+        const bounds = new google.maps.LatLngBounds();
         for (let i = 0; i < locationsFormatted.length; i++) {
             const marker = new google.maps.Marker({
                 position: {lat: parseFloat(locationsFormatted[i].lat), lng: parseFloat(locationsFormatted[i].lng)},
                 map: map,
                 title: locationsFormatted[i].name
             });
+            bounds.extend(marker.getPosition());
         }
+
+        map.setCenter(bounds.getCenter());
+        map.fitBounds(bounds);
     };
 
     function notes(){
