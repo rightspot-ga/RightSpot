@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Login
+{% endblock title %}
+
 {% block content %}
 <div id="login-container" class="d-flex flex-column justify-content-center align-items-center">
     <div id="login-inner" class="d-flex flex-column justify-content-center align-items-center p-4 bg-primary shadow rounded">
@@ -29,11 +34,15 @@
     </div>
 </div>
 
-<script defer>
+
+
+{% endblock %}
+
+{% block body_bottom %}
+<script>
     const loginLabels = document.querySelectorAll('.login-label > label');
     loginLabels.forEach(label => {
         label.textContent = label.textContent.slice(0, -1);
     })
 </script>
-
-{% endblock %}
+{% endblock body_bottom %}

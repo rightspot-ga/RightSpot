@@ -1,43 +1,236 @@
 {% extends 'base.html' %}
+
+{% block extra_head %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_api_key}}&callback=initMap" async defer></script>
+{% endblock extra_head %}
+
+{% block title %}
+{{ project.name }}
+{% endblock title %}
+
 {% block content %}
+{% csrf_token %} 
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
-        <h1 id="" class="text-primary">
+        <h1 id="" class="text-primary letter-spacing-2">
             {{ project.name }}
         </h1>
     </div>
-    <div class="row w-100 max-width-1000 mb-2 text-white ">
-        <div class="col bg-primary mx-4 my-2 p-4 rounded">
+    <div class="row w-100 max-width-1000 mb-4 text-white ">
+        <div class="col bg-primary mx-4 my-2 p-4 rounded mobile-m-0">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="fs-6">{{ project.description }}</span>
             </div>
         </div>
     </div>
-
-<div class="row d-flex flex-column w-100 max-width-1000">
-    {% for location in project.location_set.all %}
-        <div class="project-item row gap-2 p-4 ms-1 justify-self-center" >
-            <div class="col">
-                <div class="row">
-                    <h4>{{ location.name }}</h4>
-                </div>
-                <div class="row">
-                    <small class="text-muted">{{ location.description }}</small>
-                </div>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-                <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
-                    <i class="fa-solid fa-eye"></i>
-                </a>
-                <a href="{% url 'location_update' location.pk %}" class="btn btn-radius btn-accent mx-2 text-white">
-                    <i class="bi bi-pencil-fill"></i>
-                </a>
-                <a href="{% url 'location_delete' location.pk %}" class="btn btn-radius btn-danger mx-2">
-                    <i class="bi bi-trash3"></i>
-                </a>
+    {% if project.locations %}
+    <div class="row project-map w-100 max-width-1000 mb-2">
+        <div class="px-4 mobile-p-0">
+            <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row d-flex flex-column w-100 max-width-1000">
+        <div class=" p-4 pb-2 mb-1 mobile-p-0">
+            <h3 class="letter-spacing-1">Notes</h3>
+            <hr>
+        </div>
+        <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
+            <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter notes here...">{{ project.notes }}</textarea>
+            <div id="notes-buttons" class="mt-4">
+              <button id="edit-button" class="btn btn-accent text-white letter-spacing-2" style="min-width: 5rem;">Edit</button>
+              <button id="save-button" class="btn btn-secondary ms-2 text-white letter-spacing-2" style="min-width: 5rem;" disabled>Save</button>
             </div>
         </div>
-    {% endfor %}
+    </div>
+    <div class="row d-flex flex-column w-100 max-width-1000">
+        <div class=" p-4 pb-2 my-1 mobile-p-0">
+            <h3 class="letter-spacing-1">Locations</h3>
+            <hr>
+            {% if project.locations %}
+            <div class="d-flex justify-content-end align-items-center mobile-flex-column">
+                <span id="compare-message" class="me-3 text-muted letter-spacing-1 mobile-m-0 mobile-mb-1">Select 2 to compare</span>
+                <button id="compare-button" class="btn btn-info text-white letter-spacing-2" style="min-width: 5rem;" disabled>Compare</button>
+            </div>
+            {% endif %}
+        </div>
+        {% for location in project.location_set.all %}
+            <div class="project-item row gap-2 p-4 justify-self-center" >
+                <div class="col-auto d-flex justify-content-center align-items-center ">
+                    <input type="checkbox" class="compare-checkbox" data-location-id="{{ location.pk }}">
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <h4 class="letter-spacing-1">{{ location.name }}</h4>
+                    </div>
+                    <div class="row mobile-remove">
+                        <small class="text-muted">{{ location.description }}</small>
+                    </div>
+                </div>
+                <div class="mobile-width-100 mobile-pt-1 col-auto d-flex align-items-center justify-content-center">
+                    <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'location_update' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-accent mx-2 text-white">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="{% url 'location_delete' location.pk %}?next={{ request.path }}" class="btn btn-radius btn-danger mx-2">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not project.locations %}
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <p class="text-center fw-bold letter-spacing-2">No Locations</p>
+            <p class="text-center letter-spacing-1">Search for and save locations. Then edit the project and select one or more.</p>
+            <a href="{% url 'project_update' project.pk %}" class="btn btn-accent px-auto mt-2 text-white letter-spacing-2">
+                <i class="bi bi-pencil-fill pe-1"></i> Edit Project
+            </a>
+        </div>
+        {% endif %}
+    </div>
 </div>
-</div>
+
+
 {% endblock %}
+
+{% block body_bottom %}
+<script defer>
+    function initMap(){
+
+        const mapElement = document.getElementById('map');
+
+        const project_locations = mapElement.dataset.coords.split('&');
+        project_locations.splice(-1, 1);
+
+        locationsFormatted = [];
+        for (let i = 0; i < project_locations.length; i++) {
+            const location = project_locations[i].split('%');
+            locationsFormatted.push({name:location[0], lat: parseFloat(location[1]), lng: parseFloat(location[2])});
+        }
+
+        let latSum = 0;
+        let lngSum = 0;
+
+        for (let i = 0; i < locationsFormatted.length; i++) {
+            latSum += parseFloat(locationsFormatted[i].lat);
+            lngSum += parseFloat(locationsFormatted[i].lng);
+        }
+
+        const center = {lat: latSum / locationsFormatted.length, lng: lngSum / locationsFormatted.length};
+
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7,
+            center: center
+        });
+
+        for (let i = 0; i < locationsFormatted.length; i++) {
+            const marker = new google.maps.Marker({
+                position: {lat: parseFloat(locationsFormatted[i].lat), lng: parseFloat(locationsFormatted[i].lng)},
+                map: map,
+                title: locationsFormatted[i].name
+            });
+        }
+    };
+
+    function notes(){
+        const notesTextarea = document.getElementById('notes-textarea');
+        const editButton = document.getElementById('edit-button');
+        const saveButton = document.getElementById('save-button');
+
+        editButton.addEventListener('click', function() {
+            notesTextarea.disabled = false;
+            editButton.disabled = true;
+            saveButton.disabled = false;
+        });
+
+        saveButton.addEventListener('click', function() {
+            const notesContent = notesTextarea.value;
+            const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+            fetch('/update_project_notes/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: new URLSearchParams({
+                    'project_id': '{{ project.id }}',
+                    'notes_content': notesContent
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    notesTextarea.disabled = true;
+                    editButton.disabled = false;
+                    saveButton.disabled = true;
+                } else {
+                    throw new Error('Failed to update project notes');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        });
+    };
+
+    function compare(){
+        const compareButton = document.getElementById('compare-button');
+        const compareMessage = document.getElementById('compare-message');
+        const checkboxes = document.getElementsByClassName('compare-checkbox');
+
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function() {
+                checkCheckboxes();
+            });
+        }
+
+        function checkCheckboxes(){
+            checkedCount = 0;
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checkedCount++;
+                }
+            }
+            if (checkedCount == 2) {
+                compareButton.disabled = false;
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (!checkboxes[i].checked) {
+                        checkboxes[i].disabled = true;
+                    }
+                }
+                compareMessage.innerText = 'Ready!'
+                compareMessage.classList.add('text-success');
+                compareMessage.classList.remove('text-muted');
+            } else {
+                compareButton.disabled = true;
+                for (let i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].disabled = false;
+                }
+                compareMessage.innerText = 'Select 2 to compare'
+                compareMessage.classList.add('text-muted');
+                compareMessage.classList.remove('text-success');
+            }
+        }
+
+        compareButton.addEventListener('click', function() {
+            const checkedLocations = [];
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    checkedLocations.push(checkboxes[i].dataset.locationId);
+                }
+            }
+            window.location.href = '/compare?left=' + checkedLocations[0] + '&right=' + checkedLocations[1];
+        });
+
+    }
+
+    window.onload = function() {
+        initMap();
+        notes();
+        compare();
+    };
+</script>
+
+
+{% endblock body_bottom %}

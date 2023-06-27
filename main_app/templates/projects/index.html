@@ -1,51 +1,58 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block title %}
+Projects
+{% endblock title %}
+
+{% block content %}
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
-        <h1 id="" class="text-primary">
+        <h1 id="" class="text-primary letter-spacing-1">
             Projects
         </h1>
     </div>
-    <div class="row w-100 max-width-1000 mb-5">
-        <div class="col bg-primary mx-4 my-2 p-4 text-white text-center  rounded">
+    <div class="row w-100 max-width-1000 mb-5 letter-spacing-1">
+        <div class="col bg-primary mx-4 my-2 p-4 text-white text-center page-intro rounded mobile-m-0">
             {% if not user_projects %}
-                <p class="fs-5 fw-bold">Do you have a great idea? Want to collect information about potential locations?</p>
+                <p class="fs-5 fw-bold">Do you have a great idea for a business?</p>
+                <p class="fs-6">Are you looking for information about potential locations?</p>
                 <p class="fs-6">Projects allow you to save multiple locations under one roof and come back to them later.</p>
-                <p class="fs-6">Get started now and create your next project...</p>
+                <p class="fs-6">Get started now and create your next project!</p>
             {% else %}
-                <p class="fs-5 fw-bold">You've got <span class="text-secondary fs-2">{{ user_projects|length }}</span> projects</p>
-                <p class="fs-6">Create another?</p>
+                <p class="fs-5 fw-bold">You've got <span class="text-secondary fs-2">{{ user_projects|length }}</span> {% if user_projects|length == 1 %} project{% else %} projects{% endif %}</p>
+                <p class="fs-6">Create another? Easy as pie!</p>
             {% endif %}
-                <button id="create-project-btn" class="btn btn-accent fw-bold mt-2" data-toggle="modal" data-target="#createProjectModal">
+                <button id="create-project-btn" class="btn btn-accent mt-2 letter-spacing-2 text-white" data-toggle="modal" data-target="#createProjectModal">
                     Create project
                 </button>
         </div>
     </div>
     <div class="row d-flex flex-row w-100 max-width-1000">
         {% for project in user_projects %}
-            <div class="project-item row gap-2 p-4 ms-1" >
+            <div class="project-item row gap-2 p-4 ms-1 page-item" >
                 <div class="col">
                     <div class="row">
-                        <h4>{{ project.name }}</h4>
+                        <h4 class="letter-spacing-1">{{ project.name }}</h4>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <small class="text-muted">{{ project.description }}</small>
                     </div>
-                    {% if project.locations|length > 0 %}
-                        {% for location in project.locations.all %}{{ location.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    {% endif %}
                 </div>
-                <div class="col-auto d-flex align-items-center">
-                    <a href="{% url 'project_detail' project.id %}" class="btn btn-radius btn-secondary mx-2">
-                        <i class="fa-solid fa-eye"></i>
-                    </a>
-                    <a href="{% url 'project_update' project.pk %}" class="btn btn-radius btn-accent mx-2 text-white">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                    <a href="{% url 'project_delete' project.id %}" class="btn btn-radius btn-danger mx-2">
-                        <i class="bi bi-trash3"></i>
-                    </a>
+                <div class="col col-auto mobile-p-0">
+                    <div>
+                        <img class="project-index-img" src="https://maps.googleapis.com/maps/api/staticmap?{% for location in project.locations %}&markers=color:0x14213D%7Clabel:{{ forloop.counter }}%7C{{ location.location.coords.0 }},{{ location.location.coords.1 }}{% endfor %}&size=600x200&key={{ google_api_key }}">
+                    </div>
+                    <div class="col-auto d-flex align-items-center justify-content-center mt-4">
+                        <a href="{% url 'project_detail' project.id %}" class="btn btn-radius btn-secondary mx-2">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{% url 'project_update' project.pk %}" class="btn btn-radius btn-accent mx-2 text-white">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="{% url 'project_delete' project.id %}" class="btn btn-radius btn-danger mx-2">
+                            <i class="bi bi-trash3"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -56,7 +63,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content bg-primary text-white p-3">
             <div class="modal-header">
-                <h5 class="modal-title" id="createProjectModalLabel">Create project</h5>
+                <h5 class="modal-title letter-spacing-1" id="createProjectModalLabel">Create project</h5>
                 <button type="button" class="close btn btn-sm btn-danger" data-dismiss="modal" aria-label="Close">
                     <i class="bi bi-x"></i>
                 </button>
@@ -65,16 +72,16 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group mb-2">
-                        <label class="mb-1" for="name">Project name</label>
+                        <label class="mb-3 mt-2 letter-spacing-1" for="name">Project name</label>
                         <input type="text" class="form-control" id="name" name="name" required>
                     </div>
                     <div class="form-group mb-2">
-                        <label class="mb-1" for="description">Description</label>
+                        <label class="mb-3 mt-4 letter-spacing-1" for="description">Description</label>
                         <textarea class="form-control" id="description" name="description"></textarea>
                     </div>
                     <div class="form-group mb-2">
-                        <label class="mb-1" for="locations">Saved locations</label>
-                        <div id="locations">
+                        <label class="mb-3 mt-4 letter-spacing-1" for="locations">Saved locations</label>
+                        <div id="locations" class="locations-list">
                             {% for location in user_locations %}
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" name="locations" value="{{ location.pk }}" id="location_{{ location.pk }}">
@@ -85,12 +92,10 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="submit" class="btn btn-accent fw-bold">Create project</button>
+                    <button type="submit" class="btn btn-accent text-white letter-spacing-1">Create project</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-
 {% endblock %}

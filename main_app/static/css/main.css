@@ -24,6 +24,10 @@ html, body{
     max-width: 1000px;
 }
 
+.max-width-700{
+    max-width: 700px;
+}
+
 .letter-spacing-1{
     letter-spacing: 1px;
 }
@@ -34,6 +38,18 @@ html, body{
 
 .mobile-show{
     display: none;
+}
+
+.modal{
+    z-index: 9999 !important;
+}
+
+.scrollable-y{
+    overflow-y: auto;
+}
+
+.scrollable-x{
+    overflow-x: auto;
 }
 
 /* Sidebar */
@@ -63,6 +79,10 @@ html, body{
 .nav-icon{
     font-size: 24px;
     transition: font-size 0.3s ease-in-out;
+}
+
+a.nav-link:focus{
+    color: var(--accent-color);
 }
 
 img#nav-logo{
@@ -152,7 +172,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 footer > .wrapper{
@@ -193,6 +213,13 @@ footer > .wrapper{
 
 .value-cell{
     text-align: center;
+}
+
+.location-detail-title{
+    text-align: left;
+    padding-left: 1rem !important;
+    letter-spacing: 2px;
+    font-weight: 600;
 }
 
 .cell-centered {
@@ -255,13 +282,7 @@ footer > .wrapper{
     font-weight: 650;
 }
 
-.profile-label > label {
-    min-width: 9rem;
-    color: var(--primary-color);
-    font-weight: 650;
-}
-
-.password-label > label {
+.password-label > label, .profile-label > label  {
     min-width: 15rem;
     color: var(--primary-color);
     font-weight: 650;
@@ -286,10 +307,6 @@ footer > .wrapper{
 }
 
 #profile-settings > div > p > input, #password-settings > div > p > input{
-    width: calc(100% - 10rem);
-}
-
-#password-settings > div > p > input{
     width: calc(100% - 16rem);
 }
 
@@ -312,9 +329,10 @@ footer > .wrapper{
     width: 100%;
 }
 
-#normal-search > span > input{
-    border: var(--accent-color) 2px solid;
-    padding: 5px;
+#location_search{
+    border: transparent;
+    font-size: 18px;
+    padding: 12px;
     min-width: 20rem;
 }
 
@@ -341,13 +359,35 @@ footer > .wrapper{
 
 /* Project */
 
-.project-item:hover{
+.project-item:hover, .starred-item:hover{
     background-color: var(--light-color);
-
+    box-shadow: 0 0 20px rgba(193, 193, 193, 0.5);
 }
 
 .projects-intro{
     width: 75%;
+}
+
+.project-index-img{
+    box-shadow: 0 0 10px rgba(193, 193, 193, 0.5);
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.project-detail-map{
+    height: 400px;
+    width: 100%;
+}
+
+#notes-textarea{
+    font-size: 16px;
+    min-height: 100px;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Account Settings */
@@ -369,8 +409,17 @@ footer > .wrapper{
     color: var(--light-color);
 }
 
+.compare-checkbox{
+    width: 30px;
+    height: 30px;
+}
 
-
+.locations-list{
+    max-height: 150px;
+    overflow-y: scroll;
+    background-color: rgb(0,0,0,0.2);
+    padding: 20px;
+}
 
 /* Google Autocomplete */
 
@@ -430,6 +479,92 @@ footer > .wrapper{
     .mobile-show{
         display: inline;
     }
+
+    .page-intro{
+        margin-left: 1rem !important;
+        margin-right: 1rem !important;
+    }
+
+    .page-item{
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    #user-title{
+        display: none;
+    }
+
+    #user-title.active {
+        display: inline;
+        margin-bottom: 0 !important;
+    }
+
+    .mobile-pt-1 {
+        padding-top: 1rem;
+    }
+
+    .mobile-pb-1 {
+        padding-bottom: 1rem;
+    }
+
+    .mobile-pb-2{
+        padding-bottom: 2rem;
+    }
+
+    .mobile-width-100{
+        width: 100%;
+    }
+
+    .mobile-remove{
+        display: none;
+    }
+
+    .mobile-m-0{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .mobile-p-0{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .mobile-mb-1{
+        margin-bottom: 1rem !important;
+    }
+
+    .mobile-flex-column{
+        flex-direction: column;
+    }
+
+    .mobile-max-v-width-50{
+        max-width: 50vw
+    }
+
+    table{
+        font-size: 12px;
+    }
+
+    #left-location-select, #right-location-select{
+        width: 100%;
+        font-size: 11.5px;
+    }
+
+    #profile-settings > div > p > input, #password-settings > div > p > input{
+        width: 100%;
+    }
+
+    /* #right-location-data > tr {
+        overflow: hidden !important;
+    } */
+
+    /* #right-location-data > tr > td:last-of-type{
+        visibility: hidden !important;
+        width: 0px !important;
+        overflow: hidden !important;
+        position: relative;
+        left: -50%;
+    } */
 
   }
 

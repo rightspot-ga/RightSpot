@@ -20,6 +20,5 @@ urlpatterns = [
   path('faq/', views.faq, name='faq'),
   path('legal/', views.legal, name='legal'),
   path('settings/', views.settings, name='settings'),
-  path('apikey/w3w/', views.apikey_w3w, name='apikey_w3w'),
-  path('apikey/google/', views.apikey_google, name='apikey_google'),
+  path('update_project_notes/', views.update_project_notes, name='update_project_notes'),
 ]
