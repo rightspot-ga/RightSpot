@@ -34,8 +34,11 @@ def about(request):
 def faq(request):
 	return render(request, 'faq.html')
 
-def legal(request):
-	return render(request, 'legal.html')
+def privacy(request):
+	return render(request, 'privacy.html')
+
+def terms(request):
+	return render(request, 'terms.html')
 
 #! Locations 
 @login_required
@@ -208,10 +211,12 @@ class LocationUpdate(LoginRequiredMixin, UpdateView):
         return kwargs
 
     def form_valid(self, form):
-        self.object = form.save()
-        self.object.projects.set(form.cleaned_data['projects'])
+        self.object = form.save(commit=False)
+        projects = form.cleaned_data.get('projects', [])
+        self.object.projects.set(projects)
+        self.object.save()
         next_url = self.request.GET.get('next')
-        return next_url if next_url else redirect('saved_location_detail', location_id=self.object.id)
+        return redirect(next_url) if next_url else redirect('saved_location_detail', location_id=self.object.id)
 
 class LocationDelete(LoginRequiredMixin, DeleteView):
     model = Location
@@ -398,5 +403,12 @@ def tallyPlaces(nearbyplaces):
 		place_type['name'] = place_type['name'].replace('_', ' ')
 		# Capitalise place types
 		place_type['name'] = place_type['name'].title()
+		# Lowecase "And", "Of", and "Or" in place types
+		place_type['name'] = place_type['name'].replace('And', 'and')
+		place_type['name'] = place_type['name'].replace('Of', 'of')
+		place_type['name'] = place_type['name'].replace('Or', 'or')
+		# Override place types
+		if place_type['name'] == 'Grocery or Supermarket':
+			place_type['name'] = 'Grocery'
 
 	return places_types

@@ -1,12 +1,108 @@
 {% extends 'base.html' %}
 
 
+{% block extra_head %}
+{% endblock extra_head %}
+
+
 {% block title %}
 FAQs
 {% endblock title %}
 
 {% block content %}
 
-<h1>FAQ</h1>
+<div class="d-flex flex-column align-items-center my-3">
+    <div class="row projects-top pb-3 text-center mb-1">
+        <h1 id="" class="text-primary letter-spacing-1">
+            FAQs
+        </h1>
+    </div>
+    <div class="row w-100 max-width-700 bg-light rounded">
+        <div class="d-flex align-items-start p-0">
+            <div class="tab-content m-4 mb-4 w-100">
+                <div class="tab-pane fade show active" id="profile">
+                    <div class="mb-1">
+                        <p class="fs-3 fw-bold mb-4 letter-spacing-1">Frequently Asked Questions</p>
+                    </div>
+                    <div class="">
+                        <div class="accordion accordion-flush" id="faqAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed fw-bold letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        Where does the data you use come from?
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We currently use two core sources of data - the Google Places API, which is used to provide information about nearby locations, and a hand-picked dataset derived from eight different ONS (Office for National Statistics, UK) surveys.
+                                        </p>
+                                        <p>
+                                            The specific surveys we have used can be found below. You can follow the links to find detailed information about each dataset, including specifics on methodology and variable construction.
+                                        </p>
+                                        <ul>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/apsnew" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Annual Population Survey</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/ashe" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Annual Survey of Hours and Earnings</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/newbres6pub" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Business Register and Employment Survey</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/jd" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Jobs Density</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/lebirthrates" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Live births</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/idbrent" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">UK Business Counts</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/pestnew" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Population Estimates</a>  
+                                            </li>
+                                            <li>
+                                                <a href="https://www.nomisweb.co.uk/datasets/wfjnsa" class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" target="_blank">Annual Population Survey</a>  
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed fw-bold letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        How often is the data updated?
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p>
+                                            The Google Places data is always generated in real time, and the ONS data is updated whenever new survey results come out. This can vary from survey to survey, but most are updated quarterly or annually.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed fw-bold letter-spacing-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Do you do any processing of the data before displaying it?
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p>
+                                            We do not apply transformations to the data, our processing is limited to formatting and selection of variables. The restriction of the set of variables shown to the final user is minimal, and only seeks to avoid redundancy. At its core, our service aims to provide the user with relevant information, rather than offer analysis.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

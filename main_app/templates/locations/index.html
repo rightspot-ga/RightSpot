@@ -39,7 +39,7 @@ Saved Locations
                 </div>
                 <div class="col col-auto mobile-p-0 mobile-width-100">
                     <div>
-                        <img class="project-index-img" src="https://maps.googleapis.com/maps/api/staticmap?center={{location.location.coords.0}},{{ location.location.coords.1 }}&zoom=15&size=400x200&markers=color:0x14213D%7C{{location.location.coords.0}},{{ location.location.coords.1 }}&key={{ google_api_key }}">
+                        <img class="project-index-img" src="https://maps.googleapis.com/maps/api/staticmap?center={{location.location.coords.0}},{{ location.location.coords.1 }}&zoom=15&size=400x200&markers={{location.location.coords.0}},{{ location.location.coords.1 }}&key={{ google_api_key }}">
                     </div>
                     <div class="col-auto d-flex align-items-center justify-content-center mt-4">
                         <a href="{% url 'saved_location_detail' location.id %}" class="btn btn-radius btn-secondary mx-2">
