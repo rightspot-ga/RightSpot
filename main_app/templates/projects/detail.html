@@ -12,43 +12,47 @@
 {% csrf_token %} 
 <div class="d-flex flex-column align-items-center my-3">
     <div class="row projects-top pb-3 text-center mb-1">
-        <h1 id="" class="text-primary">
+        <h1 id="" class="text-primary letter-spacing-2">
             {{ project.name }}
         </h1>
     </div>
     <div class="row w-100 max-width-1000 mb-4 text-white ">
-        <div class="col bg-primary mx-4 my-2 p-4 rounded">
+        <div class="col bg-primary mx-4 my-2 p-4 rounded mobile-m-0">
             <div class="d-flex align-items-center justify-content-center">
                 <span class="fs-6">{{ project.description }}</span>
             </div>
         </div>
     </div>
+    {% if project.locations %}
     <div class="row project-map w-100 max-width-1000 mb-2">
-        <div class="px-4">
+        <div class="px-4 mobile-p-0">
             <div id="map" class="project-detail-map" data-coords="{% for location in project.locations %}{{location.name}}%{{location.location.coords.0}}%{{location.location.coords.1}}&{% endfor %}"></div>
         </div>
     </div>
+    {% endif %}
     <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 pb-2 mb-1">
-            <h3 class="">Notes</h3>
+        <div class=" p-4 pb-2 mb-1 mobile-p-0">
+            <h3 class="letter-spacing-1">Notes</h3>
             <hr>
         </div>
         <div id="notes-container" class="d-flex flex-column justify-content-center align-items-center">
             <textarea id="notes-textarea" disabled class="w-75" rows="6" placeholder="Enter notes here...">{{ project.notes }}</textarea>
             <div id="notes-buttons" class="mt-4">
-              <button id="edit-button" class="btn btn-accent text-white" style="min-width: 5rem;">Edit</button>
-              <button id="save-button" class="btn btn-secondary ms-2 text-white" style="min-width: 5rem;" disabled>Save</button>
+              <button id="edit-button" class="btn btn-accent text-white letter-spacing-2" style="min-width: 5rem;">Edit</button>
+              <button id="save-button" class="btn btn-secondary ms-2 text-white letter-spacing-2" style="min-width: 5rem;" disabled>Save</button>
             </div>
         </div>
     </div>
     <div class="row d-flex flex-column w-100 max-width-1000">
-        <div class=" p-4 pb-2 my-1">
-            <h3>Locations</h3>
+        <div class=" p-4 pb-2 my-1 mobile-p-0">
+            <h3 class="letter-spacing-1">Locations</h3>
             <hr>
-            <div class="d-flex justify-content-end align-items-center">
-                <span id="compare-message" class="me-3 text-muted letter-spacing-1">Select 2 to compare</span>
-                <button id="compare-button" class="btn btn-info text-white" style="min-width: 5rem;" disabled>Compare</button>
+            {% if project.locations %}
+            <div class="d-flex justify-content-end align-items-center mobile-flex-column">
+                <span id="compare-message" class="me-3 text-muted letter-spacing-1 mobile-m-0 mobile-mb-1">Select 2 to compare</span>
+                <button id="compare-button" class="btn btn-info text-white letter-spacing-2" style="min-width: 5rem;" disabled>Compare</button>
             </div>
+            {% endif %}
         </div>
         {% for location in project.location_set.all %}
             <div class="project-item row gap-2 p-4 justify-self-center" >
@@ -57,13 +61,13 @@
                 </div>
                 <div class="col">
                     <div class="row">
-                        <h4>{{ location.name }}</h4>
+                        <h4 class="letter-spacing-1">{{ location.name }}</h4>
                     </div>
-                    <div class="row">
+                    <div class="row mobile-remove">
                         <small class="text-muted">{{ location.description }}</small>
                     </div>
                 </div>
-                <div class="col-auto d-flex align-items-center">
+                <div class="mobile-width-100 mobile-pt-1 col-auto d-flex align-items-center justify-content-center">
                     <a href="{% url 'saved_location_detail' location.pk %}" class="btn btn-radius btn-secondary mx-2">
                         <i class="fa-solid fa-eye"></i>
                     </a>
@@ -76,6 +80,15 @@
                 </div>
             </div>
         {% endfor %}
+        {% if not project.locations %}
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <p class="text-center fw-bold letter-spacing-2">No Locations</p>
+            <p class="text-center letter-spacing-1">Search for and save locations. Then edit the project and select one or more.</p>
+            <a href="{% url 'project_update' project.pk %}" class="btn btn-accent px-auto mt-2 text-white letter-spacing-2">
+                <i class="bi bi-pencil-fill pe-1"></i> Edit Project
+            </a>
+        </div>
+        {% endif %}
     </div>
 </div>
 

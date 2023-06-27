@@ -12,43 +12,43 @@ Compare Locations
 </script>
 <script defer src="{% static 'js/compare.js' %}"></script>
 
-<h1 class="text-center">Compare Locations</h1>
-<div class="container my-5">
+<h1 class="text-center letter-spacing-1">Compare Locations</h1>
+<div class="container my-5 mobile-p-0">
     <div class="d-flex justify-content-between">
 
         <!-- Left Side -->
-        <div class="d-flex flex-column flex-grow-1 mr-2">
-            <select id="left-location-select" class="form-control mb-4 text-center">
+        <div class="d-flex flex-column flex-grow-1 mr-2 mobile-max-v-width-50">
+            <select id="left-location-select" class="form-control mb-4 text-center mobile-max-v-width-50">
                 <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-
-            <table class="table">
-                <tbody id="left-location-data">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody id="left-location-data">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Right Side -->
-        <div class="d-flex flex-column flex-grow-1 ml-2">
-            <select id="right-location-select" class="form-control mb-4 text-center">
+        <div class="d-flex flex-column flex-grow-1 ml-2 mobile-max-v-width-50 ">
+            <select id="right-location-select" class="form-control mb-4 text-center mobile-max-v-width-50">
                 <option value="" disabled selected>Select a location</option>
                 {% for location in locations %}
                     <option value="{{ location.pk }}">{{ location.name }}</option>
                 {% endfor %}
             </select>
-
-            <table class="table">
-                <tbody id="right-location-data">
-                    <!-- Data will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody id="right-location-data">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-
     </div>
 </div>
-
 {% endblock %}

@@ -41,7 +41,8 @@ def legal(request):
 @login_required
 def locations_index(request):
 		user_locations = Location.objects.filter(user=request.user).order_by('-id')
-		return render(request, 'locations/index.html', {'user_locations': user_locations})
+		return render(request, 'locations/index.html', {'user_locations': user_locations,'google_api_key': env('GOOGLE_MAPS_API_KEY'),})
+		
 
 def location_detail(request):
 	location_name = request.GET.get('gQuery') or request.GET.get('what3words_3wa')

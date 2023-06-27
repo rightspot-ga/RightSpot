@@ -24,6 +24,10 @@ html, body{
     max-width: 1000px;
 }
 
+.max-width-700{
+    max-width: 700px;
+}
+
 .letter-spacing-1{
     letter-spacing: 1px;
 }
@@ -34,6 +38,18 @@ html, body{
 
 .mobile-show{
     display: none;
+}
+
+.modal{
+    z-index: 9999 !important;
+}
+
+.scrollable-y{
+    overflow-y: auto;
+}
+
+.scrollable-x{
+    overflow-x: auto;
 }
 
 /* Sidebar */
@@ -156,7 +172,7 @@ footer{
     transition: all 0.4s;
     padding: 1rem 1rem 0 1rem;
     overflow: auto;
-    z-index: 9999 !important;
+    z-index: 9998 !important;
 }
 
 footer > .wrapper{
@@ -197,6 +213,13 @@ footer > .wrapper{
 
 .value-cell{
     text-align: center;
+}
+
+.location-detail-title{
+    text-align: left;
+    padding-left: 1rem !important;
+    letter-spacing: 2px;
+    font-weight: 600;
 }
 
 .cell-centered {
@@ -391,6 +414,12 @@ footer > .wrapper{
     height: 30px;
 }
 
+.locations-list{
+    max-height: 150px;
+    overflow-y: scroll;
+    background-color: rgb(0,0,0,0.2);
+    padding: 20px;
+}
 
 /* Google Autocomplete */
 
@@ -469,6 +498,73 @@ footer > .wrapper{
         display: inline;
         margin-bottom: 0 !important;
     }
+
+    .mobile-pt-1 {
+        padding-top: 1rem;
+    }
+
+    .mobile-pb-1 {
+        padding-bottom: 1rem;
+    }
+
+    .mobile-pb-2{
+        padding-bottom: 2rem;
+    }
+
+    .mobile-width-100{
+        width: 100%;
+    }
+
+    .mobile-remove{
+        display: none;
+    }
+
+    .mobile-m-0{
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .mobile-p-0{
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .mobile-mb-1{
+        margin-bottom: 1rem !important;
+    }
+
+    .mobile-flex-column{
+        flex-direction: column;
+    }
+
+    .mobile-max-v-width-50{
+        max-width: 50vw
+    }
+
+    table{
+        font-size: 12px;
+    }
+
+    #left-location-select, #right-location-select{
+        width: 100%;
+        font-size: 11.5px;
+    }
+
+    #profile-settings > div > p > input, #password-settings > div > p > input{
+        width: 100%;
+    }
+
+    /* #right-location-data > tr {
+        overflow: hidden !important;
+    } */
+
+    /* #right-location-data > tr > td:last-of-type{
+        visibility: hidden !important;
+        width: 0px !important;
+        overflow: hidden !important;
+        position: relative;
+        left: -50%;
+    } */
 
   }
 
