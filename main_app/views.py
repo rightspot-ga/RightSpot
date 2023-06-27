@@ -34,8 +34,11 @@ def about(request):
 def faq(request):
 	return render(request, 'faq.html')
 
-def legal(request):
-	return render(request, 'legal.html')
+def privacy(request):
+	return render(request, 'privacy.html')
+
+def terms(request):
+	return render(request, 'terms.html')
 
 #! Locations 
 @login_required

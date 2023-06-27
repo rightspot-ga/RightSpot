@@ -56,6 +56,10 @@ html, body{
     display: none;
 }
 
+.text-right{
+    text-align: right;
+}
+
 /* Sidebar */
 
 .vertical-nav{
