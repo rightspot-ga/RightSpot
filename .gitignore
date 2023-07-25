@@ -2,3 +2,4 @@
 fly.toml
 staticfiles
 .vscode
+env
